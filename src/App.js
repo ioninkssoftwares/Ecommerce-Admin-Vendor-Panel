@@ -8,6 +8,7 @@ import InventoryManagement from "./Page/InventoryMangement/InventoryManagement";
 import AgentManagement from "./Page/AgentManagementSection/AgentManagement";
 import UserManagement from "./Page/UserManagement/UserManagement";
 import Login from "./Page/Login/loginadmin";
+import LoginVenDor from "./VendorPanel/Pages/login/LoginVendor";
 import BannerComponent from "./Page/InventoryMangement/addbaneer";
 import Coupons from "./Page/Coupon Management/couponcode";
 import EditProduct from "./Page/Product Management/editproduct";
@@ -17,11 +18,11 @@ import StaffManagement from "./Page/StaffManagement/Staffmanagement";
 import { ToastContainer } from "react-toastify";
 import SubscriptionManagement from "./Page/Subscrption/subscription";
 import VendorManagement from "./Page/Vendormanagement/vendor";
+import DashboardVendor from "./VendorPanel/Pages/dashboard/DashboardVendor";
+import { useCookies } from "react-cookie";
 
 // Function to check if the token exists in cookies
 const getTokenFromCookies = () => {
-  // Implement logic to get token from cookies and return it
-  // For example:
   const token = document.cookie
     .split("; ")
     .find((row) => row.startsWith("token="));
@@ -36,7 +37,56 @@ const ProtectedRoute = ({ element }) => {
   return token ? element : <Navigate to="/loginadmin" />;
 };
 
+
+// const VendorProtectedRoute = ({ element: Component, ...rest }) => {
+//   const [cookies] = useCookies(['vendorToken']);
+//   const vendorToken = cookies.vendorToken;
+//   console.log("Vendor Token: ", vendorToken);
+
+//   const isAuthenticated = vendorToken && vendorToken !== "";
+//   console.log("isAuthenticated: ", isAuthenticated);
+
+
+//   return (
+//     <Route
+//       {...rest}
+//       element={isAuthenticated ? <Component /> : <Navigate to="/vendor/login" replace />}
+//     />
+//   );
+// };
+
+const VendorProtectedRoute = ({ element: Component, ...rest }) => {
+  const [cookies] = useCookies(['vendorToken']);
+  const vendorToken = cookies.vendorToken;
+  console.log("Vendor Token: ", vendorToken);
+
+  const isAuthenticated = vendorToken && vendorToken !== "";
+
+  return isAuthenticated ? (
+    <Component {...rest} />
+  ) : (
+    <Navigate to="/vendor/login" replace />
+  );
+};
+
+
+
+
+
 export default function App() {
+  // const [cookies] = useCookies(['vendorToken']);
+
+
+  // Vendor ProtectdRoute Logics
+  // const checkVendorIsAuthenticated = () => {
+  //   const vendorToken = cookies.vendorToken;
+  //   console.log("Vendor Token: ", vendorToken);
+  //   return vendorToken && vendorToken !== "";
+  // };
+
+
+
+
   return (
     <>
       <BrowserRouter>
@@ -104,8 +154,24 @@ export default function App() {
             path="/vendormanagement"
             element={<ProtectedRoute element={<VendorManagement />} />}
           />
+
+          {/************************  Vendor Panel Routes ******************************/}
+
+          <Route
+            path="/vendor/login"
+            element={<LoginVenDor />}
+          />
+          {/* <VendorProtectedRoute path="/vendor/dashboard" element={<DashboardVendor />} /> */}
+          {/* <Route path="/vendor/dashboard" element={<VendorProtectedRoute element={<DashboardVendor />} />} /> */}
+
+          <Route
+            path="/vendor/dashboard"
+            element={<VendorProtectedRoute element={<DashboardVendor />} />}
+          />
+
+
         </Routes>
-      
+
       </BrowserRouter>
     </>
   );

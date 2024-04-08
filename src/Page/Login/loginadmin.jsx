@@ -34,33 +34,38 @@ const Login = () => {
   };
 
   return (
-    <div className="containering">
-      <h2>Login</h2>
-      {error && <div className="error">{error}</div>}
-      <form className="form" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button className="btn" type="submit">
-          Login
-        </button>
-      </form>
-    </div>
+    <>
+      <div className="containering">
+        <h2 className="text-red-600 font-bold">Login</h2>
+        {error && <div className="error">{error}</div>}
+        <form className="form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Email:</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Password:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button className="btn" type="submit">
+            Login
+          </button>
+        </form>
+      </div>
+      <div className="flex items-center justify-center">
+        <p onClick={() => navigate("/vendor/login")} className="text-blue-600 cursor-pointer underline">Login as Vendor</p>
+      </div>
+    </>
   );
 };
 
