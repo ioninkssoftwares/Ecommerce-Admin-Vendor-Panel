@@ -38,22 +38,6 @@ const ProtectedRoute = ({ element }) => {
 };
 
 
-// const VendorProtectedRoute = ({ element: Component, ...rest }) => {
-//   const [cookies] = useCookies(['vendorToken']);
-//   const vendorToken = cookies.vendorToken;
-//   console.log("Vendor Token: ", vendorToken);
-
-//   const isAuthenticated = vendorToken && vendorToken !== "";
-//   console.log("isAuthenticated: ", isAuthenticated);
-
-
-//   return (
-//     <Route
-//       {...rest}
-//       element={isAuthenticated ? <Component /> : <Navigate to="/vendor/login" replace />}
-//     />
-//   );
-// };
 
 const VendorProtectedRoute = ({ element: Component, ...rest }) => {
   const [cookies] = useCookies(['vendorToken']);
@@ -71,21 +55,7 @@ const VendorProtectedRoute = ({ element: Component, ...rest }) => {
 
 
 
-
-
 export default function App() {
-  // const [cookies] = useCookies(['vendorToken']);
-
-
-  // Vendor ProtectdRoute Logics
-  // const checkVendorIsAuthenticated = () => {
-  //   const vendorToken = cookies.vendorToken;
-  //   console.log("Vendor Token: ", vendorToken);
-  //   return vendorToken && vendorToken !== "";
-  // };
-
-
-
 
   return (
     <>
@@ -161,9 +131,6 @@ export default function App() {
             path="/vendor/login"
             element={<LoginVenDor />}
           />
-          {/* <VendorProtectedRoute path="/vendor/dashboard" element={<DashboardVendor />} /> */}
-          {/* <Route path="/vendor/dashboard" element={<VendorProtectedRoute element={<DashboardVendor />} />} /> */}
-
           <Route
             path="/vendor/dashboard"
             element={<VendorProtectedRoute element={<DashboardVendor />} />}
