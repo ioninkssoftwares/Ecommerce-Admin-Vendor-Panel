@@ -38,11 +38,9 @@ const ProtectedRoute = ({ element }) => {
 };
 
 
-
-const VendorProtectedRoute = ({ element: Component, ...rest }) => {
+const VendorProtectedRoute = ({ Component, ...rest }) => {
   const [cookies] = useCookies(['vendorToken']);
   const vendorToken = cookies.vendorToken;
-  console.log("Vendor Token: ", vendorToken);
 
   const isAuthenticated = vendorToken && vendorToken !== "";
 
@@ -131,11 +129,11 @@ export default function App() {
             path="/vendor/login"
             element={<LoginVenDor />}
           />
+
           <Route
             path="/vendor/dashboard"
-            element={<VendorProtectedRoute element={<DashboardVendor />} />}
+            element={<VendorProtectedRoute Component={DashboardVendor} />}
           />
-
 
         </Routes>
 

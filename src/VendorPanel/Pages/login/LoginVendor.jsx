@@ -24,11 +24,11 @@ export default function Login() {
         formState: { errors },
     } = useForm();
 
-    // useEffect(() => {
-    //     if (cookies && cookies.token) {
-    //         navigate("/")
-    //     }
-    // }, [cookies]);
+    useEffect(() => {
+        if (cookies && cookies.vendorToken) {
+            navigate("/vendor/dashboard")
+        }
+    }, [cookies]);
 
 
     // useEffect(() => {
@@ -132,14 +132,14 @@ export default function Login() {
 
                                 if (res.data) {
                                     // const user = res.data.user;
-                                    // console.log(user, "sdhfaskfhdj")
-                                    setCookies("vendorToken", res.data.token);
+                                    console.log(res.data.data.token, "sdhfaskfhdj")
+                                    setCookies("vendorToken", res.data.data.token);
                                     localStorage.setItem("isAdmin", false);
                                     // localStorage.setItem("userId", res.data.user._id);
                                     // localStorage.setItem("vendorToken", res.data.token);
-                                    toast(" Vendor Login Successful")
                                     navigate("/vendor/dashboard")
                                     setLoading(false)
+                                    toast(" Vendor Login Successful")
                                 }
 
                             } catch (error) {
