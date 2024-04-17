@@ -61,7 +61,7 @@ const Sidebar = () => {
                         {isExpanded ? <p className='' >Orders</p> : ""}
                     </div>
                     <div
-                        // onClick={() => navigate("/admin/productManagement")}
+                        onClick={() => navigate("/vendor/productManagement")}
                         className={`flex ${location?.pathname === "/admin/productManagement" ? "bg-gray-400 text-indigo-500" : "bg-primary-blue text-white"} gap-1 items-center justify-start w-full hover:bg-white hover:text-primary-blue ${isExpanded ? 'text-white' : 'text-white'} `}>
                         <div className='p-2'>
                             {/* <img className="w-auto h-6" src="https://merakiui.com/images/logo.svg" alt="" /> */}
@@ -78,6 +78,7 @@ const Sidebar = () => {
                         </div>
                         {isExpanded ? <p className='' >Customers</p> : ""}
                     </div>
+
                     <div
                         // onClick={() => navigate("/admin/membership")}
                         className={`flex ${location?.pathname === "/admin/membership" ? "bg-gray-400 text-indigo-500" : "bg-primary-blue text-white"} gap-1 items-center justify-start w-full hover:bg-white hover:text-primary-blue ${isExpanded ? 'text-white' : 'text-white'} `}>
@@ -105,33 +106,36 @@ const Sidebar = () => {
                         </div>
                         {isExpanded ? <p className='' >Inventory</p> : ""}
                     </div>
-                    <div
+
+                    {/* <div
                         // onClick={() => navigate("/admin/payment")}
                         className={`flex ${location?.pathname === "/admin/payment" ? "bg-gray-400 text-indigo-500" : "bg-primary-blue text-white"} gap-1 items-center justify-start w-full hover:bg-white hover:text-primary-blue ${isExpanded ? 'text-white' : 'text-white'} `}>
                         <div className='p-2'>
-                            {/* <img className="w-auto h-6" src="https://merakiui.com/images/logo.svg" alt="" /> */}
+                
                             <MdInventory className="w-auto h-6" />
                         </div>
                         {isExpanded ? <p className='' >Payment Section</p> : ""}
-                    </div>
-                    <div
+                    </div> */}
+
+                    {/* <div
                         // onClick={() => navigate("/admin/siteSettings")} 
                         className={`flex  ${location?.pathname === "/admin/siteSettings" ? "bg-gray-400 text-indigo-500" : "bg-primary-blue text-white"} gap-1 items-center justify-start w-full hover:bg-white hover:text-primary-blue ${isExpanded ? 'text-white' : 'text-white'} `}>
                         <div className='p-2'>
-                            {/* <img className="w-auto h-6" src="https://merakiui.com/images/logo.svg" alt="" /> */}
+                     
                             <MdAnalytics className="w-auto h-6" />
                         </div>
                         {isExpanded ? <p className='' >Analytics and Reports</p> : ""}
-                    </div>
-                    <div
+                    </div> */}
+
+                    {/* <div
                         // onClick={() => navigate("/admin")} 
                         className={`flex gap-1 items-center justify-start w-full hover:bg-white hover:text-primary-blue ${isExpanded ? 'text-white' : 'text-white'} `}>
                         <div className='p-2'>
-                            {/* <img className="w-auto h-6" src="https://merakiui.com/images/logo.svg" alt="" /> */}
+    
                             <MdOutlineSettings className="w-auto h-6 " />
                         </div>
                         {isExpanded ? <p className='' >Settings</p> : ""}
-                    </div>
+                    </div> */}
                     <div
                         //  onClick={() => navigate("/admin")} 
                         className={`flex gap-1 items-center justify-start w-full hover:bg-white hover:text-primary-blue ${isExpanded ? 'text-white' : 'text-white'} `}>
