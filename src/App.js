@@ -17,9 +17,15 @@ import CategoryComponent from "./Page/InventoryMangement/CategoryMangement";
 import StaffManagement from "./Page/StaffManagement/Staffmanagement";
 import { ToastContainer } from "react-toastify";
 import SubscriptionManagement from "./Page/Subscrption/subscription";
+import { useCookies } from "react-cookie";
+
+
+// Vendor Imports
 import VendorManagement from "./Page/Vendormanagement/vendor";
 import DashboardVendor from "./VendorPanel/Pages/dashboard/DashboardVendor";
-import { useCookies } from "react-cookie";
+import ProductManagementVendor from "./VendorPanel/Pages/productManagement/ProductManagementVendor";
+import AddProductByAdmin from "./VendorPanel/Pages/productManagement/AddProductByAdmin";
+
 
 // Function to check if the token exists in cookies
 const getTokenFromCookies = () => {
@@ -133,6 +139,16 @@ export default function App() {
           <Route
             path="/vendor/dashboard"
             element={<VendorProtectedRoute Component={DashboardVendor} />}
+          />
+
+          <Route
+            path="/vendor/productManagement"
+            element={<VendorProtectedRoute Component={ProductManagementVendor} />}
+          />
+
+          <Route
+            path="/vendor/addProduct"
+            element={<VendorProtectedRoute Component={AddProductByAdmin} />}
           />
 
         </Routes>
