@@ -53,7 +53,7 @@ const VendorNavbar = () => {
                             <div className="flex items-center justify-center gap-4">
 
 
-                                <form className="hidden md:block">
+                                {/* <form className="hidden md:block">
                                     <label for="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -62,12 +62,12 @@ const VendorNavbar = () => {
                                             </svg>
                                         </div>
                                         <input type="search" id="default-search" className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Mockups, Logos..." required />
-                                        {/* <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button> */}
+                           
                                     </div>
-                                </form>
+                                </form> */}
 
 
-                                <button className=" hidden bg-primary-blue px-5 py-2 rounded-lg md:flex items-center justify-center gap-3"><FaStoreAlt />Visit My Store</button>
+                                {/* <button className=" hidden bg-primary-blue px-5 py-2 rounded-lg md:flex items-center justify-center gap-3"><FaStoreAlt />Visit My Store</button>
 
 
                                 <button type="button" className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
@@ -75,7 +75,7 @@ const VendorNavbar = () => {
                                     <span className="sr-only">Open user menu</span>
                                     <img className="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
                                 </button>
-                                <span className="text-black">Sandeep</span>
+                                <span className="text-black">Sandeep</span> */}
 
                                 {isAdmin ? (<div onClick={handleLogout} style={{ width: "28px", height: "28px", borderRadius: "50%" }}>
                                     <CiLogout className='w-full h-full cursor-pointer hover:text-primary-blue' />
