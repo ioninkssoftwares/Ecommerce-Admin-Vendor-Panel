@@ -14,6 +14,7 @@ import React from "react";
 import { forwardRef } from "react";
 import { GrClose } from "react-icons/gr";
 import { MdOutlineDelete } from "react-icons/md";
+import { IoIosAddCircle } from "react-icons/io";
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Fade ref={ref} {...props} />;
@@ -92,10 +93,10 @@ function ConfirmBox({
                             }}
                         >
                             <Typography variant="h4" sx={{ mb: 3, lineHeight: "2rem" }}>
-                                Delete {title}
+                                {title}
                             </Typography>
                             <Typography variant="body1">
-                                Are You Sure you want to delete this {name} ?
+                                Are you sure you want to add this {name} ?
                             </Typography>
                         </Box>
                     </Grid>
@@ -113,14 +114,14 @@ function ConfirmBox({
                         <button
                             onClick={toDoFunction}
                             disabled={loading}
-                            className="flex text-white font-small justify-center items-center w-[8rem] bg-[#d32f2f] rounded-lg py-3 mx-2 transition transform active:scale-95 duration-200  "
+                            className="flex text-white font-small justify-center items-center w-[8rem] bg-[#2ed718] gap-1 text-lg rounded-lg py-3 mx-2 transition transform active:scale-95 duration-200  "
                         >
                             {loading ? (
                                 <CircularProgress size={20} sx={{ mr: 2 }} color="inherit" />
                             ) : (
-                                <MdOutlineDelete />
+                                <IoIosAddCircle />
                             )}
-                            DELETE
+                            Add
                         </button>
                     </Grid>
                 </Grid>
