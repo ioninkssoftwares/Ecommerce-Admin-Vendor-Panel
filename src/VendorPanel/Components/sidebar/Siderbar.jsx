@@ -1,24 +1,39 @@
 
 import React, { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 import { AiOutlineOrderedList } from 'react-icons/ai';
 import { BiSolidCoupon, BiSolidUser } from 'react-icons/bi';
+import { CiLogout } from 'react-icons/ci';
 import { FaArrowRight, FaArrowLeft, FaAddressBook } from 'react-icons/fa'; // Import arrow icons from react-icons
 import { MdAnalytics, MdInventory, MdOutlineSettings } from 'react-icons/md';
 import { TbBrandProducthunt } from 'react-icons/tb';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Sidebar = () => {
-    const [isExpanded, setIsExpanded] = useState(false);
     const navigate = useNavigate();
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [cookies, setCookies, removeCookie] = useCookies(["vendorToken"]);
+    const [token, setToken] = useState("");
+
     const location = useLocation();
     const toggleSidebar = () => {
         setIsExpanded(!isExpanded);
     };
 
-    useEffect(() => {
-        console.log(location.pathname, "path")
-    }, [])
 
+    useEffect(() => {
+        if (cookies && cookies.vendorToken) {
+            console.log(cookies.vendorToken, "fdsfsdfsf")
+            setToken(cookies.vendorToken);
+        }
+    }, [cookies]);
+
+    const handleLogout = () => {
+        removeCookie('vendorToken', { path: '/' });
+        toast("Logout Successfully")
+        navigate("/")
+    };
 
     return (
         <>
@@ -147,11 +162,11 @@ const Sidebar = () => {
                     </div>
 
                     <div
-                        //  onClick={() => navigate("/admin")} 
+                        onClick={handleLogout}
                         className={`flex gap-1 items-center justify-start w-full hover:bg-white hover:text-primary-blue ${isExpanded ? 'text-white' : 'text-white'} `}>
                         <div className='p-2'>
                             {/* <img className="w-auto h-6" src="https://merakiui.com/images/logo.svg" alt="" /> */}
-                            <BiSolidUser className="w-auto h-6 " />
+                            <CiLogout className="w-auto h-6 " />
                         </div>
                         {isExpanded ? <p className='' >Logout</p> : ""}
                     </div>
