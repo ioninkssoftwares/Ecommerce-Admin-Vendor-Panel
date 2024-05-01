@@ -137,6 +137,16 @@ const Sidebar = () => {
                         {isExpanded ? <p className='' >Settings</p> : ""}
                     </div> */}
                     <div
+                        onClick={() => navigate("/vendor/profile")}
+                        className={`flex gap-1 items-center justify-start w-full hover:bg-white hover:text-primary-blue ${isExpanded ? 'text-white' : 'text-white'} `}>
+                        <div className='p-2'>
+                            {/* <img className="w-auto h-6" src="https://merakiui.com/images/logo.svg" alt="" /> */}
+                            <BiSolidUser className="w-auto h-6 " />
+                        </div>
+                        {isExpanded ? <p className='' >Profile</p> : ""}
+                    </div>
+
+                    <div
                         //  onClick={() => navigate("/admin")} 
                         className={`flex gap-1 items-center justify-start w-full hover:bg-white hover:text-primary-blue ${isExpanded ? 'text-white' : 'text-white'} `}>
                         <div className='p-2'>
