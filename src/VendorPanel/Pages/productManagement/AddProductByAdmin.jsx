@@ -23,6 +23,7 @@ import Textarea from '@mui/joy/Textarea';
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import InputField from "../../Components/InputField";
+import ConfirmBox from "../../Components/vendor/shared/ConfirmDialog";
 
 
 export const Button = ({
@@ -225,7 +226,8 @@ const AddProductByAdmin = () => {
     };
 
     const handleProductSubmit = async () => {
-        setLoading(true)
+        // setLoading(true)
+        setDeleteLoading(true)
         var ProductFormData = new FormData();
         for (let i of filesToupload) {
             ProductFormData.append('productImages', i);
@@ -251,14 +253,20 @@ const AddProductByAdmin = () => {
                 },
             });
             if (res.data) {
-                setLoading(false)
+                // setLoading(false)
+                setDeleteLoading(false)
                 console.log(res.data, "sdfhadjkf")
                 toast("Product has been added")
+                setDeleteOpen(false)
                 navigate("/vendor/productManagement")
+
+
             }
         } catch (error) {
             console.log(error, "skdfhsjdf")
-            setLoading(false)
+            // setLoading(false)
+            setDeleteLoading(false)
+            setDeleteOpen(false)
             toast(error?.response?.data?.message)
         }
     }
@@ -489,7 +497,7 @@ const AddProductByAdmin = () => {
                                 {/* <button className="px-4 py-2 rounded-lg text-white bg-black">
                                     Save as Draft
                                 </button> */}
-                                {loading ? <CircularProgress /> : Object.values(formErrors).some((error) => Boolean(error)) ? null : (<button onClick={handleProductSubmit} className="px-4 py-2 rounded-lg text-white bg-primary-blue">
+                                {loading ? <CircularProgress /> : Object.values(formErrors).some((error) => Boolean(error)) ? null : (<button onClick={() => setDeleteOpen(true)} className="px-4 py-2 rounded-lg text-white bg-primary-blue">
                                     Save & Publish
                                 </button>)}
                             </div>
@@ -886,7 +894,15 @@ const AddProductByAdmin = () => {
 
                             </div>
                         </div>
-
+                        <ConfirmBox
+                            title="Add Product"
+                            name="product"
+                            open={deleteOpen}
+                            closeDialog={() => setDeleteOpen(false)}
+                            toDoFunction={handleProductSubmit}
+                            loading={deleteLoading}
+                            sx={{ pb: 4, border: "2px solid red" }}
+                        />
 
                     </div>
                 </div>
