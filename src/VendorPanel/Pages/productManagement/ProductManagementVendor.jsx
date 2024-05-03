@@ -585,15 +585,15 @@ const ProductManagementVendor = () => {
                                     </span>
                                     <span>Add Product</span>
                                 </button>
-                                <button
+                                {/* <button
                                     onClick={exportExcelFile}
                                     className=" px-3 text-white font-medium justify-center w-full bg-primary-blue rounded-lg py-3 flex space-x-2 items-center transition transform active:scale-95 duration-200  "
                                 >
-                                    <span>
+                                    <span> 
                                         <CiExport className="w-6 h-6 font-bold" />
                                     </span>
                                     <span>Export Products</span>
-                                </button>
+                                </button> */}
                             </div>
                         </div>
 
