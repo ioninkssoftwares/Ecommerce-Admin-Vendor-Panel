@@ -153,6 +153,8 @@ const AddProductByAdmin = () => {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [vendorId, setVendorId] = useState('');
 
+    if (product) console.log(product, 'produddct');
+
     const handleBrandChange = (event) => {
         console.log(event.target.value, "dsljfdslkj")
         const selectedBrandId = event.target.value;
@@ -789,14 +791,33 @@ const AddProductByAdmin = () => {
                                             validate={validateSellingPrice} />
 
 
-                                        <InputField label="Warranty Period"
+                                        {/* <InputField label="Warranty Period"
                                             type="text"
                                             value={product.warrantyPeriod}
                                             // onChange={(e) => setProduct({ ...product, stock: e })} 
                                             onChange={(value) => {
                                                 setProduct({ ...product, warrantyPeriod: value })
                                             }}
-                                        />
+                                        /> */}
+                                        <FormControl fullWidth>
+                                            <InputLabel id="warranty-period-label">Warranty Period</InputLabel>
+                                            <Select
+                                                labelId="warranty-period-label"
+                                                id="warranty-period-select"
+                                                value={product.warrantyPeriod}
+                                                onChange={(event) => {
+                                                    setProduct({ ...product, warrantyPeriod: event.target.value });
+                                                }}
+                                                label="Warranty Period"
+                                            >
+                                                <MenuItem value="6 months">3 months</MenuItem>
+                                                <MenuItem value="6 months">6 months</MenuItem>
+                                                <MenuItem value="12 months">12 months</MenuItem>
+                                                <MenuItem value="18 months">18 months</MenuItem>
+                                                <MenuItem value="24 months">24 months</MenuItem>
+                                                <MenuItem value="36 months">36 months</MenuItem>
+                                            </Select>
+                                        </FormControl>
 
 
                                     </Box>

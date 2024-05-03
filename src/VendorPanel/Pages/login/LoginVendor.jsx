@@ -131,12 +131,10 @@ export default function Login() {
                                 const res = await instance.post("/vendor/login", data)
 
                                 if (res.data) {
-                                    // const user = res.data.user;
                                     console.log(res.data.data.token, "sdhfaskfhdj")
-                                    setCookies("vendorToken", res.data.data.token);
+                                    // setCookies("vendorToken", res.data.data.token);
+                                    setCookies('vendorToken', res.data.data.token, { path: '/' });
                                     localStorage.setItem("isAdmin", false);
-                                    // localStorage.setItem("userId", res.data.user._id);
-                                    // localStorage.setItem("vendorToken", res.data.token);
                                     navigate("/vendor/dashboard")
                                     setLoading(false)
                                     toast(" Vendor Login Successful")
