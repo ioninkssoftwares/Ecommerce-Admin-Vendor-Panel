@@ -64,17 +64,6 @@ const Sidebar = () => {
                         {isExpanded && <p>Dashboard</p>}
                     </div>
 
-
-
-                    {/* <div
-                        // onClick={() => navigate("/admin/orders")}
-                        className={`flex gap-1 ${location?.pathname === "/admin/orders" ? "bg-gray-400 text-indigo-500" : "bg-primary-blue text-white"} items-center justify-start w-full hover:bg-white hover:text-primary-blue ${isExpanded ? 'text-white' : 'text-white'} `}>
-                        <div className='p-2'>
-                     
-                            <AiOutlineOrderedList className="w-auto h-6 " />
-                        </div>
-                        {isExpanded ? <p className='' >Orders</p> : ""}
-                    </div> */}
                     <div
                         onClick={() => navigate("/vendor/productManagement")}
                         className={`flex ${location?.pathname === "/admin/productManagement" ? "bg-gray-400 text-indigo-500" : "bg-primary-blue text-white"} gap-1 items-center justify-start w-full hover:bg-white hover:text-primary-blue ${isExpanded ? 'text-white' : 'text-white'} `}>
@@ -84,6 +73,18 @@ const Sidebar = () => {
                         </div>
                         {isExpanded ? <p className='' >Product</p> : ""}
                     </div>
+
+                    <div
+                        onClick={() => navigate("/vendor/orders")}
+                        className={`flex gap-1 ${location?.pathname === "/vendor/orders" ? "bg-gray-400 text-indigo-500" : "bg-primary-blue text-white"} items-center justify-start w-full hover:bg-white hover:text-primary-blue ${isExpanded ? 'text-white' : 'text-white'} `}>
+                        <div className='p-2'>
+
+                            <AiOutlineOrderedList className="w-auto h-6 " />
+                        </div>
+                        {isExpanded ? <p className='' >Orders</p> : ""}
+                    </div>
+
+
                     {/* <div
                         // onClick={() => navigate("/admin/userManagement")}
                         className={`flex ${location?.pathname === "/admin/userManagement" ? "bg-gray-400 text-indigo-500" : "bg-primary-blue text-white"} gap-1 items-center justify-start w-full hover:bg-white hover:text-primary-blue ${isExpanded ? 'text-white' : 'text-white'} `}>
