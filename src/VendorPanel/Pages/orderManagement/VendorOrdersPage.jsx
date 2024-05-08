@@ -78,8 +78,8 @@ const VendorOrdersPage = () => {
     const navigate = useNavigate();
 
 
-    if (allProducts) {
-        console.log(allProducts, "jsdahfaksdjhf")
+    if (allOrders) {
+        console.log(allOrders, "jsdahfaksdjhf")
     }
 
 
@@ -89,7 +89,7 @@ const VendorOrdersPage = () => {
             const res = await instance.get(`/vendor/getOrderByVendorId/${vendorId}`)
             if (res.data) {
                 setLoading(false)
-                setAllOrders(res.data.orders)
+                setAllOrders(res.data.data)
             }
 
 
@@ -225,13 +225,13 @@ const VendorOrdersPage = () => {
             minWidth: 150,
 
             field: "name",
-            headerName: "Customer Name",
+            headerName: "Customer Id",
             align: "left",
             headerAlign: "left",
             disableColumnMenu: true,
             renderCell: ({ row }) => (
                 <Typography variant="body1" fontWeight={500}>
-                    {row?.user?.name}
+                    {row?.user}
                 </Typography>
             ),
         },
@@ -270,32 +270,32 @@ const VendorOrdersPage = () => {
         //     disableColumnMenu: true,
         // },
         {
-            minWidth: 150,
+            minWidth: 50,
 
-            flex: 0.25,
+            flex: 0.1,
             field: "subtotal",
             headerName: "Subtotal",
             align: "left",
             headerAlign: "left",
             disableColumnMenu: true,
         },
+        // {
+        //     minWidth: 150,
+
+        //     flex: 0.25,
+        //     field: "tax",
+        //     headerName: "Tax",
+        //     align: "left",
+        //     headerAlign: "left",
+        //     disableColumnMenu: true,
+        // },
+
         {
-            minWidth: 150,
+            minWidth: 50,
 
-            flex: 0.25,
-            field: "tax",
-            headerName: "Tax",
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true,
-        },
-
-        {
-            minWidth: 120,
-
+            flex: 0.1,
             field: "discount",
             headerName: "Discount",
-            flex: 0.2,
             align: "left",
             headerAlign: "left",
             disableColumnMenu: true,
