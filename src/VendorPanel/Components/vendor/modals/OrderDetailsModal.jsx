@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import {
     Box,
     Card,
+    CircularProgress,
     Grid,
-    IconButton,
     LinearProgress,
-    Tooltip,
     // Typography,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -13,27 +12,19 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 // import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import { FormControlLabel, FormGroup, Switch } from '@mui/material';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 import dayjs from 'dayjs';
-import { TimePicker } from '@mui/x-date-pickers';
-// import { Search } from '@mui/icons-material';
-import SearchIcon from '@mui/icons-material/Search';
+
+
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
-import { FiUser, FiUsers } from 'react-icons/fi';
-import { FaArrowDown } from 'react-icons/fa';
+
 import { AiOutlineSearch } from 'react-icons/ai';
-import { tableStyles } from "../../../components/admin/shared/ConfirmDialog";
-// import { useAxios } from '../../utills/axios';
+import { tableStyles } from '../../vendor/shared/ConfirmDialog'
+import { FiUser, FiUsers } from 'react-icons/fi';
+import { useAxios } from '../../../../utils/axios';
+import { LuMapPin } from 'react-icons/lu';
+import { toast } from 'react-toastify';
 
 
 
@@ -54,7 +45,7 @@ const Search = styled('div')(({ theme }) => ({
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 2),
-    height: '100%',
+    height: '80%',
     position: 'absolute',
     pointerEvents: 'none',
     display: 'flex',
@@ -81,17 +72,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 
-const OrderDetailsModal = ({ buttonText, modalTitle, products }) => {
-    // const instance = useAxios();
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(dayjs('2022-04-17'));
-    // const theme = useTheme();
-    const [status, setStatus] = useState('');
-    const [selectedClient, setSelectedClient] = useState('');
-    const [clients, setClients] = useState(null)
-    const [clientNames, setClientNames] = useState([]);
-    const [users, setUsers] = useState([]);
+const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) => {
+    const instance = useAxios();
+
     const [loading, setLoading] = useState(false);
+    const [orderDetails, setOrderDetails] = useState({});
+    const [orderGridDetails, setOrderGridDetails] = useState([]);
     const [projectData, setProjectData] = useState({
         project_name: '',
         status: '',
@@ -102,10 +88,96 @@ const OrderDetailsModal = ({ buttonText, modalTitle, products }) => {
         project_categories: '',
     });
 
+    const [shippingPartner, setShippingPartner] = useState("");
+    const [trackingId, setTrackingId] = useState("");
+    const [trackingLink, setTrackingLink] = useState("");
+    const [processLoadingState, setProcessLoadingState] = useState({});
 
-    if (products) {
-        console.log(products, "lkjlkjlkkl")
+
+    if (orderDetails) {
+        console.log(orderDetails, "lkjlkjlkkl")
     }
+
+    const getOrderDetailsByOrderId = async (id) => {
+        try {
+            const res = await instance.get(
+                `/order/orderByorderId/${id}`
+            );
+            if (res.data) {
+                setOrderDetails(res.data.data)
+                setOrderGridDetails([res.data.data])
+            }
+        } catch (e) {
+            setLoading(false);
+            console.log(e)
+            // ErrorDispaly(e);
+        }
+    }
+
+
+    useEffect(() => {
+        if (orderId) {
+            getOrderDetailsByOrderId(orderId)
+        }
+
+        return () => {
+            setTrackingId('');
+            setTrackingLink('');
+            setShippingPartner('');
+        };
+    }, [orderId])
+
+    useEffect(() => {
+        if (orderDetails) {
+            setTrackingId(orderDetails?.trackingDetails?.trackingId)
+            setTrackingLink(orderDetails?.trackingDetails?.trackingLink)
+            setShippingPartner(orderDetails?.trackingDetails?.shippingPartner)
+        }
+
+
+        return () => {
+            setTrackingId('');
+            setTrackingLink('');
+            setShippingPartner('');
+        };
+    }, [orderDetails])
+
+    const isTrackingDetailsEmpty =
+        !orderDetails?.trackingDetails?.trackingId ||
+        !orderDetails?.trackingDetails?.trackingLink ||
+        !orderDetails?.trackingDetails?.shippingPartner;
+
+
+    console.log(isTrackingDetailsEmpty, "trackiiiii")
+
+    const processOrder = async (processId) => {
+        try {
+            // Set loading state to true for the specific order
+            setProcessLoadingState((prev) => ({ ...prev, [processId]: true }));
+
+            const res = await instance.put("/order/" + processId);
+
+            if (res.data) {
+                toast.success("Order Processed Successfully");
+
+                // Clear loading state for the specific order
+                setProcessLoadingState((prev) => ({ ...prev, [processId]: false }));
+                // setDeleteOpen(false);
+                getOrderDetailsByOrderId(orderId)
+            }
+        } catch (e) {
+            // Handle errors here
+            console.error(e);
+
+            // Clear loading state for the specific order on error
+            setProcessLoadingState((prev) => ({ ...prev, [processId]: false }));
+        }
+    };
+
+
+
+
+
     const [pagination, setPagination] = useState(
         null
     );
@@ -115,36 +187,9 @@ const OrderDetailsModal = ({ buttonText, modalTitle, products }) => {
         pageSize: 50,
     });
 
-    // const [switchState, setSwitchState] = useState(false);
+    if (orderDetails) console.log(orderDetails, "oooooo")
 
-    // const handleSwitchChange = (event) => {
-    //     setSwitchState(event.target.checked);
-    // };
 
-    const handleOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const handleSubmit = async () => {
-        // onSubmit(projectData);
-        // setOpen(false);
-        try {
-
-            const res = await instance.post("/project/addProject/admin", projectData);
-
-            if (res.data) {
-                console.log(res.data)
-            }
-
-        } catch (error) {
-            console.log(error)
-        }
-
-    };
 
     const style = {
         position: 'absolute',
@@ -154,6 +199,7 @@ const OrderDetailsModal = ({ buttonText, modalTitle, products }) => {
         left: '50%',
         transform: 'translate(-50%, -50%)',
         width: 1200,
+        height: "90%",
         bgcolor: '#fcfcfc', // Changed background color to white
         boxShadow: 24,
         p: 3, // Adjust padding as needed
@@ -192,100 +238,54 @@ const OrderDetailsModal = ({ buttonText, modalTitle, products }) => {
 
 
 
-    const handleChange = (event) => {
-        console.log(event.target.value, "clieee")
+    // const handleChange = (event) => {
+    //     console.log(event.target.value, "clieee")
 
-        setStatus(event.target.value);
-        setProjectData({
-            ...projectData,
-            status: event.target.value
-        });
-    };
-
-
-
-    // Get all Clients
-    const getAllClients = async () => {
-        // try {
-        //     const res = await instance.get("/client/allclientlist/admin");
-
-        //     if (res.data.TaskList) {
-        //         setClients(res?.data?.TaskList);
-
-        //         console.log(res.data.TaskList, "task")
-        //     }
-        // } catch (error) {
-        //     console.log(error);
-        // }
-    };
-
-
-    // useEffect(() => {
-    //     console.log("API call started");
-    //     getAllClients(); // Make the API call
-    // }, []);
-
-
-
-    const handleClient = (event) => {
-        console.log(event.target.value, "clieee")
-        setSelectedClient(event.target.value)
-        setProjectData({
-            ...projectData,
-            clientEmail: event.target.value.clientEmail
-        });
-    };
-
-
-
-
-    // if (projectData) {
-    //     console.log(projectData, "project")
-    // }
+    //     setStatus(event.target.value);
+    //     setProjectData({
+    //         ...projectData,
+    //         status: event.target.value
+    //     });
+    // };
 
 
     const all_customer_columns = [
-        // {
-        //     flex: 0.25,
-        //     minWidth: 150,
-
-        //     field: "name",
-        //     headerName: "Customer Name",
-        //     align: "left",
-        //     headerAlign: "left",
-        //     disableColumnMenu: true,
-        //     renderCell: ({ row }) => (
-        //         <Typography variant="body1" fontWeight={500}>
-        //             {row?.name}
-        //         </Typography>
-        //     ),
-        // },
         {
-            minWidth: 150,
+            flex: 0.25,
+            minWidth: 120,
+            field: "user.name",
+            headerName: "Customer Name",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+            renderCell: ({ row }) => (
+
+                <Typography variant="body1" fontWeight={500}>
+                    {row.user.name}
+                </Typography>
+            )
+        },
+        {
+            minWidth: 120,
 
             flex: 0.25,
-            field: "orderDate",
+            field: "createdAt",
             headerName: "Order Date",
             align: "left",
             headerAlign: "left",
-            disableColumnMenu: true,
+            disableColumnMenu: true, renderCell: ({ row }) => (
+                <Typography variant="body1" fontWeight={500}>
+                    {new Date(row?.createdAt).toLocaleDateString('en-GB')}
+                </Typography>
+            ),
         },
+
         {
-            minWidth: 150,
+            minWidth: 120,
 
             flex: 0.25,
-            field: "orderType",
-            headerName: "Order Type",
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true,
-        },
-        {
-            minWidth: 150,
-
-            flex: 0.25,
-            field: "trackingId",
-            headerName: "Tracking ID",
+            field: "quantity",
+            headerName: "Quantity",
             align: "left",
             headerAlign: "left",
             disableColumnMenu: true,
@@ -293,9 +293,31 @@ const OrderDetailsModal = ({ buttonText, modalTitle, products }) => {
         {
             minWidth: 120,
 
-            field: "orderTotal",
-            headerName: "Order Total",
-            flex: 0.2,
+            flex: 0.25,
+            field: "subtotal",
+            headerName: "Subtotal",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+        },
+
+
+        {
+            minWidth: 120,
+
+            flex: 0.25,
+            field: "discount",
+            headerName: "Discount",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+        },
+        {
+            minWidth: 120,
+
+            field: "shippingCharges",
+            headerName: "Shipping Charges",
+            flex: 0.25,
             align: "left",
             headerAlign: "left",
             disableColumnMenu: true,
@@ -306,53 +328,61 @@ const OrderDetailsModal = ({ buttonText, modalTitle, products }) => {
 
             field: "status",
             headerName: "Status",
-            flex: 0.2,
+            flex: 0.25,
             align: "left",
             headerAlign: "left",
             disableColumnMenu: true,
         },
-        // {
-        //     minWidth: 150,
 
-        //     field: "action",
-        //     headerName: "ACTION",
-        //     flex: 0.15,
-        //     align: "left",
-        //     headerAlign: "left",
-        //     disableColumnMenu: true,
-        //     renderCell: ({ row }) => (
-        //         <Box>
-        //             <Tooltip title="Edit">
-        //                 <IconButton
-        //                     // onClick={() => router.push(`/admin/customers/${row._id}`)}
-        //                     color="primary"
-        //                 >
-        //                     <BsEyeFill />
-        //                 </IconButton>
-        //             </Tooltip>
-        //             <Tooltip title="Edit">
-        //                 <IconButton
-        //                     // onClick={() => router.push(`/admin/customers/edit/${row._id}`)}
-        //                     color="primary"
-        //                 >
-        //                     <BsPencilFill />
-        //                 </IconButton>
-        //             </Tooltip>
-        //             <Tooltip title="Delete">
-        //                 <IconButton
-        //                     onClick={() => {
-        //                         setDeleteId(row?._id);
-        //                         setDeleteOpen(true);
-        //                     }}
-        //                     color="error"
-        //                 >
-        //                     <MdDeleteForever />
-        //                 </IconButton>
-        //             </Tooltip>
-        //         </Box>
-        //     ),
-        // },
     ];
+
+    const formatAddress = (shippingInfo) => {
+        const { address, city, state, country, pinCode } = shippingInfo;
+        return `${address}, ${city}, ${state}, ${country}, ${pinCode}`;
+    };
+
+
+    const formatDate = (dateString) => {
+        const optionsDate = { day: '2-digit', month: 'short', year: 'numeric' };
+        const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: true };
+
+        const date = new Date(dateString);
+
+        const formattedDate = date.toLocaleDateString('en-US', optionsDate).replace(/ /g, '-');
+        const formattedTime = date.toLocaleTimeString('en-US', optionsTime).toLowerCase();
+
+        return `${formattedDate} - ${formattedTime}`;
+    };
+
+
+    const updateTrackingDetials = async () => {
+        setLoading(true)
+        try {
+            const shippingData = {
+                trackingLink,
+                trackingId,
+                shippingPartner
+            }
+            const res = await instance.put(
+                `/orders/${orderId}/tracking`, shippingData
+            );
+            if (res.data) {
+                toast("Update Tracking Details Successfully")
+                setLoading(false);
+                getOrderDetailsByOrderId(orderId)
+                // setTrackingId("")
+                // setTrackingLink("")
+                // setShippingPartner("")
+
+
+            }
+        } catch (e) {
+            setLoading(false);
+            console.log(e)
+        }
+
+    }
+
 
     return (
         <>
@@ -362,10 +392,10 @@ const OrderDetailsModal = ({ buttonText, modalTitle, products }) => {
                 //  "&:hover": {
                 //     backgroundColor: '#db8e57'
                 // },
-            }} className="px-3 text-white font-medium justify-center w-full bg-primary-blue rounded-lg py-3 flex space-x-2 items-center transition transform active:scale-95 duration-200" onClick={handleOpen}>{buttonText}</Button>
+            }} className="px-3 text-white font-medium justify-center w-full bg-primary-blue rounded-lg py-3 flex space-x-2 items-center transition transform active:scale-95 duration-200" >{buttonText}</Button>
             <Modal
                 open={open}
-                onClose={handleClose}
+                onClose={onClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
@@ -376,12 +406,17 @@ const OrderDetailsModal = ({ buttonText, modalTitle, products }) => {
 
 
                     <div className="flex m-7 ">
-                        <p className="mr-9">SAMSUNG 8 kg Fully Automatic Washing Machine</p>
+                        {/* <p className="mr-9">SAMSUNG 8 kg Fully Automatic Washing Machine</p> */}
+                        {orderDetails && orderDetails.product && (<p className="mr-9">{orderDetails.product.name}</p>)}
 
                         <p className="mr-2">Date Added</p>
-                        <span className="text-gray-400 mr-12"> 01-Jan-2023 - 03:21 pm</span>
+                        {orderDetails && orderDetails.createdAt ? (
+                            <span className="text-gray-400 mr-12">{formatDate(orderDetails.createdAt)}</span>
+                        ) : (
+                            <span className="text-gray-400 mr-12">Date not available</span>
+                        )}
                         <p className="mr-2">Product URL</p>
-                        <span className="text-blue-600 mr-12">coolzone.in/samsung-fu..</span>
+                        {/* <span className="text-blue-600 mr-12">coolzone.in/samsung-fu..</span> */}
 
 
                     </div>
@@ -389,29 +424,34 @@ const OrderDetailsModal = ({ buttonText, modalTitle, products }) => {
 
                     <div className="flex  gap-10 ">
 
-                        <div className="basis-[33%]  p-3 bg-white rounded-lg">
+                        <div className="basis-[25%]  p-3 bg-white rounded-lg">
                             <div className="flex justify-between items-center">
                                 <div className="flex gap-5">
                                     <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
-                                        <FiUsers />
+                                        <FiUser />
                                     </div>
                                     <div>
-                                        <p className="text-gray-400">Sravan Kumar</p>
-                                        <p className='text-xs'>Customer Since 12 Sept 2023</p>
+                                        {/* <p className="text-gray-400">Sravan Kumar</p> */}
+                                        {/* {orderDetails && orderDetails.user && (
+                                            <p className="text-gray-400">{orderDetails.user._id}</p>
+                                            
+                                            )} */}
+                                        {orderDetails && orderDetails.user && (<p className="text-gray-400 mt-3">{orderDetails.user.name}</p>)}
                                     </div>
                                 </div>
 
-                                <button className="flex px-3 py-2 text-xs justify-between items-center gap-3 rounded-xl bg-red-100 text-black">
-                                    Pending
-                                </button>
+                                <p className="flex px-3 py-2 text-xs justify-between items-center gap-3 rounded-xl bg-red-100 text-black">
+                                    {orderDetails && (<p>{orderDetails.status}</p>)}
+                                </p>
                             </div>
                             <div className="mt-8 flex items-center justify-start gap-20 w-full">
                                 <div className="flex flex-col items-start justify-center">
                                     <p className="text-gray-400">
                                         Phone
                                     </p>
-                                    <p className=" font-bold text-">
-                                        878787787                              </p>
+                                    {/* <p className=" font-bold ">
+                                        878787787                              </p> */}
+                                    {orderDetails && orderDetails.user && (<p className=" font-bold ">{orderDetails.user.mobileNo}</p>)}
                                 </div>
                                 <div className="flex flex-col items-start justify-center">
                                     <p className=" text-gray-400">
@@ -425,7 +465,7 @@ const OrderDetailsModal = ({ buttonText, modalTitle, products }) => {
                         </div>
 
 
-                        <div className="basis-[33%]  p-3 bg-white rounded-lg">
+                        <div className="basis-[25%]  p-3 bg-white rounded-lg">
                             <div className="flex justify-between items-center">
                                 <div className="flex gap-5">
                                     <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
@@ -444,48 +484,76 @@ const OrderDetailsModal = ({ buttonText, modalTitle, products }) => {
                                     <p className="text-gray-400">
                                         Home Address
                                     </p>
-                                    <p className=" text-xs font-bold w-full">
-                                        Hiyamat nagar, bara jyotiling mandir ke paas, hitech city, Hyderabad                               </p>
+                                    {/* <p className=" text-xs font-bold w-full">
+                                        {formatAddress(orderDetails.shippingInfo)}                           </p> */}
+                                    {orderDetails && orderDetails.shippingInfo ? (
+                                        <p className=" text-xs font-bold w-full">{formatAddress(orderDetails.shippingInfo)}</p>
+                                    ) : (
+                                        <p className=" text-xs font-bold w-full">Address not avialable</p>
+                                    )}
                                 </div>
 
                             </div>
                         </div>
 
-                        <div className="basis-[33%]  p-3 bg-white rounded-lg">
+                        <div className="basis-[50%]  p-3 bg-white rounded-lg">
                             <div className="flex justify-between items-center">
                                 <div className="flex gap-5">
-                                    <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
-                                        <FiUsers />
+                                    <div className="bg-[#04A7FF29] p-3 w-12 h-12 text-primary-blue rounded-xl text-xl">
+                                        <LuMapPin className='w-full h-full ' />
+                                    </div>
+                                    <div>
+                                        <p className="text-gray-400 mb-2">Tracking Details</p>
+                                        <div>
+                                            <span>Shipping Partner -</span>
+                                            <input type="text" onChange={(e) => setShippingPartner(e.target.value)} className="rounded-md" value={shippingPartner} />
+                                        </div>
                                     </div>
                                 </div>
 
+                                {/* <p className="flex px-3 py-2 mb-20 text-xs justify-between items-center gap-3 rounded-xl bg-red-100 text-black">
+                                    {orderDetails && (<p>{orderDetails.status}</p>)}
+                                </p> */}
+                                {orderDetails && orderDetails.status === "Processing" && (
+                                    <p className="flex px-3 py-2 mb-20 text-xs justify-between items-center gap-3 rounded-xl bg-red-100 text-black whitespace-nowrap">
+                                        Pending
+                                    </p>
+                                )}
+                                {orderDetails && orderDetails.status === "Shipped" && (
+                                    <p className="flex px-3 py-2 mb-20 text-xs justify-between items-center gap-3 rounded-xl bg-orange-400 text-black whitespace-nowrap">
+                                        In-Transit
+                                    </p>
+                                )}
+                                {orderDetails && orderDetails.status === "Delivered" && (
+                                    <p className="flex px-3 py-2 mb-20 text-xs justify-between items-center gap-3 rounded-xl bg-green-400 text-black whitespace-nowrap">
+                                        Delivered
+                                    </p>
+                                )}
                             </div>
-                            <div className="mt-8 flex items-center justify-start gap- w-full">
+                            <div className="mt-2 flex items-center justify-start gap-20 w-full">
                                 <div className="flex flex-col items-start justify-center">
                                     <p className="text-gray-400">
-                                        Payment Method
+                                        Tracking ID
                                     </p>
-                                    <p className=" font-bold">
-                                        Master Card                                </p>
+                                    <input type="text" onChange={(e) => setTrackingId(e.target.value)} className="rounded-md" value={trackingId} />
                                 </div>
                                 <div className="flex flex-col items-start justify-center">
                                     <p className=" text-gray-400">
-                                        Order Type
+                                        Tracking Link
                                     </p>
-                                    <p className=" font-bold">
-                                        Home Delivery
-                                    </p>
+                                    <input type="text" onChange={(e) => setTrackingLink(e.target.value)} className="rounded-md" value={trackingLink} />
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
-                    <div className="flex justify-between items-center mb-8 px-4">
+                    {/* <div className="flex justify-between items-center px-4">
                         <div className="space-x-5">
                             <p className="text-2xl ">Item's <span className='text-blue-600'>3</span></p>
                         </div>
 
-                        <div className="flex my-6 space-x-[12px]">
+                        <div className="flex my-1  space-x-[12px]">
                             <div className="flex items-center bg-white p-2 rounded-lg space-x-3">
                                 <AiOutlineSearch className="text-xl" />
                                 <input
@@ -501,13 +569,13 @@ const OrderDetailsModal = ({ buttonText, modalTitle, products }) => {
                                 />
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     <Grid container spacing={6} sx={{}}>
                         <Grid item xs={12}>
                             <Card sx={{ borderRadius: 2 }}>
                                 <DataGrid
-                                    rows={users || []}
+                                    rows={orderGridDetails || []}
                                     columns={all_customer_columns}
                                     getRowId={(row) => row._id}
                                     autoHeight
@@ -543,14 +611,39 @@ const OrderDetailsModal = ({ buttonText, modalTitle, products }) => {
                         </Grid>
                     </Grid>
 
-                    <div className="flex justify-end gap-12 my-7">
+                    <div className="flex justify-end gap-12 mt-3">
 
-                        <button
-                            // onClick={() => router.push("/admin/customers/add")}
+                        {orderDetails?.status === "Processing" ? (
+                            <button
+                                onClick={() => !isTrackingDetailsEmpty && processOrder(orderId)}
+                                disabled={loading || isTrackingDetailsEmpty}
+                                className={`px-7 text-white font-medium bg-primary-blue rounded-lg py-3 items-center transition transform active:scale-95 duration-200 ${loading || isTrackingDetailsEmpty ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            >
+                                {loading ? <CircularProgress size={24} color="inherit" /> : "Mark as Shipped"}
+                            </button>
+                        ) : orderDetails?.status === "Shipped" ? (
+                            <button
+                                onClick={() => processOrder(orderId)}
+                                disabled={loading}
+                                className={`px-7 text-white font-medium bg-primary-blue rounded-lg py-3 items-center transition transform active:scale-95 duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            >
+                                {loading ? <CircularProgress size={24} color="inherit" /> : "Mark as Delivered"}
+                            </button>
+                        ) : (
+                            <button
+                                disabled
+                                className="px-7 text-gray-400 font-medium bg-gray-300 rounded-lg py-3 items-center"
+                            >
+                                Delivered
+                            </button>
+                        )}
+
+                        {loading ? <CircularProgress /> : <button
+                            onClick={updateTrackingDetials}
                             className=" px-7 text-white font-medium bg-primary-blue rounded-lg py-3  items-center transition transform active:scale-95 duration-200  "
                         >
-                            Mark as Complete
-                        </button>
+                            Update Tracking
+                        </button>}
                         <button
                             // onClick={() => router.push("/admin/customers/add")}
                             className=" px-7 text-white font-medium bg-red-600 rounded-lg py-3  items-center transition transform active:scale-95 duration-200  "
