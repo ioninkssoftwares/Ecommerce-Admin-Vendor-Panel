@@ -20,7 +20,44 @@ const Transition = forwardRef(function Transition(props, ref) {
     return <Fade ref={ref} {...props} />;
 });
 
+// export const tableStyles = {
+//     "& .MuiDataGrid-root": {
+//         overflowX: "scroll", // Enable horizontal scrolling
+//     },
+//     "& .MuiDataGrid-cellContent": {
+//         wordBreak: "break-word",
+//         whiteSpace: "break-spaces",
+//         paddingY: 1.5,
+//     },
+//     "& .MuiDataGrid-columnHeaders": {
+//         bgcolor: "#04a7ff",
+//         borderRadius: 2,
+//         color: "white",
+//     },
+//     "& .MuiDataGrid-iconSeparator": {
+//         display: "none",
+//     },
+//     "& .MuiDataGrid-MuiFormControl-root-MuiTextField-root-MuiDataGrid-toolbarQuickFilter":
+//     {
+//         display: "none",
+//     },
+//     "& .MuiDataGrid-cell": {
+//         borderBottom: "none",
+//         paddingY: 1.5,
+//     },
+//     "& .MuiDataGrid-columnHeader:focus, .MuiDataGrid-columnHeader:focus-within, .MuiDataGrid-cell:focus":
+//     {
+//         outline: "none !important",
+//     },
+// };
+
 export const tableStyles = {
+    "& .MuiDataGrid-root": {
+        overflowX: "auto", // Enable horizontal scrolling for the DataGrid
+    },
+    "& .MuiDataGrid-virtualScroller": {
+        overflowX: "auto !important", // Ensure the virtual scroller allows horizontal scrolling
+    },
     "& .MuiDataGrid-cellContent": {
         wordBreak: "break-word",
         whiteSpace: "break-spaces",
@@ -34,19 +71,18 @@ export const tableStyles = {
     "& .MuiDataGrid-iconSeparator": {
         display: "none",
     },
-    "& .MuiDataGrid-MuiFormControl-root-MuiTextField-root-MuiDataGrid-toolbarQuickFilter":
-    {
+    "& .MuiDataGrid-MuiFormControl-root-MuiTextField-root-MuiDataGrid-toolbarQuickFilter": {
         display: "none",
     },
     "& .MuiDataGrid-cell": {
         borderBottom: "none",
         paddingY: 1.5,
     },
-    "& .MuiDataGrid-columnHeader:focus, .MuiDataGrid-columnHeader:focus-within, .MuiDataGrid-cell:focus":
-    {
+    "& .MuiDataGrid-columnHeader:focus, .MuiDataGrid-columnHeader:focus-within, .MuiDataGrid-cell:focus": {
         outline: "none !important",
     },
 };
+
 
 
 function ConfirmBox({
