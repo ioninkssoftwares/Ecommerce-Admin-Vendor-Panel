@@ -114,10 +114,10 @@ const Sidebar = () => {
                         {isExpanded ? <p className='' >Coupon Codes</p> : ""}
                     </div> */}
                     {/* <div
-                        // onClick={() => navigate("/admin/inventory")} 
-                        className={`flex ${location?.pathname === "/admin/inventory" ? "bg-gray-400 text-indigo-500" : "bg-primary-blue text-white"} gap-1 items-center justify-start w-full hover:bg-white hover:text-primary-blue ${isExpanded ? 'text-white' : 'text-white'} `}>
+                        onClick={() => navigate("/vendor/inventory")}
+                        className={`flex ${location?.pathname === "/vendor/inventory" ? "bg-gray-400 text-indigo-500" : "bg-primary-blue text-white"} gap-1 items-center justify-start w-full hover:bg-white hover:text-primary-blue ${isExpanded ? 'text-white' : 'text-white'} `}>
                         <div className='p-2'>
-                    
+
                             <MdInventory className="w-auto h-6" />
                         </div>
                         {isExpanded ? <p className='' >Inventory</p> : ""}
