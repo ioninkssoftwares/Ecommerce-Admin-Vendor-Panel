@@ -9,6 +9,7 @@ import Select from "@mui/material/Select";
 
 import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
+import { useMediaQuery } from "@mui/material";
 
 const PieChartThree = () => {
   const chartRef = useRef(null);
@@ -46,9 +47,17 @@ const PieChartThree = () => {
     };
   });
 
+  const isMobile = useMediaQuery('(max-width:600px)');
+
   return (
     <>
-      <div className="PieChartOne01">
+      <div
+        style={{
+          width: isMobile ? "100%" : "32%",
+          marginBottom: isMobile ? "30px" : "0",
+
+        }}
+        className="PieChartOne01">
         <Box
           sx={{
             display: "flex",

@@ -27,6 +27,8 @@ import ProductManagementVendor from "./VendorPanel/Pages/productManagement/Produ
 import AddProductByAdmin from "./VendorPanel/Pages/productManagement/AddProductByAdmin";
 import VendorProfile from "./VendorPanel/Pages/profile/VendorProfile";
 import VendorOrdersPage from "./VendorPanel/Pages/orderManagement/VendorOrdersPage";
+import VendorInventoryManagement from "./VendorPanel/Pages/inventory/VendorInventoryManagement";
+
 
 
 // Function to check if the token exists in cookies
@@ -133,6 +135,7 @@ export default function App() {
 
           {/************************  Vendor Panel Routes ******************************/}
 
+
           <Route
             path="/vendor/login"
             element={<LoginVenDor />}
@@ -161,6 +164,11 @@ export default function App() {
           <Route
             path="/vendor/orders"
             element={<VendorProtectedRoute Component={VendorOrdersPage} />}
+          />
+
+          <Route
+            path="/vendor/inventory"
+            element={<VendorProtectedRoute Component={VendorInventoryManagement} />}
           />
 
         </Routes>
