@@ -12,7 +12,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import React, { ReactElement, useEffect, useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
 import { toast } from "react-toastify";
-import { FaArrowDown, FaCartArrowDown } from "react-icons/fa";
+import { FaArrowDown, FaCartArrowDown, FaEye } from "react-icons/fa";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { FcProcess } from "react-icons/fc";
@@ -22,6 +22,8 @@ import { useAxios } from "../../../utils/axios";
 import { tableStyles } from "../../Components/vendor/shared/ConfirmDialog";
 import ConfirmBox from "../../Components/vendor/shared/ConfirmDialog";
 import { AiOutlineSearch } from "react-icons/ai";
+import { TbEdit } from "react-icons/tb";
+import OrderDetailsModal from "../../Components/vendor/modals/OrderDetailsModal";
 
 
 
@@ -54,6 +56,7 @@ const VendorOrdersPage = () => {
     const [loading, setLoading] = useState(false);
     const [processLoading, setProcessLoading] = useState(false);
     const [deleteId, setDeleteId] = useState("");
+    const [orderId, setOrderId] = useState("");
     const [token, setToken] = useState("");
     const [cookies, setCookies] = useCookies(["vendorToken"]);
     const [allOrders, setAllOrders] = useState([]);
@@ -193,44 +196,53 @@ const VendorOrdersPage = () => {
 
     // }
 
-    // const processOrder = async (processId) => {
-    //     try {
-    //         // Set loading state to true for the specific order
-    //         setProcessLoadingState((prev) => ({ ...prev, [processId]: true }));
+    const processOrder = async (processId) => {
+        try {
+            // Set loading state to true for the specific order
+            setProcessLoadingState((prev) => ({ ...prev, [processId]: true }));
 
-    //         const res = await instance.put("/order/" + processId);
+            const res = await instance.put("/order/" + processId);
 
-    //         if (res.data) {
-    //             toast.success("Order Processed Successfully");
+            if (res.data) {
+                toast.success("Order Processed Successfully");
 
-    //             // Clear loading state for the specific order
-    //             setProcessLoadingState((prev) => ({ ...prev, [processId]: false }));
-    //             setDeleteOpen(false);
-    //             getOrdersByAdmin();
-    //         }
-    //     } catch (e) {
-    //         // Handle errors here
-    //         console.error(e);
+                // Clear loading state for the specific order
+                setProcessLoadingState((prev) => ({ ...prev, [processId]: false }));
+                setDeleteOpen(false);
+                getOrdersByVendorId()
+            }
+        } catch (e) {
+            // Handle errors here
+            console.error(e);
 
-    //         // Clear loading state for the specific order on error
-    //         setProcessLoadingState((prev) => ({ ...prev, [processId]: false }));
-    //     }
-    // };
+            // Clear loading state for the specific order on error
+            setProcessLoadingState((prev) => ({ ...prev, [processId]: false }));
+        }
+    };
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
 
+    const handleOpenModal = (id) => {
+        setOrderId(id);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
 
     const all_customer_columns = [
         {
             flex: 0.25,
             minWidth: 150,
-
             field: "name",
             headerName: "Customer Id",
             align: "left",
             headerAlign: "left",
             disableColumnMenu: true,
             renderCell: ({ row }) => (
-                <Typography variant="body1" fontWeight={500}>
+                <Typography variant="body1" fontWeight={500} style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '150px' }}>
                     {row?.user}
                 </Typography>
             ),
@@ -249,51 +261,33 @@ const VendorOrdersPage = () => {
                 </Typography>
             ),
         },
-        // {
-        //     minWidth: 150,
 
-        //     flex: 0.25,
-        //     field: "Order Type",
-        //     headerName: "Order Type",
-        //     align: "left",
-        //     headerAlign: "left",
-        //     disableColumnMenu: true,
-        // },
-        // {
-        //     minWidth: 150,
-
-        //     flex: 0.25,
-        //     field: "_id",
-        //     headerName: "Order Id",
-        //     align: "left",
-        //     headerAlign: "left",
-        //     disableColumnMenu: true,
-        // },
         {
-            minWidth: 50,
+            minWidth: 120,
 
-            flex: 0.1,
+            flex: 0.25,
+            field: "quantity",
+            headerName: "Quantity",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+        },
+
+        {
+            minWidth: 150,
+
+            flex: 0.25,
             field: "subtotal",
             headerName: "Subtotal",
             align: "left",
             headerAlign: "left",
             disableColumnMenu: true,
         },
-        // {
-        //     minWidth: 150,
-
-        //     flex: 0.25,
-        //     field: "tax",
-        //     headerName: "Tax",
-        //     align: "left",
-        //     headerAlign: "left",
-        //     disableColumnMenu: true,
-        // },
 
         {
-            minWidth: 50,
+            minWidth: 150,
 
-            flex: 0.1,
+            flex: 0.25,
             field: "discount",
             headerName: "Discount",
             align: "left",
@@ -301,11 +295,11 @@ const VendorOrdersPage = () => {
             disableColumnMenu: true,
         },
         {
-            minWidth: 120,
+            minWidth: 150,
 
             field: "shippingCharges",
             headerName: "Shipping Charges",
-            flex: 0.2,
+            flex: 0.25,
             align: "left",
             headerAlign: "left",
             disableColumnMenu: true,
@@ -320,60 +314,46 @@ const VendorOrdersPage = () => {
             headerAlign: "left",
             disableColumnMenu: true,
         },
-        // {
-        //     minWidth: 120,
 
-        //     field: "paymentInfo.status",
-        //     headerName: "Payment Status",
-        //     flex: 0.2,
-        //     align: "left",
-        //     headerAlign: "left",
-        //     disableColumnMenu: true,
-        //     valueGetter: (params) => params.row.paymentInfo.status,
-        // },
         {
-            minWidth: 120,
+            minWidth: 150,
 
             field: "status",
             headerName: "Order Status",
-            flex: 0.2,
+            flex: 0.25,
             align: "left",
             headerAlign: "left",
             disableColumnMenu: true,
         },
-        // {
-        //     minWidth: 150,
+        {
+            minWidth: 150,
 
-        //     field: "action",
-        //     headerName: "ACTION",
-        //     flex: 0.15,
-        //     align: "left",
-        //     headerAlign: "left",
-        //     disableColumnMenu: true,
-        //     renderCell: ({ row }) => (
-        //         <Box>
-        //             <Tooltip title="Process">
-        //                 <IconButton
-        //                     onClick={() => processOrder(row._id)}
-        //                     color="primary"
-        //                 >
-        //                     {processLoadingState[row._id] ? <CircularProgress size={24} /> : <FcProcess />}
-        //                 </IconButton>
-        //             </Tooltip>
-        //             <Tooltip title="Delete">
-        //                 <IconButton
-        //                     onClick={() => {
-        //                         setDeleteId(row?._id);
-        //                         setDeleteOpen(true);
-        //                     }}
-        //                     color="error"
-        //                 >
-        //                     <MdDeleteForever />
-        //                 </IconButton>
-        //             </Tooltip>
-        //         </Box>
-        //     ),
-        // },
+            field: "action",
+            headerName: "ACTION",
+            flex: 0.25,
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+            renderCell: ({ row }) => (
+                <Box>
+                    <Tooltip title="View Order Details">
+                        <IconButton onClick={() => handleOpenModal(row._id)} color="error">
+                            <FaEye />
+                        </IconButton>
+                    </Tooltip>
+
+                    {/* <Tooltip title="Process">
+                        <IconButton
+                            onClick={() => processOrder(row._id)}
+                            color="primary"
+                        >
+                            {processLoadingState[row._id] ? <CircularProgress size={24} /> : <FcProcess />}
+                        </IconButton>
+                    </Tooltip> */}
+
+                </Box>
+            ),
+        },
     ];
 
     return (
@@ -386,41 +366,7 @@ const VendorOrdersPage = () => {
                         <CircularProgress className="text-3xl" />
                     </div> : <div className='bg-gray-50'>
                         <AdminNavbar />
-                        <div className="flex justify-between items-center mt-8 mb-6">
-                            <div className=" text-sm px-3">
-                                {/* <button
-                                    // onClick={() => router.push("/admin/customers/add")}
-                                    className=" px-3 text-white font-medium justify-center w-full bg-primary-blue rounded-lg py-3 flex space-x-2 items-center transition transform active:scale-95 duration-200  "
-                                > */}
-                                {/* <span> */}
-                                {/* <TbEdit /> */}
-                                {/* </span> */}
-                                {/* <span>Order Summary</span> */}
-                                {/* <OrderDetailsModal
-                                        buttonText="Order Summary"
-                                        modalTitle="Order Details"
 
-                                    /> */}
-                                {/* </button> */}
-                            </div>
-                            <div className=" text-sm px-3">
-                                {/* <button
-                                    // onClick={() => router.push("/admin/customers/add")}
-                                    className=" px-3 text-white font-medium justify-center w-full bg-primary-blue rounded-lg py-3 flex space-x-2 items-center transition transform active:scale-95 duration-200  "
-                                >
-                                    <span>
-                                        <TbEdit />
-                                    </span> */}
-                                {/* <span>Create New Order</span> */}
-                                {/* <OrderModal
-                                        buttonText="Create New Order"
-                                        modalTitle="Create New Order"
-                                        // onSubmit={projectSubmit}
-                                        products={allProducts}
-                                    /> */}
-                                {/* </button> */}
-                            </div>
-                        </div>
 
                         {/* <div className="flex md:justify-between md:items-center md:flex-row flex-col justify-center items-center mt-8 mb-6 gap-3 px-3">
                             <div className="basis-[35%] p-4 rounded-2xl bg-white ">
@@ -539,7 +485,7 @@ const VendorOrdersPage = () => {
                         </div> */}
                         {/* dashboard caerd */}
 
-                        <div className="flex justify-between items-center mb-8  px-10">
+                        <div className="flex justify-between items-center mb-8 mt-4  px-10">
                             <div className="space-x-5">
                                 <p className="text-2xl ">Orders </p>
                             </div>
@@ -611,6 +557,24 @@ const VendorOrdersPage = () => {
                             loading={deleteLoading}
                             sx={{ pb: 4, border: "2px solid red" }}
                         /> */}
+
+
+                        {/* <OrderDetailsModal
+                            orderId={orderId}
+                            open={deleteOpen}
+                            modalTitle="Order Details"
+                            buttonText="Order Details"
+                            onClose={handleCloseModal}
+                        /> */}
+
+                        <OrderDetailsModal
+                            open={isModalOpen}
+                            onClose={handleCloseModal}
+                            orderId={orderId}
+                            modalTitle="Order Details"
+                            buttonText="Order Details"
+                        />
+
                     </div>}
                 </div>
                 {/* </main> */}
