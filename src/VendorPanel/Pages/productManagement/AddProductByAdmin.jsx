@@ -138,7 +138,9 @@ const AddProductByAdmin = () => {
         bestSeller: true,
         subCategory: "",
         mrp: 0,
-        warrantyPeriod: ""
+        warrantyPeriod: "",
+        hsnCode: 0,
+        gstPercentage: 0
         // costPrice: 0,
         // returnPolicy: true
     })
@@ -148,9 +150,14 @@ const AddProductByAdmin = () => {
     const [bestSellerSwitch, setBestSellerSwitch] = useState(true);
     const [allBrands, setAllBrands] = useState([]);
     const [allCategories, setAllCategories] = useState([]);
+    const [allSubCategories, setAllSubCategories] = useState([]);
+    const [subCategories, setSubCategories] = useState([]);
+
 
     const [selectedBrand, setSelectedBrand] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedSubCategory, setSelectedSubCategory] = useState('');
+    const [selectedCategoryName, setSelectedCategoryName] = useState("");
     const [vendorId, setVendorId] = useState('');
 
     if (product) console.log(product, 'produddct');
@@ -163,13 +170,50 @@ const AddProductByAdmin = () => {
         // If you need to update your product state as well
         setProduct({ ...product, brand: selectedBrandId });
     };
-    const handleCategoryChange = (event) => {
-        const selectedCategoryName = event.target.value;
-        setSelectedCategory(selectedCategoryName);
+    // const handleCategoryChange = (event) => {
+    //     const selectedCategoryName = event.target.value;
+    //     setSelectedCategory(selectedCategoryName);
+
+    //     // If you need to update your product state as well
+    //     setProduct({ ...product, category: selectedCategoryName });
+    // };
+
+    const handleCategoryChange = (e) => {
+        const categoryId = e.target.value;
+        const selectedCategory = allCategories.find(category => category._id === categoryId);
+        setSelectedCategory(categoryId); // Update selected category ID
+        setSelectedCategoryName(selectedCategory ? selectedCategory.categoryName : ""); // Update selected category name
+    };
+
+
+    const handleSubCategoryChange = (event) => {
+        const selectedSubCategoryName = event.target.value;
+        setSelectedSubCategory(selectedSubCategoryName);
 
         // If you need to update your product state as well
-        setProduct({ ...product, category: selectedCategoryName });
+        setProduct({ ...product, subCategory: selectedSubCategoryName });
     };
+
+
+
+    useEffect(() => {
+        const fetchSubCategories = async () => {
+            try {
+                if (selectedCategory) {
+                    const response = await instance.get(
+                        `/admin/getSubCategoryByCategoryId/${selectedCategory}`,
+                    );
+                    setSubCategories(response.data.data); // Update to response.data.data
+                }
+            } catch (error) {
+                console.error("Error fetching subcategories:", error);
+                toast.error("Failed to fetch subcategories");
+            }
+        };
+
+        fetchSubCategories();
+    }, [selectedCategory]);
+
 
     if (product) console.log(product, "dsfjdslk")
 
@@ -235,7 +279,7 @@ const AddProductByAdmin = () => {
             ProductFormData.append('productImages', i);
         }
         ProductFormData.append('name', product.name);
-        ProductFormData.append('category', product.category);
+        ProductFormData.append('category', selectedCategoryName);
         ProductFormData.append('stock', product.stock);
         ProductFormData.append('price', product.price);
         ProductFormData.append('bestSeller', product.bestSeller);
@@ -247,6 +291,8 @@ const AddProductByAdmin = () => {
         ProductFormData.append('mrp', product.mrp);
         ProductFormData.append('warrantyPeriod', product.warrantyPeriod);
         ProductFormData.append('vendorId', vendorId);
+        ProductFormData.append('gstPerc ', product.gstPercentage);
+        ProductFormData.append('hsnCode ', product.hsnCode);
 
         try {
             const res = await instance.post("/admin/product/new", ProductFormData, {
@@ -450,6 +496,26 @@ const AddProductByAdmin = () => {
     }
 
 
+    // async function getAllSubCategories() {
+    //     try {
+    //         console.log(token, "jsakdfjkladsj")
+
+    //         setLoading(true);
+    //         const res = await instance.get(
+    //             `/admin/getAllSubCategories`
+    //         );
+    //         if (res.data) {
+    //             setAllSubCategories(res.data.subcategories)
+    //             setLoading(false);
+    //         }
+    //     } catch (e) {
+    //         setLoading(false);
+    //         console.log(e)
+    //         // ErrorDispaly(e);
+    //     }
+    // }
+
+
     const getVendorDetails = async () => {
         console.log(token, "tokeeen")
         try {
@@ -471,6 +537,7 @@ const AddProductByAdmin = () => {
     useEffect(() => {
         getAllBrands();
         getAllCategories();
+        // getAllSubCategories();
         getVendorDetails();
     }, [token]);
 
@@ -577,7 +644,7 @@ const AddProductByAdmin = () => {
                                         >
 
                                             {allCategories?.map((category) => (
-                                                <MenuItem key={category._id} value={category.categoryName}>
+                                                <MenuItem key={category._id} value={category._id}>
                                                     {category.categoryName}
                                                 </MenuItem>
                                             ))}
@@ -585,13 +652,38 @@ const AddProductByAdmin = () => {
                                     </FormControl>
 
 
-                                    <InputField
+                                    <FormControl variant="standard" sx={{ mb: 4, width: "100%" }}>
+                                        <InputLabel id="subCategory-select-label">Select Sub Category</InputLabel>
+                                        <Select
+                                            labelId="brand-select-label"
+                                            id="subCategory-select"
+                                            value={selectedSubCategory}
+                                            onChange={handleSubCategoryChange}
+                                            label="Category"
+                                        // sx={{ w: '100%' }}
+                                        >
+
+                                            {subCategories?.map((category) => (
+                                                <MenuItem key={category._id} value={category.subCategoryName}>
+                                                    {category.subCategoryName}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+
+
+
+
+
+
+
+                                    {/* <InputField
                                         label="Sub Category"
                                         type="text"
                                         value={product?.subCategory}
                                         onChange={(e) => setProduct({ ...product, subCategory: e })}
                                     // validate={validateCategory}
-                                    />
+                                    /> */}
 
 
 
@@ -641,6 +733,51 @@ const AddProductByAdmin = () => {
                                                 setFormErrors({ ...formErrors, stock: validateSellingPrice(value) });
                                             }}
                                             validate={validateSellingPrice} />
+
+
+                                    </Box>
+
+                                    <Box sx={{ display: "flex", marginTop: 2, gap: 2 }}>
+
+                                        <InputField
+                                            label=" Mrp"
+                                            type="number"
+                                            value={product.mrp}
+                                            // onChange={(e) => setProduct({ ...product, price: e })} 
+                                            onChange={(value) => {
+                                                setProduct({ ...product, mrp: value })
+                                                setFormErrors({ ...formErrors, mrp: validateSellingPrice(value) });
+                                            }}
+                                            validate={validateSellingPrice} />
+
+
+                                        {/* <InputField label="Warranty Period"
+    type="text"
+    value={product.warrantyPeriod}
+    // onChange={(e) => setProduct({ ...product, stock: e })} 
+    onChange={(value) => {
+        setProduct({ ...product, warrantyPeriod: value })
+    }}
+/> */}
+                                        <FormControl fullWidth>
+                                            <InputLabel id="warranty-period-label">Warranty Period</InputLabel>
+                                            <Select
+                                                labelId="warranty-period-label"
+                                                id="warranty-period-select"
+                                                value={product.warrantyPeriod}
+                                                onChange={(event) => {
+                                                    setProduct({ ...product, warrantyPeriod: event.target.value });
+                                                }}
+                                                label="Warranty Period"
+                                            >
+                                                <MenuItem value="6 months">3 months</MenuItem>
+                                                <MenuItem value="6 months">6 months</MenuItem>
+                                                <MenuItem value="12 months">12 months</MenuItem>
+                                                <MenuItem value="18 months">18 months</MenuItem>
+                                                <MenuItem value="24 months">24 months</MenuItem>
+                                                <MenuItem value="36 months">36 months</MenuItem>
+                                            </Select>
+                                        </FormControl>
 
 
                                     </Box>
@@ -753,10 +890,10 @@ const AddProductByAdmin = () => {
 
 
 
-                                    <Textarea sx={{ padding: 0, borderRadius: 1 }} onChange={(event) => setProduct({
+                                    <Textarea sx={{ padding: 0, borderRadius: 1, marginBottom: 1 }} onChange={(event) => setProduct({
                                         ...product,
                                         description: event.target.value
-                                    })} placeholder="Description" minRows={3} />
+                                    })} placeholder="Description" minRows={6} />
 
                                     {/* 
                                     <TextField
@@ -774,53 +911,40 @@ const AddProductByAdmin = () => {
                                         Product Specifications
                                     </Typography>
 
-                                    <Textarea sx={{ padding: 0, borderRadius: 1 }}
-                                        onChange={(event) => setProduct({ ...product, specification: event.target.value })} placeholder="Your text goes here" minRows={5} />
+                                    <Textarea sx={{ padding: 0, borderRadius: 1, marginBottom: 3 }}
+                                        onChange={(event) => setProduct({ ...product, specification: event.target.value })} placeholder="Your text goes here" minRows={6} />
+
 
                                     <Box sx={{ display: "flex", marginTop: 2, gap: 2 }}>
 
                                         <InputField
-                                            label=" Mrp"
+                                            label="HSN Code"
                                             type="number"
-                                            value={product.mrp}
+                                            value={product.hsnCode}
                                             // onChange={(e) => setProduct({ ...product, price: e })} 
                                             onChange={(value) => {
-                                                setProduct({ ...product, mrp: value })
-                                                setFormErrors({ ...formErrors, mrp: validateSellingPrice(value) });
+                                                setProduct({ ...product, hsnCode: value })
+                                                setFormErrors({ ...formErrors, hsnCode: validateSellingPrice(value) });
+                                            }}
+                                            validate={validateSellingPrice} />
+
+                                        {/* <InputField label="Cost Price" type="number" value={product.costPrice} onChange={(e) => setProduct({ ...product, costPrice: e })} validate={validateCostPrice} />
+*/}
+
+                                        <InputField label="GST Percentage"
+                                            type="number"
+                                            value={product.gstPercentage}
+                                            // onChange={(e) => setProduct({ ...product, stock: e })} 
+                                            onChange={(value) => {
+                                                setProduct({ ...product, gstPercentage: value })
+                                                setFormErrors({ ...formErrors, gstPercentage: validateSellingPrice(value) });
                                             }}
                                             validate={validateSellingPrice} />
 
 
-                                        {/* <InputField label="Warranty Period"
-                                            type="text"
-                                            value={product.warrantyPeriod}
-                                            // onChange={(e) => setProduct({ ...product, stock: e })} 
-                                            onChange={(value) => {
-                                                setProduct({ ...product, warrantyPeriod: value })
-                                            }}
-                                        /> */}
-                                        <FormControl fullWidth>
-                                            <InputLabel id="warranty-period-label">Warranty Period</InputLabel>
-                                            <Select
-                                                labelId="warranty-period-label"
-                                                id="warranty-period-select"
-                                                value={product.warrantyPeriod}
-                                                onChange={(event) => {
-                                                    setProduct({ ...product, warrantyPeriod: event.target.value });
-                                                }}
-                                                label="Warranty Period"
-                                            >
-                                                <MenuItem value="6 months">3 months</MenuItem>
-                                                <MenuItem value="6 months">6 months</MenuItem>
-                                                <MenuItem value="12 months">12 months</MenuItem>
-                                                <MenuItem value="18 months">18 months</MenuItem>
-                                                <MenuItem value="24 months">24 months</MenuItem>
-                                                <MenuItem value="36 months">36 months</MenuItem>
-                                            </Select>
-                                        </FormControl>
-
-
                                     </Box>
+
+
                                     {/* <Typography sx={{ color: "gray" }} id="modal-modal-title" variant="p" component="p">
                                         Add a long description for your product
                                     </Typography> */}
