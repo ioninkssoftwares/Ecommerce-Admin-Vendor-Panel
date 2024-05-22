@@ -415,7 +415,7 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
                         ) : (
                             <span className="text-gray-400 mr-12">Date not available</span>
                         )}
-                        <p className="mr-2">Product URL</p>
+                        {/* <p className="mr-2">Product URL</p> */}
                         {/* <span className="text-blue-600 mr-12">coolzone.in/samsung-fu..</span> */}
 
 

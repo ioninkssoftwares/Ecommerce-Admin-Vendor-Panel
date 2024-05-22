@@ -137,10 +137,10 @@ const AddProductByAdmin = () => {
         featured: true,
         bestSeller: true,
         subCategory: "",
-        mrp: 0,
+        // mrp: 0,
         warrantyPeriod: "",
-        hsnCode: 0,
-        gstPercentage: 0
+        hsnCode: "",
+        gstPerc: 0
         // costPrice: 0,
         // returnPolicy: true
     })
@@ -161,6 +161,29 @@ const AddProductByAdmin = () => {
     const [vendorId, setVendorId] = useState('');
 
     if (product) console.log(product, 'produddct');
+
+
+
+    const [specifications, setSpecifications] = useState(['']);
+
+
+
+    const handleSpecificationChange = (index, event) => {
+        const values = [...specifications];
+        values[index] = event.target.value;
+        setSpecifications(values);
+    };
+
+    const handleAddSpecification = () => {
+        setSpecifications([...specifications, '']);
+    };
+
+    const handleRemoveSpecification = (index) => {
+        const values = [...specifications];
+        values.splice(index, 1);
+        setSpecifications(values);
+    };
+
 
     const handleBrandChange = (event) => {
         console.log(event.target.value, "dsljfdslkj")
@@ -284,15 +307,15 @@ const AddProductByAdmin = () => {
         ProductFormData.append('price', product.price);
         ProductFormData.append('bestSeller', product.bestSeller);
         ProductFormData.append('featured', product.featured);
-        ProductFormData.append('specification', product.specification);
+        ProductFormData.append('specification', specifications);
         ProductFormData.append('description', product.description);
         ProductFormData.append('brand', product.brand);
         ProductFormData.append('subCategory', product.subCategory);
-        ProductFormData.append('mrp', product.mrp);
+        // ProductFormData.append('mrp', product.mrp);
         ProductFormData.append('warrantyPeriod', product.warrantyPeriod);
         ProductFormData.append('vendorId', vendorId);
-        ProductFormData.append('gstPerc ', product.gstPercentage);
-        ProductFormData.append('hsnCode ', product.hsnCode);
+        ProductFormData.append('gstPerc', product.gstPerc);
+        ProductFormData.append('hsnCode', product.hsnCode);
 
         try {
             const res = await instance.post("/admin/product/new", ProductFormData, {
@@ -364,9 +387,9 @@ const AddProductByAdmin = () => {
                         onClick={() => {
                             dleteImage(photo);
                         }}
-                        className="text-white bg-red-500 h-6 w-6 flex rounded-full items-center justify-center absolute top-1 right-0"
+                        className="text-white bg-red-500 h-7 w-7 pt-1 flex rounded-full items-center justify-center absolute top-1 right-0"
                     >
-                        <AiOutlineClose />
+                        x
                     </button>
                     <img
                         className=" h-full object-cover"
@@ -716,7 +739,7 @@ const AddProductByAdmin = () => {
                                             value={product.price}
                                             // onChange={(e) => setProduct({ ...product, price: e })} 
                                             onChange={(value) => {
-                                                setProduct({ ...product, price: value })
+                                                setProduct({ ...product, price: +value })
                                                 setFormErrors({ ...formErrors, price: validateSellingPrice(value) });
                                             }}
                                             validate={validateSellingPrice} />
@@ -729,7 +752,7 @@ const AddProductByAdmin = () => {
                                             value={product.stock}
                                             // onChange={(e) => setProduct({ ...product, stock: e })} 
                                             onChange={(value) => {
-                                                setProduct({ ...product, stock: value })
+                                                setProduct({ ...product, stock: +value })
                                                 setFormErrors({ ...formErrors, stock: validateSellingPrice(value) });
                                             }}
                                             validate={validateSellingPrice} />
@@ -739,16 +762,16 @@ const AddProductByAdmin = () => {
 
                                     <Box sx={{ display: "flex", marginTop: 2, gap: 2 }}>
 
-                                        <InputField
+                                        {/* <InputField
                                             label=" Mrp"
                                             type="number"
                                             value={product.mrp}
                                             // onChange={(e) => setProduct({ ...product, price: e })} 
                                             onChange={(value) => {
-                                                setProduct({ ...product, mrp: value })
+                                                setProduct({ ...product, mrp: +value })
                                                 setFormErrors({ ...formErrors, mrp: validateSellingPrice(value) });
                                             }}
-                                            validate={validateSellingPrice} />
+                                            validate={validateSellingPrice} /> */}
 
 
                                         {/* <InputField label="Warranty Period"
@@ -907,43 +930,63 @@ const AddProductByAdmin = () => {
                                     /> */}
 
 
-                                    <Typography sx={{ my: 1, color: "gray" }} id="modal-modal-title" variant="p" component="p">
+                                    {/* <Typography sx={{ my: 1, color: "gray" }} id="modal-modal-title" variant="p" component="p">
                                         Product Specifications
                                     </Typography>
 
                                     <Textarea sx={{ padding: 0, borderRadius: 1, marginBottom: 3 }}
-                                        onChange={(event) => setProduct({ ...product, specification: event.target.value })} placeholder="Your text goes here" minRows={6} />
+                                        onChange={(event) => setProduct({ ...product, specification: event.target.value })} placeholder="Your text goes here" minRows={6} /> */}
+
+
+
+
+
 
 
                                     <Box sx={{ display: "flex", marginTop: 2, gap: 2 }}>
 
                                         <InputField
                                             label="HSN Code"
-                                            type="number"
+                                            type="text"
                                             value={product.hsnCode}
                                             // onChange={(e) => setProduct({ ...product, price: e })} 
                                             onChange={(value) => {
                                                 setProduct({ ...product, hsnCode: value })
-                                                setFormErrors({ ...formErrors, hsnCode: validateSellingPrice(value) });
+                                                // setFormErrors({ ...formErrors, hsnCode: validateSellingPrice(value) });
                                             }}
-                                            validate={validateSellingPrice} />
+                                        // validate={validateSellingPrice} 
+                                        />
 
                                         {/* <InputField label="Cost Price" type="number" value={product.costPrice} onChange={(e) => setProduct({ ...product, costPrice: e })} validate={validateCostPrice} />
 */}
 
                                         <InputField label="GST Percentage"
                                             type="number"
-                                            value={product.gstPercentage}
+                                            value={product.gstPerc}
                                             // onChange={(e) => setProduct({ ...product, stock: e })} 
                                             onChange={(value) => {
-                                                setProduct({ ...product, gstPercentage: value })
-                                                setFormErrors({ ...formErrors, gstPercentage: validateSellingPrice(value) });
+                                                setProduct({ ...product, gstPerc: +value })
+                                                setFormErrors({ ...formErrors, gstPerc: validateSellingPrice(value) });
                                             }}
                                             validate={validateSellingPrice} />
 
 
                                     </Box>
+                                    <div>
 
+                                        {specifications.map((specification, index) => (
+                                            <div key={index}>
+                                                <input
+                                                    type="text"
+                                                    value={specification}
+                                                    onChange={(event) => handleSpecificationChange(index, event)}
+                                                    placeholder={`Specification ${index + 1}`}
+                                                />
+                                                <button className="mb-2 bg-primary-blue" type="button" onClick={() => handleRemoveSpecification(index)}>Remove</button>
+                                            </div>
+                                        ))}
+                                        <button className="bg-primary-blue" type="button" onClick={handleAddSpecification}>Add Specification</button>
+                                    </div>
 
                                     {/* <Typography sx={{ color: "gray" }} id="modal-modal-title" variant="p" component="p">
                                         Add a long description for your product
