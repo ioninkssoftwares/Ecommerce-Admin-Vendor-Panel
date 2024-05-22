@@ -28,6 +28,7 @@ import AddProductByAdmin from "./VendorPanel/Pages/productManagement/AddProductB
 import VendorProfile from "./VendorPanel/Pages/profile/VendorProfile";
 import VendorOrdersPage from "./VendorPanel/Pages/orderManagement/VendorOrdersPage";
 import VendorInventoryManagement from "./VendorPanel/Pages/inventory/VendorInventoryManagement";
+import ViewProduct from "./VendorPanel/Pages/productManagement/ViewProduct";
 
 
 
@@ -154,6 +155,11 @@ export default function App() {
           <Route
             path="/vendor/productManagement"
             element={<VendorProtectedRoute Component={ProductManagementVendor} />}
+          />
+
+          <Route
+            path="/vendor/product/:id"
+            element={<VendorProtectedRoute Component={ViewProduct} />}
           />
 
           <Route
