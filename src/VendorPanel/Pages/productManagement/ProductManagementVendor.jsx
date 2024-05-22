@@ -1,5 +1,6 @@
 import {
     Box,
+    Button,
     Card,
     CircularProgress,
     Grid,
@@ -30,7 +31,7 @@ import { useAxios } from "../../../utils/axios";
 import { tableStyles } from "../../Components/vendor/shared/ConfirmDialog";
 import Sidebar from "../../Components/sidebar/Siderbar";
 import AdminNavbar from "../../Components/navbar/VendorNavbar";
-import { FaArrowDown, FaCartArrowDown } from "react-icons/fa";
+import { FaArrowDown, FaCartArrowDown, FaCheckCircle, FaEye, FaTimesCircle } from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 // import CustomPagination from "src/componets/customPagination";
 // import { ErrorDispaly } from "../property";
@@ -40,6 +41,10 @@ import { useCookies } from "react-cookie";
 // import * as XLSX from 'xlsx';
 import ExcelJS from "exceljs";
 import { CiExport } from "react-icons/ci";
+import { PiWarningCircleBold } from "react-icons/pi";
+import { CircleOutlined } from "@mui/icons-material";
+import { GrStatusGood } from "react-icons/gr";
+import StockPopup from "./StockPopup";
 
 
 const toDataURL = (url) => {
@@ -62,25 +67,25 @@ const toDataURL = (url) => {
 
 
 
-export const Button = ({
-    name,
-    Icon,
-    Color,
-}) => {
-    return (
-        <div
-            className={
-                Color +
-                " bg-white font-bold w-full rounded-sm shadow-sm flex space-x-1 items-center justify-center px-4 p-1 max-w-max border border-[#DEDEDE]"
-            }
-        >
-            <div className="text-xs">{<Icon />}</div>
-            <div>
-                <p className=" text-[10px]">{name}</p>
-            </div>
-        </div>
-    );
-};
+// export const Button = ({
+//     name,
+//     Icon,
+//     Color,
+// }) => {
+//     return (
+//         <div
+//             className={
+//                 Color +
+//                 " bg-white font-bold w-full rounded-sm shadow-sm flex space-x-1 items-center justify-center px-4 p-1 max-w-max border border-[#DEDEDE]"
+//             }
+//         >
+//             <div className="text-xs">{<Icon />}</div>
+//             <div>
+//                 <p className=" text-[10px]">{name}</p>
+//             </div>
+//         </div>
+//     );
+// };
 
 const userTypes = ["All", "Premium"];
 const rows = [
@@ -166,6 +171,8 @@ const ProductManagementVendor = () => {
     const [vendorProducts, setVendorProducts] = useState([]);
     const [vendorId, setVendorId] = useState('');
 
+    const [popupOpen, setPopupOpen] = useState(false);
+
     if (vendorProducts) console.log("Vendor Products:", vendorProducts);
 
     const handleSearchQueryChange = (event) => {
@@ -184,32 +191,22 @@ const ProductManagementVendor = () => {
         setFilteredRows(filtered);
     };
 
-    // async function getAllUsers() {
-    //     let pr = selected === "All" ? `search=${name || ""}` : `premium=true&&search=${name || ""}`
-    //     try {
-    //         setLoading(true);
-    //         const res = await instance.get(
-    //             `/admin/user/getAllUsers?page=${paginationModel?.page + 1 || 1}&&limit=${paginationModel?.pageSize || 50}&&${pr}`
-    //         );
-    //         if (res.data) {
-    //             setUsers(res?.data?.data);
-    //             setPagination(res?.data?.pagination);
-    //             setLoading(false);
-    //         }
-    //     } catch (e) {
-    //         setLoading(false);
-    //         // ErrorDispaly(e);
-    //     }
-    // }
+    // Low stock Functionalities
+    const lowStockProducts = vendorProducts.filter((product) => product.stock < 5 && product.isVerified === "true");
 
-    useEffect(() => {
-        // getAllUsers();
-    }, [selected, name, paginationModel?.page, paginationModel?.pageSize]);
+    if (lowStockProducts) console.log("Low Stock Products:", lowStockProducts);
+
+    const handleStockCheck = () => {
+        setPopupOpen(true);
+    };
+
+    const handleClosePopup = () => {
+        setPopupOpen(false);
+    };
 
 
-
-    if (allProducts) {
-        console.log(allProducts, "dshfsjkdfsjk")
+    if (vendorProducts) {
+        console.log(vendorProducts, "dshfsjkdfsjk")
     }
 
 
@@ -359,49 +356,61 @@ const ProductManagementVendor = () => {
             headerAlign: "left",
             disableColumnMenu: true,
         },
-        // {
-        //     minWidth: 150,
 
-        //     field: "action",
-        //     headerName: "ACTION",
-        //     flex: 0.15,
-        //     align: "left",
-        //     headerAlign: "left",
-        //     disableColumnMenu: true,
-        //     renderCell: ({ row }) => (
-        //         <Box>
-        //             <Tooltip title="Edit">
-        //                 <IconButton
-        //                     // onClick={() => router.push(`/admin/customers/${row._id}`)}
-        //                     onClick={() => navigate(`/admin/editProductDetails/${row._id}`)}
-        //                     color="primary"
-        //                 >
-        //                     <BsPencilFill />
-        //                 </IconButton>
-        //             </Tooltip>
-        //             {/* <Tooltip title="Edit">
-        //                 <IconButton
-        //                     // onClick={() => router.push(`/admin/customers/edit/${row._id}`)}
+        {
+            minWidth: 150,
 
-        //                     color="primary"
-        //                 >
-        //                     <BsPencilFill />
-        //                 </IconButton>
-        //             </Tooltip> */}
-        //             <Tooltip title="Delete">
-        //                 <IconButton
-        //                     onClick={() => {
-        //                         setDeleteId(row?._id);
-        //                         setDeleteOpen(true);
-        //                     }}
-        //                     color="error"
-        //                 >
-        //                     <MdDeleteForever />
-        //                 </IconButton>
-        //             </Tooltip>
-        //         </Box>
-        //     ),
-        // },
+            field: "isVerified",
+            headerName: "Status",
+            flex: 0.15,
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+            renderCell: ({ row }) => {
+                // Convert string to boolean
+                const isActive = row.isVerified === "true";
+
+                return (
+                    <Box>
+                        <Tooltip title="Verification Status">
+                            <IconButton>
+                                {isActive ? <FaCheckCircle style={{ color: 'green' }} /> : <FaTimesCircle style={{ color: 'red' }} />}
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                );
+            }
+
+        },
+        {
+            minWidth: 150,
+
+            field: "action",
+            headerName: "ACTION",
+            flex: 0.25,
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+            renderCell: ({ row }) => (
+                <Box>
+                    <Tooltip title="View Order Details">
+                        <IconButton onClick={() => navigate(`/vendor/product/${row._id}`)} color="error">
+                            <FaEye />
+                        </IconButton>
+                    </Tooltip>
+
+                    {/* <Tooltip title="Process">
+                        <IconButton
+                            onClick={() => processOrder(row._id)}
+                            color="primary"
+                        >
+                            {processLoadingState[row._id] ? <CircularProgress size={24} /> : <FcProcess />}
+                        </IconButton>
+                    </Tooltip> */}
+
+                </Box>
+            ),
+        },
     ];
 
 
@@ -564,17 +573,32 @@ const ProductManagementVendor = () => {
                     </div> : <div className='bg-gray-50'>
                         <AdminNavbar />
                         <div className="flex justify-end items-center mt-8 mb-6 px-4">
-                            {/* <div className=" text-sm px-3">
-                                <button
-                                   
-                                    className=" px-3 text-white font-medium justify-center w-full bg-primary-blue rounded-lg py-3 flex space-x-2 items-center transition transform active:scale-95 duration-200  "
-                                >
-                                    <span>
-                                     
-                                    </span>
-                                    <span>Product</span>
-                                </button>
-                            </div> */}
+                            <Button
+                                sx={{
+                                    background: lowStockProducts.length > 0 ? "red" : "green",
+                                    display: "flex",
+                                    gap: "10px",
+                                }}
+                                variant="contained"
+                                onClick={handleStockCheck}
+                                disabled={loading} // Disable button when loading
+                            >
+
+                                {loading ? (
+                                    <CircularProgress color="inherit" size={20} />
+                                ) : (
+                                    "Stock"
+                                )}
+                                {lowStockProducts.length > 0 ? (
+                                    <PiWarningCircleBold
+                                        sx={{ position: "absolute", top: "5px", right: "5px", width: "20px", height: "20px" }}
+                                    />
+                                ) : (
+                                    <GrStatusGood
+                                        sx={{ position: "absolute", top: "5px", right: "5px", width: "20px", height: "20px" }}
+                                    />
+                                )}
+                            </Button>
                             <div className=" text-sm px-3 flex gap-4">
                                 <button
                                     onClick={() => navigate("/vendor/addProduct")}
@@ -678,6 +702,12 @@ const ProductManagementVendor = () => {
                             toDoFunction={deleteProduct}
                             loading={deleteLoading}
                             sx={{ pb: 4, border: "2px solid red" }}
+                        />
+
+                        <StockPopup
+                            open={popupOpen}
+                            handleClose={handleClosePopup}
+                            products={lowStockProducts}
                         />
                     </div>}
                 </div>
