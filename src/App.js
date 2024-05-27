@@ -29,6 +29,7 @@ import VendorProfile from "./VendorPanel/Pages/profile/VendorProfile";
 import VendorOrdersPage from "./VendorPanel/Pages/orderManagement/VendorOrdersPage";
 import VendorInventoryManagement from "./VendorPanel/Pages/inventory/VendorInventoryManagement";
 import ViewProduct from "./VendorPanel/Pages/productManagement/ViewProduct";
+import InvoicePage from "./VendorPanel/Pages/invoicePage/InvoicePage";
 
 
 
@@ -171,6 +172,12 @@ export default function App() {
             path="/vendor/orders"
             element={<VendorProtectedRoute Component={VendorOrdersPage} />}
           />
+
+          <Route
+            path="/vendor/order/invoice"
+            element={<VendorProtectedRoute Component={InvoicePage} />}
+          />
+
 
           <Route
             path="/vendor/inventory"

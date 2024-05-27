@@ -4,7 +4,9 @@ import {
     Card,
     CircularProgress,
     Grid,
+    IconButton,
     LinearProgress,
+    Tooltip,
     // Typography,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -25,6 +27,8 @@ import { FiUser, FiUsers } from 'react-icons/fi';
 import { useAxios } from '../../../../utils/axios';
 import { LuMapPin } from 'react-icons/lu';
 import { toast } from 'react-toastify';
+import { FaFileInvoice } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -74,7 +78,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) => {
     const instance = useAxios();
-
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [orderDetails, setOrderDetails] = useState({});
     const [orderGridDetails, setOrderGridDetails] = useState([]);
@@ -383,16 +387,22 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
 
     }
 
+    // Invoice Section
+
+    const navigateToOrder = (orderDetails) => {
+        navigate(`/vendor/order/invoice`, { state: { orderDetails } });
+    };
+
 
     return (
         <>
             {/* <p></p> */}
-            <Button sx={{
+            {/* <Button sx={{
                 color: "white", borderRadius: "10px", padding: "7px 15px", backgroundColor: "#04a7ff",
                 //  "&:hover": {
                 //     backgroundColor: '#db8e57'
                 // },
-            }} className="px-3 text-white font-medium justify-center w-full bg-primary-blue rounded-lg py-3 flex space-x-2 items-center transition transform active:scale-95 duration-200" >{buttonText}</Button>
+            }} className="px-3 text-white font-medium justify-center w-full bg-primary-blue rounded-lg py-3 flex space-x-2 items-center transition transform active:scale-95 duration-200" >{buttonText}</Button> */}
             <Modal
                 open={open}
                 onClose={onClose}
@@ -400,9 +410,21 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        {modalTitle}
-                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            {modalTitle}
+                        </Typography>
+
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Tooltip title="Download Invoice">
+                                <IconButton>
+                                    <FaFileInvoice onClick={() => navigateToOrder(orderDetails)} className='text-2xl cursor-pointer' />
+                                </IconButton>
+                            </Tooltip>
+                            <span onClick={() => navigateToOrder(orderDetails)} className='cursor-pointer'>Click here to download PDf</span>
+                        </Box>
+
+                    </Box>
 
 
                     <div className="flex m-7 ">
@@ -431,11 +453,6 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
                                         <FiUser />
                                     </div>
                                     <div>
-                                        {/* <p className="text-gray-400">Sravan Kumar</p> */}
-                                        {/* {orderDetails && orderDetails.user && (
-                                            <p className="text-gray-400">{orderDetails.user._id}</p>
-                                            
-                                            )} */}
                                         {orderDetails && orderDetails.user && (<p className="text-gray-400 mt-3">{orderDetails.user.name}</p>)}
                                     </div>
                                 </div>

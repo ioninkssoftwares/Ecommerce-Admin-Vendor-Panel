@@ -5,12 +5,14 @@ import {
     Grid,
     IconButton,
     LinearProgress,
+    TextField,
     Tooltip,
     Typography,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import React, { ReactElement, useEffect, useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
+import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import { toast } from "react-toastify";
 import { FaArrowDown, FaCartArrowDown, FaEye } from "react-icons/fa";
 import { useCookies } from "react-cookie";
@@ -21,10 +23,17 @@ import AdminNavbar from "../../Components/navbar/VendorNavbar";
 import { useAxios } from "../../../utils/axios";
 import { tableStyles } from "../../Components/vendor/shared/ConfirmDialog";
 import ConfirmBox from "../../Components/vendor/shared/ConfirmDialog";
-import { AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineCloseCircle, AiOutlineSearch } from "react-icons/ai";
 import { TbEdit } from "react-icons/tb";
 import OrderDetailsModal from "../../Components/vendor/modals/OrderDetailsModal";
-
+// import { DatePicker} from '@mui/x-date-pickers';
+// import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+// import format from 'date-fns/format';
+import dayjs from 'dayjs'; // Import dayjs for date manipulation
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+// import 'dayjs/locale/en'; // Optionally, set locale
 
 
 export const Button = ({
@@ -79,6 +88,171 @@ const VendorOrdersPage = () => {
     const [selected, setSelected] = useState("All");
     // const router = useRouter();
     const navigate = useNavigate();
+
+    // FIlter section
+    // const [searchQuery, setSearchQuery] = useState('');
+    // const [filteredRows, setFilteredRows] = useState(allOrders);
+    // const [statusFilter, setStatusFilter] = useState('');
+    // const [startDate, setStartDate] = useState(null);
+    // const [endDate, setEndDate] = useState(null);
+
+
+    // // useEffect(() => {
+    // //     applyFilters();
+    // // }, [searchQuery, statusFilter]);
+    // useEffect(() => {
+    //     applyFilters();
+    // }, [searchQuery, statusFilter, startDate, endDate]);
+
+    // const handleSearchQueryChange = (event) => {
+    //     const query = event.target.value;
+    //     setSearchQuery(query);
+    // };
+
+    // const handleStatusFilterChange = (event) => {
+    //     const status = event.target.value;
+    //     setStatusFilter(status);
+    // };
+
+    // const handleStartDateChange = (date) => {
+    //     setStartDate(date);
+    // };
+
+    // const handleEndDateChange = (date) => {
+    //     setEndDate(date);
+    // };
+
+    // // const applyFilters = () => {
+    // //     let searchFilteredRows = filterBySearchQuery(allOrders, searchQuery);
+    // //     let finalFilteredRows = filterByStatus(searchFilteredRows, statusFilter);
+
+    // //     // Ensure that filteredRows is set to allOrders when no filters are applied
+    // //     if (!searchQuery && !statusFilter) {
+    // //         finalFilteredRows = allOrders;
+    // //     }
+
+    // //     setFilteredRows(finalFilteredRows);
+    // // };
+
+    // const applyFilters = () => {
+    //     let searchFilteredRows = filterBySearchQuery(allOrders, searchQuery);
+    //     let statusFilteredRows = filterByStatus(searchFilteredRows, statusFilter);
+    //     let finalFilteredRows = filterByDate(statusFilteredRows, startDate, endDate);
+
+    //     // Ensure that filteredRows is set to allOrders when no filters are applied
+    //     if (!searchQuery && !statusFilter && !startDate && !endDate) {
+    //         finalFilteredRows = allOrders;
+    //     }
+
+    //     setFilteredRows(finalFilteredRows);
+    // };
+
+    // const filterBySearchQuery = (rows, query) => {
+    //     if (!query) return rows;
+    //     return rows.filter((row) => {
+    //         const { product } = row;
+    //         const { name, brand, category, subCategory } = product;
+    //         const searchFields = [name, category, subCategory, brand];
+    //         return searchFields.some((field) =>
+    //             field.toLowerCase().includes(query.toLowerCase())
+    //         );
+    //     });
+    // };
+
+    // const filterByStatus = (rows, status) => {
+    //     if (!status) return rows;
+    //     return rows.filter((row) => row.status === status);
+    // };
+
+
+    // const filterByDate = (rows, start, end) => {
+    //     if (!start && !end) return rows;
+    //     return rows.filter((row) => {
+    //         const createdAt = new Date(row.createdAt);
+    //         const startDateMatch = start ? createdAt >= start : true;
+    //         const endDateMatch = end ? createdAt <= end : true;
+    //         return startDateMatch && endDateMatch;
+    //     });
+    // };
+
+
+
+
+
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredRows, setFilteredRows] = useState(allOrders);
+    const [statusFilter, setStatusFilter] = useState('');
+    const [selectedDate, setSelectedDate] = useState(null);
+
+    if (filteredRows) console.log(filteredRows, "dlkfsjkldsjflk")
+
+    useEffect(() => {
+        applyFilters();
+    }, [searchQuery, statusFilter, selectedDate]);
+
+    const handleSearchQueryChange = (event) => {
+        const query = event.target.value;
+        setSearchQuery(query);
+    };
+
+    const handleStatusFilterChange = (event) => {
+        const status = event.target.value;
+        setStatusFilter(status);
+    };
+
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+    };
+
+    const clearDateFilter = () => {
+        setSelectedDate(null);
+    };
+
+    const applyFilters = () => {
+        let searchFilteredRows = filterBySearchQuery(allOrders, searchQuery);
+        let statusFilteredRows = filterByStatus(searchFilteredRows, statusFilter);
+        let dateFilteredRows = filterByDate(statusFilteredRows, selectedDate);
+
+        // Ensure that filteredRows is set to allOrders when no filters are applied
+        if (!searchQuery && !statusFilter && !selectedDate) {
+            dateFilteredRows = allOrders;
+        }
+
+        setFilteredRows(dateFilteredRows);
+    };
+
+    const filterBySearchQuery = (rows, query) => {
+        if (!query) return rows;
+        return rows.filter((row) => {
+            const { product } = row;
+            const { name, brand, category, subCategory } = product;
+            const searchFields = [name, category, subCategory, brand];
+            return searchFields.some((field) =>
+                field.toLowerCase().includes(query.toLowerCase())
+            );
+        });
+    };
+
+    const filterByStatus = (rows, status) => {
+        if (!status) return rows;
+        return rows.filter((row) => row.status === status);
+    };
+
+    const filterByDate = (rows, date) => {
+        if (!date) return rows;
+        return rows.filter((row) => {
+            const createdAt = dayjs(row.createdAt); // Convert to dayjs
+            const selectedDateFormatted = selectedDate.format('YYYY-MM-DD'); // Format selected date
+            const rowDateFormatted = createdAt.format('YYYY-MM-DD'); // Format row date
+            return selectedDateFormatted === rowDateFormatted;
+        });
+    };
+
+
+
+
+
+
 
 
     if (allOrders) {
@@ -248,6 +422,25 @@ const VendorOrdersPage = () => {
             ),
         },
         {
+            flex: 0.25,
+            minWidth: 250,
+            field: "productName",
+            headerName: "Product Name",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+            valueGetter: (params) => params.row.product?.name,
+            renderCell: ({ row }) => (
+                <Typography
+                    variant="body1"
+                    fontWeight={500}
+                    style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '250px' }}
+                >
+                    {row?.product?.name}
+                </Typography>
+            ),
+        },
+        {
             minWidth: 150,
 
             flex: 0.25,
@@ -273,27 +466,27 @@ const VendorOrdersPage = () => {
             disableColumnMenu: true,
         },
 
-        {
-            minWidth: 150,
+        // {
+        //     minWidth: 150,
 
-            flex: 0.25,
-            field: "subtotal",
-            headerName: "Subtotal",
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true,
-        },
+        //     flex: 0.25,
+        //     field: "subtotal",
+        //     headerName: "Subtotal",
+        //     align: "left",
+        //     headerAlign: "left",
+        //     disableColumnMenu: true,
+        // },
 
-        {
-            minWidth: 150,
+        // {
+        //     minWidth: 150,
 
-            flex: 0.25,
-            field: "discount",
-            headerName: "Discount",
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true,
-        },
+        //     flex: 0.25,
+        //     field: "discount",
+        //     headerName: "Discount",
+        //     align: "left",
+        //     headerAlign: "left",
+        //     disableColumnMenu: true,
+        // },
         {
             minWidth: 150,
 
@@ -356,6 +549,13 @@ const VendorOrdersPage = () => {
         },
     ];
 
+    const deliveredOrders =
+        allOrders?.filter((order) => order.status === "Delivered") || [];
+    const deliveredPercentage =
+        allOrders && allOrders.length > 0
+            ? ((deliveredOrders.length / allOrders.length) * 100).toFixed(2)
+            : 0;
+
     return (
         <div>
             <div className='flex h-screen overflow-hidden'>
@@ -366,124 +566,129 @@ const VendorOrdersPage = () => {
                         <CircularProgress className="text-3xl" />
                     </div> : <div className='bg-gray-50'>
                         <AdminNavbar />
+                        <div className="flex md:justify-between md:items-center md:flex-row flex-col justify-center items-center mt-8 mb-6 gap-3 px-3">
 
-
-                        {/* <div className="flex md:justify-between md:items-center md:flex-row flex-col justify-center items-center mt-8 mb-6 gap-3 px-3">
-                            <div className="basis-[35%] p-4 rounded-2xl bg-white ">
+                            {/* <div> */}
+                            <div className="p-3 bg-white rounded-lg ml-6">
                                 <div className="flex justify-between items-center">
-                                    <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
-                                        <FaCartArrowDown />
-                                    </div>
-                                    <button className="flex justify-between items-center gap-3 text-gray-400">
-                                        This week <FaArrowDown />
-                                    </button>
-                                </div>
-                                <div className="mt-8 flex items-center justify-start gap-20 w-full">
-                                    <div className="flex flex-col items-start justify-center">
-                                        <p className="text-xl text-gray-400">
-                                            All Orders
-                                        </p>
-                                        <p className="text-xl font-bold">
-                                            960
-                                        </p>
-                                    </div>
-                                    <div className="flex flex-col items-start justify-center">
-                                        <p className="text-xl text-gray-400">
-                                            Pending
-                                        </p>
-                                        <p className="text-xl font-bold">
-                                            407
-                                        </p>
-                                    </div>
-                                    <div className="flex flex-col items-start justify-center">
-                                        <p className="text-xl text-gray-400">
-                                            Completed
-                                        </p>
-                                        <p className="text-xl font-bold">
-                                            103
-                                        </p>
+                                    <div className="flex gap-5 items-center justify-center">
+                                        <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
+                                            <PeopleOutlineIcon />
+                                        </div>
+                                        <div>
+                                            <p className="text-primary-blue font-bold text-xl">Summary</p>
+                                        </div>
                                     </div>
 
+
+                                </div>
+                                <div className="flex flex-col">
+                                    <div className="mt-8 flex items-center justify-start gap-20 w-full">
+                                        <div className="flex flex-col items-start justify-center">
+                                            <p className="text-gray-400">
+                                                All Orders
+                                            </p>
+                                            <Typography
+                                                paragraph
+                                                style={{ fontWeight: "500", color: "black" }}
+                                            >
+                                                {allOrders && allOrders.length}
+                                                <span
+                                                    style={{
+                                                        fontSize: "12px",
+                                                        color: "green",
+                                                        marginLeft: "4px",
+                                                    }}
+                                                >
+
+                                                    {allOrders && allOrders.length > 0 && `+${deliveredPercentage}%`}
+                                                </span>
+                                            </Typography>
+
+                                        </div>
+                                        <div className="flex flex-col ml-11 items-start justify-center">
+                                            <p className=" text-gray-400">
+                                                Delivered Orders
+                                            </p>
+                                            <Typography
+                                                paragraph
+                                                style={{ fontWeight: "500", color: "black" }}
+                                            >
+                                                {allOrders &&
+                                                    allOrders.filter((product) => product.status === "Delivered")
+                                                        .length}
+                                            </Typography>
+                                        </div>
+                                        <div className="flex flex-col items-start justify-center">
+                                            <p className=" text-gray-400">
+                                                Shipped Orders
+                                            </p>
+                                            <Typography
+                                                paragraph
+                                                style={{ fontWeight: "500", color: "black" }}
+                                            >
+                                                {allOrders &&
+                                                    allOrders.filter((product) => product.status === "Shipped")
+                                                        .length}
+                                            </Typography>
+                                        </div>
+                                    </div>
+                                    <div className="mt-2 flex items-center justify-start gap-20 w-full">
+                                        <div className="flex flex-col items-start justify-center">
+                                            <p className="text-gray-400">
+                                                Processing Orders
+                                            </p>
+                                            <Typography
+                                                paragraph
+                                                style={{ fontWeight: "500", color: "black" }}
+                                            >
+                                                {allOrders &&
+                                                    allOrders.filter((product) => product.status === "Processing")
+                                                        .length}
+                                            </Typography>
+
+                                        </div>
+                                        <div className="flex flex-col items-start justify-center">
+                                            <p className=" text-gray-400">
+                                                Returned Orders
+                                            </p>
+                                            <Typography
+                                                paragraph
+                                                style={{ fontWeight: "500", color: "black" }}
+                                            >
+                                                {allOrders &&
+                                                    allOrders.filter((product) => product.status === "Returned")
+                                                        .length}
+                                            </Typography>
+                                        </div>
+                                        <div className="flex flex-col items-start justify-center">
+                                            <p className=" text-gray-400">
+                                                Cancelled Orders
+                                            </p>
+                                            <Typography
+                                                paragraph
+                                                style={{ fontWeight: "500", color: "black" }}
+                                            >
+                                                {allOrders &&
+                                                    allOrders.filter((product) => product.status === "Cancelled")
+                                                        .length}
+                                            </Typography>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="basis-[35%] p-4 rounded-2xl bg-white ">
-                                <div className="flex justify-between items-center">
-                                    <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
-                                        <FaCartArrowDown />
-                                    </div>
-                                    <button className="flex justify-between items-center gap-3 text-gray-400">
-                                        This week <FaArrowDown />
-                                    </button>
-                                </div>
-                                <div className="mt-8 flex items-center justify-start gap-20 w-full">
-                                    <div className="flex flex-col items-start justify-center">
-                                        <p className="text-xl text-gray-400">
-                                            All Orders
-                                        </p>
-                                        <p className="text-xl font-bold">
-                                            960
-                                        </p>
-                                    </div>
-                                    <div className="flex flex-col items-start justify-center">
-                                        <p className="text-xl text-gray-400">
-                                            Pending
-                                        </p>
-                                        <p className="text-xl font-bold">
-                                            407
-                                        </p>
-                                    </div>
-                                    <div className="flex flex-col items-start justify-center">
-                                        <p className="text-xl text-gray-400">
-                                            Completed
-                                        </p>
-                                        <p className="text-xl font-bold">
-                                            103
-                                        </p>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div className="basis-[25%]  p-4 rounded-2xl bg-white ">
-                                <div className="flex justify-between items-center">
-                                    <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
-                                        <FaCartArrowDown />
-                                    </div>
-                                    <button className="flex justify-between items-center gap-3 text-gray-400">
-                                        This week <FaArrowDown />
-                                    </button>
-                                </div>
-                                <div className="mt-8 flex items-center justify-start gap-20 w-full">
-                                    <div className="flex flex-col items-start justify-center">
-                                        <p className="text-xl text-gray-400">
-                                            Abandoned Cart
-                                        </p>
-                                        <p className="text-xl font-bold">
-                                            09% <span className="text-green-400 text-sm">+0.005%</span>
-                                        </p>
-                                    </div>
-                                    <div className="flex flex-col items-start justify-center">
-                                        <p className="text-xl text-gray-400">
-                                            Customers
-                                        </p>
-                                        <p className="text-xl font-bold">
-                                            45
-                                        </p>
-                                    </div>
 
 
-                                </div>
 
-                            </div>
-                        </div> */}
 
-                        {/* <div className="flex justify-between items-center mb-8 px-4">
-                            <div className="space-x-5">
-                                <p className="text-2xl ">Customer Orders</p>
-                            </div>
 
-                           
-                        </div> */}
-                        {/* dashboard caerd */}
+
+
+
+
+
+
+                        </div>
 
                         <div className="flex justify-between items-center mb-8 mt-4  px-10">
                             <div className="space-x-5">
@@ -496,23 +701,50 @@ const VendorOrdersPage = () => {
                                     <AiOutlineSearch className="text-xl" />
                                     <input
                                         type="text"
-                                        name=""
-                                        id=""
-                                        // value={searchQuery}
-                                        // onChange={handleSearchQueryChange}
+                                        value={searchQuery}
+                                        onChange={handleSearchQueryChange}
                                         placeholder="search"
                                         className="outline-none"
                                     />
                                 </div>
+                                <div className="flex items-center bg-white p-2 rounded-lg space-x-3">
+                                    <select
+                                        value={statusFilter}
+                                        onChange={handleStatusFilterChange}
+                                        className="outline-none p-2 rounded-lg px-8"
+                                    >
+                                        <option value="">None</option>
+                                        <option value="Processing">Processing</option>
+                                        <option value="Shipped">Shipped</option>
+                                        <option value="Delivered">Delivered</option>
+                                    </select>
+                                </div>
+                                <div className="flex items-center bg-white p-2 rounded-lg space-x-3">
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <DatePicker
+                                            label="Select Date"
+                                            value={selectedDate}
+                                            onChange={handleDateChange}
+                                            renderInput={(params) => <TextField {...params} />}
+                                        />
+                                    </LocalizationProvider>
+                                    {selectedDate && (
+                                        <IconButton onClick={clearDateFilter} size="small">
+                                            <AiOutlineCloseCircle />
+                                        </IconButton>
+                                    )}
+                                </div>
+
+
                             </div>
                         </div>
 
 
-                        <Grid container spacing={6} sx={{ pb: 38, px: 4 }}>
+                        <Grid container spacing={6} sx={{ pb: 38, px: 4, overflowX: 'scroll' }}>
                             <Grid item xs={12}>
                                 <Card sx={{ borderRadius: 2 }}>
                                     <DataGrid
-                                        rows={allOrders || []}
+                                        rows={filteredRows.length ? filteredRows : allOrders}
                                         columns={all_customer_columns}
                                         getRowId={(row) => row._id}
                                         autoHeight
@@ -528,20 +760,6 @@ const VendorOrdersPage = () => {
                                         rowCount={pagination?.totalUsers}
                                         paginationMode="server"
                                         onPaginationModelChange={setPaginationModel}
-
-
-                                        // pagination
-                                        // rowsPerPageOptions={[5, 10, 25]}
-                                        // rowCount={pagination?.totalUsers || 0}
-                                        // page={pageState.page - 1}
-                                        // pageSize={pageState.pageSize}
-                                        // paginationMode="server"
-                                        // onPageChange={(newPage: number) => {
-                                        //   setPageState((old) => ({ ...old, page: newPage + 1 }));
-                                        // }}
-                                        // onPageSizeChange={(newPageSize: number) =>
-                                        //   setPageState((old) => ({ ...old, pageSize: newPageSize }))
-                                        // }
                                         sx={tableStyles}
                                     />
                                 </Card>
@@ -571,8 +789,8 @@ const VendorOrdersPage = () => {
                             open={isModalOpen}
                             onClose={handleCloseModal}
                             orderId={orderId}
-                            modalTitle="Order Details"
-                            buttonText="Order Details"
+                            modalTitle="Order D"
+                            buttonText="Order D"
                         />
 
                     </div>}

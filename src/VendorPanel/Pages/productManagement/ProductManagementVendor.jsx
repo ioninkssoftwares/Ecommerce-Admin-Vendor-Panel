@@ -16,7 +16,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import React, { ReactElement, useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsEyeFill, BsPencil, BsPencilFill } from "react-icons/bs";
-import { MdDeleteForever } from "react-icons/md";
+import { MdDeleteForever, MdInventory } from "react-icons/md";
 import { TbEdit } from "react-icons/tb";
 import { VscListFilter } from "react-icons/vsc";
 import { toast } from "react-toastify";
@@ -45,6 +45,7 @@ import { PiWarningCircleBold } from "react-icons/pi";
 import { CircleOutlined } from "@mui/icons-material";
 import { GrStatusGood } from "react-icons/gr";
 import StockPopup from "./StockPopup";
+
 
 
 const toDataURL = (url) => {
@@ -561,6 +562,14 @@ const ProductManagementVendor = () => {
     };
 
 
+    //     const deliveredOrders =
+    //     allProducts?.filter((order) => order.status === "Delivered") || [];
+    // const deliveredPercentage =
+    //     allOrders && allOrders.length > 0
+    //         ? ((deliveredOrders.length / allOrders.length) * 100).toFixed(2)
+    //         : 0;
+
+
 
     return (
         <div>
@@ -572,44 +581,103 @@ const ProductManagementVendor = () => {
                         <CircularProgress className="text-3xl" />
                     </div> : <div className='bg-gray-50'>
                         <AdminNavbar />
-                        <div className="flex justify-end items-center mt-8 mb-6 px-4">
-                            <Button
-                                sx={{
-                                    background: lowStockProducts.length > 0 ? "red" : "green",
-                                    display: "flex",
-                                    gap: "10px",
-                                }}
-                                variant="contained"
-                                onClick={handleStockCheck}
-                                disabled={loading} // Disable button when loading
-                            >
 
-                                {loading ? (
-                                    <CircularProgress color="inherit" size={20} />
-                                ) : (
-                                    "Stock"
-                                )}
-                                {lowStockProducts.length > 0 ? (
-                                    <PiWarningCircleBold
-                                        sx={{ position: "absolute", top: "5px", right: "5px", width: "20px", height: "20px" }}
-                                    />
-                                ) : (
-                                    <GrStatusGood
-                                        sx={{ position: "absolute", top: "5px", right: "5px", width: "20px", height: "20px" }}
-                                    />
-                                )}
-                            </Button>
-                            <div className=" text-sm px-3 flex gap-4">
-                                <button
-                                    onClick={() => navigate("/vendor/addProduct")}
-                                    className=" px-3 text-white font-medium justify-center w-full bg-primary-blue rounded-lg py-3 flex space-x-2 items-center transition transform active:scale-95 duration-200  "
+                        <div className="flex justify-between mt-4 ">
+                            <div className="ml-6">
+                                <div className="p-3 bg-white rounded-lg ml-6">
+                                    <div className="flex justify-between items-center">
+                                        <div className="flex gap-5 items-center justify-center">
+                                            <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
+                                                <MdInventory />
+                                            </div>
+                                            <div>
+                                                <p className="text-primary-blue font-bold text-xl">Summary</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="mt-8 flex items-center justify-start gap-20 w-full">
+                                        <div className="flex flex-col items-start justify-center">
+                                            <p className="text-gray-400">
+                                                All Products
+                                            </p>
+                                            <Typography
+                                                paragraph
+                                                style={{ fontWeight: "500", color: "black" }}
+                                            >
+                                                {vendorProducts && vendorProducts.length}
+
+                                            </Typography>
+
+                                        </div>
+                                        <div className="flex flex-col ml-11 items-start justify-center">
+                                            <p className=" text-gray-400">
+                                                Active Products
+                                            </p>
+                                            <Typography
+                                                paragraph
+                                                style={{ fontWeight: "500", color: "black" }}
+                                            >
+                                                {vendorProducts &&
+                                                    vendorProducts.filter((product) => product.isVerified === "true")
+                                                        .length}
+                                            </Typography>
+                                        </div>
+                                        <div className="flex flex-col items-start justify-center">
+                                            <p className=" text-gray-400">
+                                                Inactive Products
+                                            </p>
+                                            <Typography
+                                                paragraph
+                                                style={{ fontWeight: "500", color: "black" }}
+                                            >
+                                                {vendorProducts &&
+                                                    vendorProducts.filter((product) => product.isVerified === "false")
+                                                        .length}
+                                            </Typography>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end items-center mt-8 mb-6 px-4">
+                                <Button
+                                    sx={{
+                                        background: lowStockProducts.length > 0 ? "red" : "green",
+                                        display: "flex",
+                                        gap: "10px",
+                                    }}
+                                    variant="contained"
+                                    onClick={handleStockCheck}
+                                    disabled={loading} // Disable button when loading
                                 >
-                                    <span>
-                                        <TbEdit className="w-6 h-6" />
-                                    </span>
-                                    <span>Add Product</span>
-                                </button>
-                                {/* <button
+
+                                    {loading ? (
+                                        <CircularProgress color="inherit" size={20} />
+                                    ) : (
+                                        "Stock"
+                                    )}
+                                    {lowStockProducts.length > 0 ? (
+                                        <PiWarningCircleBold
+                                            sx={{ position: "absolute", top: "5px", right: "5px", width: "20px", height: "20px" }}
+                                        />
+                                    ) : (
+                                        <GrStatusGood
+                                            sx={{ position: "absolute", top: "5px", right: "5px", width: "20px", height: "20px" }}
+                                        />
+                                    )}
+                                </Button>
+                                <div className=" text-sm px-3 flex gap-4">
+                                    <button
+                                        onClick={() => navigate("/vendor/addProduct")}
+                                        className=" px-3 text-white font-medium justify-center w-full bg-primary-blue rounded-lg py-3 flex space-x-2 items-center transition transform active:scale-95 duration-200  "
+                                    >
+                                        <span>
+                                            <TbEdit className="w-6 h-6" />
+                                        </span>
+                                        <span>Add Product</span>
+                                    </button>
+                                    {/* <button
                                     onClick={exportExcelFile}
                                     className=" px-3 text-white font-medium justify-center w-full bg-primary-blue rounded-lg py-3 flex space-x-2 items-center transition transform active:scale-95 duration-200  "
                                 >
@@ -618,34 +686,11 @@ const ProductManagementVendor = () => {
                                     </span>
                                     <span>Export Products</span>
                                 </button> */}
+                                </div>
                             </div>
+
                         </div>
 
-                        {/* <Box sx={{ height: 400, width: '50%', margin: "0 auto" }}>
-                            <Box sx={{ width: '100%', display: 'flex', alignItems: "center", justifyContent: "space-between", margin: "20px 0px" }}>
-                                <Typography variant="h5" >
-                                    Top Selling Products
-                                </Typography>
-                                <Typography variant="body1" sx={{ color: "#04a7ff" }}>
-                                    See more
-                                </Typography>
-                            </Box>
-
-                            <DataGrid
-                                rows={rows}
-                                columns={columns}
-                                initialState={{
-                                    pagination: {
-                                        paginationModel: {
-                                            pageSize: 5,
-                                        },
-                                    },
-                                }}
-                                pageSizeOptions={[5]}
-                                checkboxSelection
-                                disableRowSelectionOnClick
-                            />
-                        </Box> */}
 
                         <div className="flex justify-between items-center mb-8  px-4">
                             <div className="space-x-5">

@@ -1,0 +1,22 @@
+/* InvoicePage.css */
+@media print {
+    @page {
+        size: A5;
+        margin: 10mm;
+        /* Adjust the margin as needed */
+    }
+
+    .a5-page {
+        width: 148mm;
+        /* A5 width */
+        height: 210mm;
+        /* A5 height */
+        overflow: hidden;
+    }
+
+    .content {
+        font-size: 12px;
+        /* Adjust font size as needed */
+        /* Any other styles to ensure content fits well within A5 size */
+    }
+}
