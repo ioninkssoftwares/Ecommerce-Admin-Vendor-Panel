@@ -22,7 +22,7 @@ import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 
 import { AiOutlineSearch } from 'react-icons/ai';
-import { tableStyles } from '../../vendor/shared/ConfirmDialog'
+import ConfirmBox, { tableStyles } from '../../vendor/shared/ConfirmDialog'
 import { FiUser, FiUsers } from 'react-icons/fi';
 import { useAxios } from '../../../../utils/axios';
 import { LuMapPin } from 'react-icons/lu';
@@ -79,6 +79,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) => {
     const instance = useAxios();
     const navigate = useNavigate();
+    const [deleteOpen, setDeleteOpen] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
     const [loading, setLoading] = useState(false);
     const [orderDetails, setOrderDetails] = useState({});
     const [orderGridDetails, setOrderGridDetails] = useState([]);
@@ -155,6 +157,7 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
     console.log(isTrackingDetailsEmpty, "trackiiiii")
 
     const processOrder = async (processId) => {
+        setDeleteLoading(true)
         try {
             // Set loading state to true for the specific order
             setProcessLoadingState((prev) => ({ ...prev, [processId]: true }));
@@ -168,6 +171,8 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
                 setProcessLoadingState((prev) => ({ ...prev, [processId]: false }));
                 // setDeleteOpen(false);
                 getOrderDetailsByOrderId(orderId)
+                setDeleteLoading(false)
+                setDeleteOpen(false)
             }
         } catch (e) {
             // Handle errors here
@@ -175,6 +180,8 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
 
             // Clear loading state for the specific order on error
             setProcessLoadingState((prev) => ({ ...prev, [processId]: false }));
+            setDeleteLoading(false)
+            setDeleteOpen(false)
         }
     };
 
@@ -640,7 +647,8 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
                             </button>
                         ) : orderDetails?.status === "Shipped" ? (
                             <button
-                                onClick={() => processOrder(orderId)}
+                                // onClick={() => processOrder(orderId)}
+                                onClick={() => setDeleteOpen(true)}
                                 disabled={loading}
                                 className={`px-7 text-white font-medium bg-primary-blue rounded-lg py-3 items-center transition transform active:scale-95 duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
@@ -668,6 +676,16 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
                             Cancel Order
                         </button>
                     </div>
+
+                    <ConfirmBox
+                        title="Delivered"
+                        name="mark as Delivered"
+                        open={deleteOpen}
+                        closeDialog={() => setDeleteOpen(false)}
+                        toDoFunction={() => processOrder(orderId)}
+                        loading={deleteLoading}
+                        sx={{ pb: 4, border: "2px solid red" }}
+                    />
 
 
                 </Box>

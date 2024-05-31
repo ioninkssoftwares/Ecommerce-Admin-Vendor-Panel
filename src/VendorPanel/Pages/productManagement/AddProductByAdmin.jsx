@@ -1084,7 +1084,7 @@ const AddProductByAdmin = () => {
                         </div>
                         <ConfirmBox
                             title="Add Product"
-                            name="product"
+                            name="add a Product"
                             open={deleteOpen}
                             closeDialog={() => setDeleteOpen(false)}
                             toDoFunction={handleProductSubmit}
