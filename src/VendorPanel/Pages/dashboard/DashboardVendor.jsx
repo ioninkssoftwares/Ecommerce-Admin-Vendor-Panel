@@ -39,7 +39,7 @@ const DashboardVendor = () => {
                             }}
                         >
                             <Typography variant="h5">Welcome back, Vendor</Typography>
-                            <FormControl sx={{
+                            {/* <FormControl sx={{
                                 m: 1,
                                 minWidth: 250,
                             }} size="small">
@@ -58,7 +58,7 @@ const DashboardVendor = () => {
                                         <MenuItem value={30}>Monthly</MenuItem>
                                         <MenuItem value={365}>Yearly</MenuItem>
                                     </Select> </>}
-                            </FormControl>
+                            </FormControl> */}
                         </Box>
 
                         <Box
@@ -72,12 +72,123 @@ const DashboardVendor = () => {
 
 
                             }}
+
+
                         >
-                            <BarChartOne />
+
+                            {/* <div className="p-3 bg-white rounded-lg ml-6">
+                                <div className="flex justify-between items-center">
+                                    <div className="flex gap-5 items-center justify-center">
+                                        <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
+                                            <PeopleOutlineIcon />
+                                        </div>
+                                        <div>
+                                            <p className="text-primary-blue font-bold text-xl">Summary</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col">
+                                    <div className="mt-8 flex items-center justify-start gap-20 w-full">
+                                        <div className="flex flex-col items-start justify-center">
+                                            <p className="text-gray-400">
+                                                All Orders
+                                            </p>
+                                            <Typography
+                                                paragraph
+                                                style={{ fontWeight: "500", color: "black" }}
+                                            >
+                                                {allOrders && allOrders.length}
+                                                <span
+                                                    style={{
+                                                        fontSize: "12px",
+                                                        color: "green",
+                                                        marginLeft: "4px",
+                                                    }}
+                                                >
+
+                                                    {allOrders && allOrders.length > 0 && `+${deliveredPercentage}%`}
+                                                </span>
+                                            </Typography>
+
+                                        </div>
+                                        <div className="flex flex-col ml-11 items-start justify-center">
+                                            <p className=" text-gray-400">
+                                                Delivered Orders
+                                            </p>
+                                            <Typography
+                                                paragraph
+                                                style={{ fontWeight: "500", color: "black" }}
+                                            >
+                                                {allOrders &&
+                                                    allOrders.filter((product) => product.status === "Delivered")
+                                                        .length}
+                                            </Typography>
+                                        </div>
+                                        <div className="flex flex-col items-start justify-center">
+                                            <p className=" text-gray-400">
+                                                Shipped Orders
+                                            </p>
+                                            <Typography
+                                                paragraph
+                                                style={{ fontWeight: "500", color: "black" }}
+                                            >
+                                                {allOrders &&
+                                                    allOrders.filter((product) => product.status === "Shipped")
+                                                        .length}
+                                            </Typography>
+                                        </div>
+                                    </div>
+                                    <div className="mt-2 flex items-center justify-start gap-20 w-full">
+                                        <div className="flex flex-col items-start justify-center">
+                                            <p className="text-gray-400">
+                                                Processing Orders
+                                            </p>
+                                            <Typography
+                                                paragraph
+                                                style={{ fontWeight: "500", color: "black" }}
+                                            >
+                                                {allOrders &&
+                                                    allOrders.filter((product) => product.status === "Processing")
+                                                        .length}
+                                            </Typography>
+
+                                        </div>
+                                        <div className="flex flex-col items-start justify-center">
+                                            <p className=" text-gray-400">
+                                                Returned Orders
+                                            </p>
+                                            <Typography
+                                                paragraph
+                                                style={{ fontWeight: "500", color: "black" }}
+                                            >
+                                                {allOrders &&
+                                                    allOrders.filter((product) => product.status === "Returned")
+                                                        .length}
+                                            </Typography>
+                                        </div>
+                                        <div className="flex flex-col items-start justify-center">
+                                            <p className=" text-gray-400">
+                                                Cancelled Orders
+                                            </p>
+                                            <Typography
+                                                paragraph
+                                                style={{ fontWeight: "500", color: "black" }}
+                                            >
+                                                {allOrders &&
+                                                    allOrders.filter((product) => product.status === "Cancelled")
+                                                        .length}
+                                            </Typography>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> */}
+
+
+                            {/* <BarChartOne />
                             <BarChartTwo />
-                            <PieChartThree />
+                            <PieChartThree /> */}
                         </Box>
-                        <Box
+                        {/* <Box
                             sx={{
                                 justifyContent: "space-between",
                                 marginTop: "15px",
@@ -88,15 +199,15 @@ const DashboardVendor = () => {
                             <RangeChartFour />
                             <TableChartFive />
                             <CardChartSix />
-                        </Box>
+                        </Box> */}
 
-                        <Box sx={{
+                        {/* <Box sx={{
                             display: isMobile ? 'none' : 'block'
                         }}>
                             <SellingProducts />
                             <CustomersOrders />
                             <SaleVsDate />
-                        </Box>
+                        </Box> */}
                     </main>
                 </div>
             </div>

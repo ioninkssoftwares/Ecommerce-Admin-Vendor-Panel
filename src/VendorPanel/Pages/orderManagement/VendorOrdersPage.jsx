@@ -74,7 +74,6 @@ const VendorOrdersPage = () => {
     const [vendorId, setVendorId] = useState('');
 
 
-
     const instance = useAxios(token);
     const [users, setUsers] = useState([]);
     const [pagination, setPagination] = useState(
@@ -177,8 +176,6 @@ const VendorOrdersPage = () => {
 
 
 
-
-
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredRows, setFilteredRows] = useState(allOrders);
     const [statusFilter, setStatusFilter] = useState('');
@@ -208,12 +205,52 @@ const VendorOrdersPage = () => {
         setSelectedDate(null);
     };
 
+    // const applyFilters = () => {
+    //     let searchFilteredRows = filterBySearchQuery(allOrders, searchQuery);
+    //     let statusFilteredRows = filterByStatus(searchFilteredRows, statusFilter);
+    //     let dateFilteredRows = filterByDate(statusFilteredRows, selectedDate);
+
+
+    //     if (!searchQuery && !statusFilter && !selectedDate) {
+    //         dateFilteredRows = allOrders;
+    //     }
+
+    //     setFilteredRows(dateFilteredRows);
+    // };
+
+    // const filterBySearchQuery = (rows, query) => {
+    //     if (!query) return rows;
+    //     return rows.filter((row) => {
+    //         const { product } = row;
+    //         const { name, brand, category, subCategory } = product;
+    //         const searchFields = [name, category, subCategory, brand];
+    //         return searchFields.some((field) =>
+    //             field.toLowerCase().includes(query.toLowerCase())
+    //         );
+    //     });
+    // };
+
+    // const filterByStatus = (rows, status) => {
+    //     if (!status) return rows;
+    //     return rows.filter((row) => row.status === status);
+    // };
+
+    // const filterByDate = (rows, date) => {
+    //     if (!date) return rows;
+    //     return rows.filter((row) => {
+    //         const createdAt = dayjs(row.createdAt);
+    //         const selectedDateFormatted = selectedDate.format('YYYY-MM-DD'); 
+    //         const rowDateFormatted = createdAt.format('YYYY-MM-DD'); 
+    //         return selectedDateFormatted === rowDateFormatted;
+    //     });
+    // };
+
+
     const applyFilters = () => {
         let searchFilteredRows = filterBySearchQuery(allOrders, searchQuery);
         let statusFilteredRows = filterByStatus(searchFilteredRows, statusFilter);
         let dateFilteredRows = filterByDate(statusFilteredRows, selectedDate);
 
-        // Ensure that filteredRows is set to allOrders when no filters are applied
         if (!searchQuery && !statusFilter && !selectedDate) {
             dateFilteredRows = allOrders;
         }
@@ -241,17 +278,12 @@ const VendorOrdersPage = () => {
     const filterByDate = (rows, date) => {
         if (!date) return rows;
         return rows.filter((row) => {
-            const createdAt = dayjs(row.createdAt); // Convert to dayjs
-            const selectedDateFormatted = selectedDate.format('YYYY-MM-DD'); // Format selected date
-            const rowDateFormatted = createdAt.format('YYYY-MM-DD'); // Format row date
+            const createdAt = dayjs(row.createdAt);
+            const selectedDateFormatted = date.format('YYYY-MM-DD');
+            const rowDateFormatted = createdAt.format('YYYY-MM-DD');
             return selectedDateFormatted === rowDateFormatted;
         });
     };
-
-
-
-
-
 
 
 
@@ -417,7 +449,7 @@ const VendorOrdersPage = () => {
             disableColumnMenu: true,
             renderCell: ({ row }) => (
                 <Typography variant="body1" fontWeight={500} style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '150px' }}>
-                    {row?.user}
+                    {row?.user?.name}  {/* Accessing the 'name' field */}
                 </Typography>
             ),
         },
@@ -579,8 +611,6 @@ const VendorOrdersPage = () => {
                                             <p className="text-primary-blue font-bold text-xl">Summary</p>
                                         </div>
                                     </div>
-
-
                                 </div>
                                 <div className="flex flex-col">
                                     <div className="mt-8 flex items-center justify-start gap-20 w-full">

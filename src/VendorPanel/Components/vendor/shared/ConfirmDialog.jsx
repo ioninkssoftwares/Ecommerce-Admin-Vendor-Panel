@@ -132,7 +132,7 @@ function ConfirmBox({
                                 {title}
                             </Typography>
                             <Typography variant="body1">
-                                Are you sure you want to add this {name} ?
+                                Are you sure you want to {name} ?
                             </Typography>
                         </Box>
                     </Grid>
@@ -157,7 +157,7 @@ function ConfirmBox({
                             ) : (
                                 <IoIosAddCircle />
                             )}
-                            Add
+                            Yes
                         </button>
                     </Grid>
                 </Grid>
