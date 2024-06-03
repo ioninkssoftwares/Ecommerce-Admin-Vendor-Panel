@@ -1,17 +1,11 @@
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-
 import React, { useEffect, useRef } from "react";
+import { Box, Typography, InputLabel, MenuItem, FormControl, Select, CircularProgress, useMediaQuery } from "@mui/material";
+import { ArrowUpward as ArrowUpwardIcon, CurrencyRupee as CurrencyRupeeIcon } from "@mui/icons-material";
 import Chart from "chart.js/auto";
-import { useMediaQuery } from "@mui/material";
 
-const BarChartOne = () => {
+const BarChartOne = ({ allProductsCount, activeProductsCount, inactiveProductsCount, loading }) => {
+
+  console.log(allProductsCount, activeProductsCount, inactiveProductsCount, "bardata")
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
@@ -29,133 +23,109 @@ const BarChartOne = () => {
 
     const barColors = [
       "rgb(0, 101, 193)",
-      "rgb(0, 101, 193)",
-      "rgb(0, 101, 193)",
-      "rgb(0, 101, 193)",
-      "rgb(0, 101, 193)",
+      "rgb(0, 193, 0)",
+      "rgb(193, 0, 0)",
     ];
+
     chartInstance.current = new Chart(myChartRef, {
       type: "bar",
       data: {
-        labels: ["label 1", "label 2", "label 3", "label 4", "label 5"],
+        labels: ["Products"],
         datasets: [
           {
-            label: "Data",
-            data: [12, 19, 8, 4, 8],
-            backgroundColor: barColors,
-            barPercentage: 0.2,
+            label: "Product Count",
+            data: [allProductsCount],
+            backgroundColor: barColors[0],
+            barPercentage: 0.5,
+            borderRadius: 10,
+          },
+          {
+            label: "Active Count",
+            data: [activeProductsCount],
+            backgroundColor: barColors[1],
+            barPercentage: 0.5,
+            borderRadius: 10,
+          },
+          {
+            label: "Inactive Count",
+            data: [inactiveProductsCount],
+            backgroundColor: barColors[2],
+            barPercentage: 0.5,
             borderRadius: 10,
           },
         ],
       },
+      options: {
+        plugins: {
+          legend: {
+            display: true,
+            labels: {
+              generateLabels: (chart) => {
+                const datasets = chart.data.datasets;
+                return datasets.map((dataset, i) => ({
+                  text: dataset.label,
+                  fillStyle: dataset.backgroundColor,
+                  hidden: !chart.isDatasetVisible(i),
+                  lineCap: 'round',
+                  lineDash: [],
+                  lineDashOffset: 0,
+                  lineJoin: 'round',
+                  lineWidth: 1,
+                  strokeStyle: dataset.borderColor,
+                  pointStyle: 'circle',
+                }));
+              },
+            },
+          },
+        },
+      },
     });
+
     return () => {
       if (chartInstance.current) {
         chartInstance.current.destroy();
       }
     };
-  });
+  }, [allProductsCount, activeProductsCount, inactiveProductsCount]);
 
   const isMobile = useMediaQuery('(max-width:600px)');
 
   return (
-    <>
-      <div
-        style={{
-          width: isMobile ? "100%" : "32%",
-          marginBottom: isMobile ? "30px" : "0",
-          marginRight: isMobile ? "0" : "30px"
-        }}
-        className="BarChartOne01">
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="h6">
-            Total Orders
-            <br />
-            <Typography paragraph style={{ fontWeight: "800" }}>
-              <CurrencyRupeeIcon style={{ fontSize: "15px" }} />
-              400
-              <span
-                style={{ color: "green", fontSize: "12px", fontWeight: "200" }}
-              >
-                <ArrowUpwardIcon sx={{ fontSize: "12px" }} />
-                11.94%
-              </span>
-            </Typography>
-          </Typography>
-          <FormControl
-            sx={{
-              m: 1,
-              minWidth: 120,
-              alignSelf: "flex-start",
-            }}
-            size="small"
-          >
-            <InputLabel id="demo-select-small-label">Today</InputLabel>
-            <Select
-              labelId="demo-select-small-label"
-              id="demo-select-small"
-              value={time}
-              label="Time"
-              onChange={handleChange}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={7}>Weekly</MenuItem>
-              <MenuItem value={30}>Monthly</MenuItem>
-              <MenuItem value={365}>Yearly</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
-        <canvas ref={chartRef} />
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="h6" sx={{ fontSize: "15px" }}>
-            Categories
-            <br />
-            <Typography paragraph style={{ fontWeight: "800" }}>
-              12
-              <span
-                style={{ color: "green", fontSize: "12px", fontWeight: "200" }}
-              >
-                <ArrowUpwardIcon sx={{ fontSize: "12px" }} />
-                11.94%
-              </span>
-            </Typography>
-          </Typography>
+    <div
+      style={{
+        width: isMobile ? "100%" : "32%",
+        marginBottom: isMobile ? "30px" : "0",
+        marginRight: isMobile ? "0" : "30px",
+        marginLeft: isMobile ? "0" : "30px"
+      }}
+      className="BarChartOne01">
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Typography variant="h6">
+          Total Products
+          <br />
+          <Typography paragraph style={{ fontWeight: "800" }}>
 
-          <Typography variant="h6" sx={{ fontSize: "15px" }}>
-            Sub Categories
-            <br />
-            <Typography paragraph style={{ fontWeight: "800" }}>
-              06
-              <span
-                style={{
-                  color: "green",
-                  fontSize: "12px",
-                  fontWeight: "200",
-                }}
-              >
-                <ArrowUpwardIcon sx={{ fontSize: "12px" }} />
-                11.94%
-              </span>
-            </Typography>
+            {allProductsCount}
+            {/* <span style={{ color: "green", fontSize: "12px", fontWeight: "200" }}>
+              <ArrowUpwardIcon sx={{ fontSize: "12px" }} />
+              11.94%
+            </span> */}
           </Typography>
-        </Box>
-      </div>
-    </>
+        </Typography>
+
+      </Box>
+      {loading ? <CircularProgress /> : <canvas ref={chartRef} />}
+
+    </div>
   );
 };
 
 export default BarChartOne;
+
+
+
+
+
+
+
+
