@@ -280,6 +280,16 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
             minWidth: 120,
 
             flex: 0.25,
+            field: "_id",
+            headerName: "Order Id",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+        },
+        {
+            minWidth: 120,
+
+            flex: 0.25,
             field: "createdAt",
             headerName: "Order Date",
             align: "left",
@@ -663,12 +673,22 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
                             </button>
                         )}
 
-                        {loading ? <CircularProgress /> : <button
-                            onClick={updateTrackingDetials}
-                            className=" px-7 text-white font-medium bg-primary-blue rounded-lg py-3  items-center transition transform active:scale-95 duration-200  "
-                        >
-                            Update Tracking
-                        </button>}
+                        {loading ? (
+                            <CircularProgress />
+                        ) : (
+                            <button
+                                onClick={() => {
+                                    if (isTrackingDetailsEmpty) {
+                                        updateTrackingDetials();
+                                    }
+                                }}
+                                disabled={loading || !isTrackingDetailsEmpty}
+                                className={`px-7 text-white font-medium bg-primary-blue rounded-lg py-3 items-center transition transform active:scale-95 duration-200 ${loading || !isTrackingDetailsEmpty ? 'opacity-50 cursor-not-allowed' : ''
+                                    }`}
+                            >
+                                {loading ? <CircularProgress size={24} color="inherit" /> : "Update Tracking"}
+                            </button>
+                        )}
                         <button
                             // onClick={() => router.push("/admin/customers/add")}
                             className=" px-7 text-white font-medium bg-red-600 rounded-lg py-3  items-center transition transform active:scale-95 duration-200  "
