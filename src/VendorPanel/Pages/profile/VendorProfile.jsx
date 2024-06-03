@@ -4,6 +4,10 @@ import Sidebar from "../../Components/sidebar/Siderbar"
 import { useCookies } from "react-cookie";
 import { useAxios } from "../../../utils/axios";
 import { useEffect, useState } from "react";
+import { MdInventory } from "react-icons/md";
+import { FaUser } from "react-icons/fa";
+import { BsBank2 } from "react-icons/bs";
+import { IoIosDocument } from "react-icons/io";
 
 
 const VendorProfile = () => {
@@ -78,61 +82,97 @@ const VendorProfile = () => {
                     {/* <main> */}
                     {loading ? <div className="flex items-center justify-center text-3xl h-full">
                         <CircularProgress className="text-3xl" />
-                    </div> : <div className='bg-gray-50'>
+                    </div> : <div className='bg-gray-50 h-screen'>
                         <VendorNavbar />
-                        {/* <h1>Vendor profile</h1> */}
-                        <div className=" mx-28 my-5">
+                        <div className="flex justify-between mt-4 mx-6">
+                            <h1 className="text-3xl font-semibold">Profile</h1>
+                            <button
+                                className={`px-7 text-white font-medium bg-primary-blue rounded-lg py-3 items-center transition transform active:scale-95 duration-200`}
+                            >Update Password</button>
+                        </div>
 
-                            <div className="flex justify-between w-full">
-                                <h1 className="text-3xl leading-9 tracking-tight text-gray-900 max-sm:text-2xl">Profile</h1>
-                                {/* <button className="py-1 px-4 rounded-lg bg-gray-200 text-primary-blue">
-                                    Edit
-                                </button> */}
-                            </div>
-                            <div>
-                                <div className="mt-2 border-t border-gray-100">
-                                    <dl className="divide-y divide-gray-100">
-                                        <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                            <dt className="text-sm font-medium leading-6 text-gray-900">Name</dt>
-                                            <dt
-                                                className="text-sm font-medium leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                                {vendorDetails?.name}</dt>
+                        <div className="mx-6 flex items-center justify-center gap-4 mt-8">
+                            <div className=" p-4  bg-white rounded-lg w-full ">
+                                <div className="flex justify-between items-center">
+                                    <div className="flex gap-5 items-center justify-center">
+                                        <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
+                                            <FaUser />
                                         </div>
-                                        {/* <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                            <dt className="text-sm font-medium leading-6 text-gray-900">Display Name</dt>
-                                            <dt
-                                                className="text-sm font-medium leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                                Mohsin.B.W.</dt>
-                                        </div> */}
-                                        <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                            <dt className="text-sm font-medium leading-6 text-gray-900">Email</dt>
-                                            <dt
-                                                className="text-sm font-medium leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                                {vendorDetails?.email}</dt>
+                                        <div>
+                                            <p className="text-primary-blue font-bold text-xl">Personal Info</p>
                                         </div>
-                                        <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                            <dt className="text-sm font-medium leading-6 text-gray-900">Phone</dt>
-                                            <dt
-                                                className="text-sm font-medium leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                                {vendorDetails?.mobileNo}</dt>
-                                        </div>
-                                        {/* <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                            <dt className="text-sm font-medium leading-6 text-gray-900">Date of Birth</dt>
-                                            <dt
-                                                className="text-sm font-medium leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                                08/07/1988</dt>
-                                        </div> */}
-
-                                        <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                            <dt className="text-sm font-medium leading-6 text-gray-900">Address</dt>
-                                            <dt
-                                                className="text-sm font-medium leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                                {vendorDetails?.address}</dt>
-                                        </div>
-                                    </dl>
+                                    </div>
                                 </div>
-                            </div>
+                                <div className="flex gap-2 my-2">
+                                    <span className="font-bold">Name:</span><span>{vendorDetails?.name}</span>
+                                </div>
+                                <div className="flex gap-2 my-2">
+                                    <span className="font-bold">Email:</span><span>{vendorDetails?.email}</span>
+                                </div>
+                                <div className="flex gap-2 my-2">
+                                    <span className="font-bold">Mobile Number:</span><span>{vendorDetails?.mobileNo}</span>
+                                </div>
+                                <div className="flex gap-2 my-2">
+                                    <span className="font-bold">Address1:</span>{vendorDetails?.address1}<span>{vendorDetails?.address1}</span>
+                                </div>
+                                <div className="flex gap-2 my-2">
+                                    <span className="font-bold">Address2:</span>{vendorDetails?.address1}<span>{vendorDetails?.address2}</span>
+                                </div>
 
+
+
+                            </div>
+                            <div className=" p-4  bg-white rounded-lg w-full ">
+                                <div className="flex justify-between items-center">
+                                    <div className="flex gap-5 items-center justify-center">
+                                        <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
+                                            <BsBank2 />
+                                        </div>
+                                        <div>
+                                            <p className="text-primary-blue font-bold text-xl">Banking Info</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex gap-2 my-2">
+                                    <span className="font-bold">Bank Name:</span><span>{vendorDetails?.bankName}</span>
+                                </div>
+                                <div className="flex gap-2 my-2">
+                                    <span className="font-bold">IFSC:</span><span>{vendorDetails?.ifsc}</span>
+                                </div>
+                                <div className="flex gap-2 my-2">
+                                    <span className="font-bold">Account Number:</span><span>{vendorDetails?.accountNo}</span>
+                                </div>
+                                <div className="flex gap-2 my-2">
+                                    <span className="font-bold">UPI ID:</span><span>{vendorDetails?.upiId}</span>
+                                </div>
+
+
+
+                            </div>
+                            <div className=" p-4  bg-white rounded-lg w-full  ">
+                                <div className="flex justify-between items-center">
+                                    <div className="flex gap-5 items-center justify-center">
+                                        <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
+                                            <IoIosDocument />
+                                        </div>
+                                        <div>
+                                            <p className="text-primary-blue font-bold text-xl">Documental Info</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex gap-2 my-2">
+                                    <span className="font-bold">Aadhaar Card Number:</span><span>{vendorDetails?.adhaarCardNo}</span>
+                                </div>
+                                <div className="flex gap-2 my-2">
+                                    <span className="font-bold">PAN Card Number:</span><span>{vendorDetails?.pancardNo}</span>
+                                </div>
+                                <div className="flex mb-10 gap-2 my-2">
+                                    <span className="font-bold">GST Number:</span><span>{vendorDetails?.gstNo}</span>
+                                </div>
+
+
+
+                            </div>
                         </div>
 
 
