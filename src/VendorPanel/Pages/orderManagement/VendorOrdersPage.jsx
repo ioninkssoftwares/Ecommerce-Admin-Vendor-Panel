@@ -33,6 +33,7 @@ import dayjs from 'dayjs'; // Import dayjs for date manipulation
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { useMemo } from "react";
 // import 'dayjs/locale/en'; // Optionally, set locale
 
 
@@ -88,92 +89,9 @@ const VendorOrdersPage = () => {
     // const router = useRouter();
     const navigate = useNavigate();
 
-    // FIlter section
-    // const [searchQuery, setSearchQuery] = useState('');
-    // const [filteredRows, setFilteredRows] = useState(allOrders);
-    // const [statusFilter, setStatusFilter] = useState('');
-    // const [startDate, setStartDate] = useState(null);
-    // const [endDate, setEndDate] = useState(null);
-
-
-    // // useEffect(() => {
-    // //     applyFilters();
-    // // }, [searchQuery, statusFilter]);
-    // useEffect(() => {
-    //     applyFilters();
-    // }, [searchQuery, statusFilter, startDate, endDate]);
-
-    // const handleSearchQueryChange = (event) => {
-    //     const query = event.target.value;
-    //     setSearchQuery(query);
-    // };
-
-    // const handleStatusFilterChange = (event) => {
-    //     const status = event.target.value;
-    //     setStatusFilter(status);
-    // };
-
-    // const handleStartDateChange = (date) => {
-    //     setStartDate(date);
-    // };
-
-    // const handleEndDateChange = (date) => {
-    //     setEndDate(date);
-    // };
-
-    // // const applyFilters = () => {
-    // //     let searchFilteredRows = filterBySearchQuery(allOrders, searchQuery);
-    // //     let finalFilteredRows = filterByStatus(searchFilteredRows, statusFilter);
-
-    // //     // Ensure that filteredRows is set to allOrders when no filters are applied
-    // //     if (!searchQuery && !statusFilter) {
-    // //         finalFilteredRows = allOrders;
-    // //     }
-
-    // //     setFilteredRows(finalFilteredRows);
-    // // };
-
-    // const applyFilters = () => {
-    //     let searchFilteredRows = filterBySearchQuery(allOrders, searchQuery);
-    //     let statusFilteredRows = filterByStatus(searchFilteredRows, statusFilter);
-    //     let finalFilteredRows = filterByDate(statusFilteredRows, startDate, endDate);
-
-    //     // Ensure that filteredRows is set to allOrders when no filters are applied
-    //     if (!searchQuery && !statusFilter && !startDate && !endDate) {
-    //         finalFilteredRows = allOrders;
-    //     }
-
-    //     setFilteredRows(finalFilteredRows);
-    // };
-
-    // const filterBySearchQuery = (rows, query) => {
-    //     if (!query) return rows;
-    //     return rows.filter((row) => {
-    //         const { product } = row;
-    //         const { name, brand, category, subCategory } = product;
-    //         const searchFields = [name, category, subCategory, brand];
-    //         return searchFields.some((field) =>
-    //             field.toLowerCase().includes(query.toLowerCase())
-    //         );
-    //     });
-    // };
-
-    // const filterByStatus = (rows, status) => {
-    //     if (!status) return rows;
-    //     return rows.filter((row) => row.status === status);
-    // };
-
-
-    // const filterByDate = (rows, start, end) => {
-    //     if (!start && !end) return rows;
-    //     return rows.filter((row) => {
-    //         const createdAt = new Date(row.createdAt);
-    //         const startDateMatch = start ? createdAt >= start : true;
-    //         const endDateMatch = end ? createdAt <= end : true;
-    //         return startDateMatch && endDateMatch;
-    //     });
-    // };
-
+    const sortedOrders = useMemo(() => {
+        return [...allOrders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }, [allOrders]);
 
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -205,45 +123,6 @@ const VendorOrdersPage = () => {
         setSelectedDate(null);
     };
 
-    // const applyFilters = () => {
-    //     let searchFilteredRows = filterBySearchQuery(allOrders, searchQuery);
-    //     let statusFilteredRows = filterByStatus(searchFilteredRows, statusFilter);
-    //     let dateFilteredRows = filterByDate(statusFilteredRows, selectedDate);
-
-
-    //     if (!searchQuery && !statusFilter && !selectedDate) {
-    //         dateFilteredRows = allOrders;
-    //     }
-
-    //     setFilteredRows(dateFilteredRows);
-    // };
-
-    // const filterBySearchQuery = (rows, query) => {
-    //     if (!query) return rows;
-    //     return rows.filter((row) => {
-    //         const { product } = row;
-    //         const { name, brand, category, subCategory } = product;
-    //         const searchFields = [name, category, subCategory, brand];
-    //         return searchFields.some((field) =>
-    //             field.toLowerCase().includes(query.toLowerCase())
-    //         );
-    //     });
-    // };
-
-    // const filterByStatus = (rows, status) => {
-    //     if (!status) return rows;
-    //     return rows.filter((row) => row.status === status);
-    // };
-
-    // const filterByDate = (rows, date) => {
-    //     if (!date) return rows;
-    //     return rows.filter((row) => {
-    //         const createdAt = dayjs(row.createdAt);
-    //         const selectedDateFormatted = selectedDate.format('YYYY-MM-DD'); 
-    //         const rowDateFormatted = createdAt.format('YYYY-MM-DD'); 
-    //         return selectedDateFormatted === rowDateFormatted;
-    //     });
-    // };
 
 
     const applyFilters = () => {
@@ -612,100 +491,99 @@ const VendorOrdersPage = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex flex-col">
-                                    <div className="mt-8 flex items-center justify-start gap-20 w-full">
-                                        <div className="flex flex-col items-start justify-center">
-                                            <p className="text-gray-400">
-                                                All Orders
-                                            </p>
-                                            <Typography
-                                                paragraph
-                                                style={{ fontWeight: "500", color: "black" }}
-                                            >
-                                                {allOrders && allOrders.length}
-                                                <span
-                                                    style={{
-                                                        fontSize: "12px",
-                                                        color: "green",
-                                                        marginLeft: "4px",
-                                                    }}
-                                                >
+                                <div className="flex gap-[8.8rem] mt-4">
+                                    {/* <div className="mt-8 flex items-center justify-start gap-20 w-full"> */}
+                                    <div className="flex flex-col items-start justify-center">
+                                        <p className="text-gray-400">
+                                            All Orders
+                                        </p>
+                                        <Typography
+                                            paragraph
+                                            style={{ fontWeight: "500", color: "black" }}
+                                        >
+                                            {allOrders && allOrders.length}
+                                            <span
+                                                style={{
+                                                    fontSize: "12px",
+                                                    color: "green",
 
-                                                    {allOrders && allOrders.length > 0 && `+${deliveredPercentage}%`}
-                                                </span>
-                                            </Typography>
+                                                }}
+                                            >
 
-                                        </div>
-                                        <div className="flex flex-col ml-11 items-start justify-center">
-                                            <p className=" text-gray-400">
-                                                Delivered Orders
-                                            </p>
-                                            <Typography
-                                                paragraph
-                                                style={{ fontWeight: "500", color: "black" }}
-                                            >
-                                                {allOrders &&
-                                                    allOrders.filter((product) => product.status === "Delivered")
-                                                        .length}
-                                            </Typography>
-                                        </div>
-                                        <div className="flex flex-col items-start justify-center">
-                                            <p className=" text-gray-400">
-                                                Shipped Orders
-                                            </p>
-                                            <Typography
-                                                paragraph
-                                                style={{ fontWeight: "500", color: "black" }}
-                                            >
-                                                {allOrders &&
-                                                    allOrders.filter((product) => product.status === "Shipped")
-                                                        .length}
-                                            </Typography>
-                                        </div>
+                                                {allOrders && allOrders.length > 0 && `+${deliveredPercentage}%`}
+                                            </span>
+                                        </Typography>
+
                                     </div>
-                                    <div className="mt-2 flex items-center justify-start gap-20 w-full">
-                                        <div className="flex flex-col items-start justify-center">
-                                            <p className="text-gray-400">
-                                                Processing Orders
-                                            </p>
-                                            <Typography
-                                                paragraph
-                                                style={{ fontWeight: "500", color: "black" }}
-                                            >
-                                                {allOrders &&
-                                                    allOrders.filter((product) => product.status === "Processing")
-                                                        .length}
-                                            </Typography>
+                                    <div className="flex flex-col items-start justify-center">
+                                        <p className=" text-gray-400">
+                                            Delivered Orders
+                                        </p>
+                                        <Typography
+                                            paragraph
+                                            style={{ fontWeight: "500", color: "black" }}
+                                        >
+                                            {allOrders &&
+                                                allOrders.filter((product) => product.status === "Delivered")
+                                                    .length}
+                                        </Typography>
+                                    </div>
+                                    <div className="flex flex-col items-start justify-center">
+                                        <p className=" text-gray-400">
+                                            Shipped Orders
+                                        </p>
+                                        <Typography
+                                            paragraph
+                                            style={{ fontWeight: "500", color: "black" }}
+                                        >
+                                            {allOrders &&
+                                                allOrders.filter((product) => product.status === "Shipped")
+                                                    .length}
+                                        </Typography>
+                                    </div>
 
-                                        </div>
-                                        <div className="flex flex-col items-start justify-center">
-                                            <p className=" text-gray-400">
-                                                Returned Orders
-                                            </p>
-                                            <Typography
-                                                paragraph
-                                                style={{ fontWeight: "500", color: "black" }}
-                                            >
-                                                {allOrders &&
-                                                    allOrders.filter((product) => product.status === "Returned")
-                                                        .length}
-                                            </Typography>
-                                        </div>
-                                        <div className="flex flex-col items-start justify-center">
-                                            <p className=" text-gray-400">
-                                                Cancelled Orders
-                                            </p>
-                                            <Typography
-                                                paragraph
-                                                style={{ fontWeight: "500", color: "black" }}
-                                            >
-                                                {allOrders &&
-                                                    allOrders.filter((product) => product.status === "Cancelled")
-                                                        .length}
-                                            </Typography>
-                                        </div>
+                                    <div className="flex flex-col items-start justify-center">
+                                        <p className="text-gray-400">
+                                            Processing Orders
+                                        </p>
+                                        <Typography
+                                            paragraph
+                                            style={{ fontWeight: "500", color: "black" }}
+                                        >
+                                            {allOrders &&
+                                                allOrders.filter((product) => product.status === "Processing")
+                                                    .length}
+                                        </Typography>
+
+                                    </div>
+                                    <div className="flex flex-col items-start justify-center">
+                                        <p className=" text-gray-400">
+                                            Returned Orders
+                                        </p>
+                                        <Typography
+                                            paragraph
+                                            style={{ fontWeight: "500", color: "black" }}
+                                        >
+                                            {allOrders &&
+                                                allOrders.filter((product) => product.status === "Returned")
+                                                    .length}
+                                        </Typography>
+                                    </div>
+                                    <div className="flex flex-col items-start justify-center">
+                                        <p className=" text-gray-400">
+                                            Cancelled Orders
+                                        </p>
+                                        <Typography
+                                            paragraph
+                                            style={{ fontWeight: "500", color: "black" }}
+                                        >
+                                            {allOrders &&
+                                                allOrders.filter((product) => product.status === "Cancelled")
+                                                    .length}
+                                        </Typography>
                                     </div>
                                 </div>
+                                {/* </div> */}
                             </div>
 
 
@@ -752,7 +630,7 @@ const VendorOrdersPage = () => {
                                 <div className="flex items-center bg-white p-2 rounded-lg space-x-3">
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                                         <DatePicker
-                                            label="Select Date"
+                                            label="Date Range"
                                             value={selectedDate}
                                             onChange={handleDateChange}
                                             renderInput={(params) => <TextField {...params} />}
@@ -774,7 +652,7 @@ const VendorOrdersPage = () => {
                             <Grid item xs={12}>
                                 <Card sx={{ borderRadius: 2 }}>
                                     <DataGrid
-                                        rows={filteredRows.length ? filteredRows : allOrders}
+                                        rows={filteredRows.length ? filteredRows : sortedOrders}
                                         columns={all_customer_columns}
                                         getRowId={(row) => row._id}
                                         autoHeight
@@ -819,8 +697,8 @@ const VendorOrdersPage = () => {
                             open={isModalOpen}
                             onClose={handleCloseModal}
                             orderId={orderId}
-                            modalTitle="Order D"
-                            buttonText="Order D"
+                            modalTitle="Order Details"
+                            buttonText="Order Details"
                         />
 
                     </div>}
