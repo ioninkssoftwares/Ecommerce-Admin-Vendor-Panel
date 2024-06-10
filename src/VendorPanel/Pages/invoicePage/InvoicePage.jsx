@@ -33,6 +33,14 @@ const InvoicePageContent = React.forwardRef(({ orderDetails }, ref) => {
             currency: 'INR',
         }).format(amount);
     };
+
+    console.log(orderDetails, "orderDetaildds")
+
+    const { state } = orderDetails?.shippingInfo || {};
+    const cgst = orderDetails?.cgst || 0;
+    const sgst = orderDetails?.sgst || 0;
+    const igst = orderDetails?.igst || 0;
+    console.log(cgst, "cgst")
     return (
         <div ref={ref} className="a5-page">
             <div className="content">
@@ -44,10 +52,10 @@ const InvoicePageContent = React.forwardRef(({ orderDetails }, ref) => {
                     <p className="font-semibold">{`Date: ${new Date(orderDetails.createdAt).toLocaleDateString()}`}</p>
                 </div>
 
-                <div>
+                {/* <div>
                     <p className="font-semibold">Order Status</p>
                     <p>{orderDetails.status}</p>
-                </div>
+                </div> */}
                 </div>
 
                 <div className='flex justify-between items-center mb-2 gap-4'>
@@ -61,7 +69,9 @@ const InvoicePageContent = React.forwardRef(({ orderDetails }, ref) => {
                 <div className="">
                     <h2 className="text-xl font-semibold mb-2">Shipping Information</h2>
                     <p>{orderDetails?.user?.mobileNo}</p>
-                    <p>Issued On: 28 May 2024</p>
+                    <p>
+  Issued On: {orderDetails && orderDetails.createdAt && new Date(orderDetails.createdAt).toLocaleDateString() }
+</p>
                      <p> <span>Address:</span>{orderDetails.shippingInfo.address}, {orderDetails.shippingInfo.city}, {orderDetails.shippingInfo.state}, {orderDetails.shippingInfo.country}, {orderDetails.shippingInfo.pinCode}</p>
                 </div>
                 </div>
@@ -75,7 +85,7 @@ const InvoicePageContent = React.forwardRef(({ orderDetails }, ref) => {
                         <thead>
                             <tr>
                                 <th className="border border-gray-300 p-2">Product</th>
-                                <th className="border border-gray-300 p-2">Price</th>
+                                {/* <th className="border border-gray-300 p-2">Price</th> */}
                                 <th className="border border-gray-300 p-2">Quantity</th>
                                 <th className="border border-gray-300 p-2">Total</th>
 
@@ -87,7 +97,7 @@ const InvoicePageContent = React.forwardRef(({ orderDetails }, ref) => {
                             ))} */}
                             <tr key={orderDetails?.product?._id}>
                                 <td className="border border-gray-300 p-2 text-center">{orderDetails?.product?.name}</td>
-                                <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.product?.price)}</td>
+                                {/* <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.product?.price)}</td> */}
                                 <td className="border border-gray-300 p-2 text-center">{orderDetails?.quantity}</td>
                                 <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.quantity * orderDetails?.product?.price)}</td>
                             </tr>
@@ -103,19 +113,35 @@ const InvoicePageContent = React.forwardRef(({ orderDetails }, ref) => {
                         <thead>
                             <tr>
                                 <th className="border border-gray-300 p-2">Base Price</th>
-                                <th className="border border-gray-300 p-2">CGST</th>
-                                <th className="border border-gray-300 p-2">SGST</th>
+                                {state === "Andhra Pradesh" || state === "andhra pradesh" ? (
+            <>
+              <th className="border border-gray-300 p-2">CGST</th>
+              <th className="border border-gray-300 p-2">SGST</th>
+            </>
+          ) : (
+            <th className="border border-gray-300 p-2">IGST</th>
+          )}
                                 <th className="border border-gray-300 p-2">Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {/* {orderDetails.orderItems.map((item) => (  
-                               
-                            ))} */}
                             <tr key={orderDetails?.product?._id}>
                                 <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.product?.price)}</td>
-                                <td className="border border-gray-300 p-2 text-center"></td>
-                                <td className="border border-gray-300 p-2 text-center"></td>
+                            
+                                {state === "Andhra Pradesh" || state === "andhra pradesh" ? (
+            <>
+              <td className="border border-gray-300 p-2 text-black text-center">
+                {formatCurrency(cgst)}
+              </td>
+              <td className="border border-gray-300 p-2 text-center">
+                {formatCurrency(sgst)}
+              </td>
+            </>
+          ) : (
+            <td className="border border-gray-300 p-2 text-center">
+              {formatCurrency(igst)}
+            </td>
+          )}
                                 <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.quantity * orderDetails?.product?.price)}</td>
                             </tr>
                         </tbody>
