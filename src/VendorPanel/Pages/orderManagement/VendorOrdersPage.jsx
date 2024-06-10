@@ -480,7 +480,7 @@ const VendorOrdersPage = () => {
                         <div className="flex md:justify-between md:items-center md:flex-row flex-col justify-center items-center mt-8 mb-6 gap-3 px-3">
 
                             {/* <div> */}
-                            <div className="p-3 bg-white rounded-lg ml-6">
+                            <div className="p-3 w-full bg-white rounded-lg mx-6">
                                 <div className="flex justify-between items-center">
                                     <div className="flex gap-5 items-center justify-center">
                                         <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">

@@ -272,7 +272,7 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
             renderCell: ({ row }) => (
 
                 <Typography variant="body1" fontWeight={500}>
-                    {row.user.name}
+                    {row?.user?.name}
                 </Typography>
             )
         },
