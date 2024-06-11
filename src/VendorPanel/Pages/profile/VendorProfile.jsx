@@ -8,6 +8,7 @@ import { MdInventory } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 import { BsBank2 } from "react-icons/bs";
 import { IoIosDocument } from "react-icons/io";
+import UpdatePasswordModal from "../../Components/vendor/modals/UpdatePasswordModal";
 
 
 const VendorProfile = () => {
@@ -74,6 +75,18 @@ const VendorProfile = () => {
         }
     }, [vendorId])
 
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
     return (
         <div>
             <div className='flex h-screen overflow-hidden'>
@@ -87,6 +100,7 @@ const VendorProfile = () => {
                         <div className="flex justify-between mt-4 mx-6">
                             <h1 className="text-3xl font-semibold">Profile</h1>
                             <button
+                                onClick={() => handleOpenModal()}
                                 className={`px-7 text-white font-medium bg-primary-blue rounded-lg py-3 items-center transition transform active:scale-95 duration-200`}
                             >Update Password</button>
                         </div>
@@ -170,17 +184,17 @@ const VendorProfile = () => {
                                     <span className="font-bold">GST Number:</span><span>{vendorDetails?.gstNo}</span>
                                 </div>
 
-
-
                             </div>
                         </div>
-
-
-
-
                     </div>}
+                    <UpdatePasswordModal
+                        open={isModalOpen}
+                        onClose={handleCloseModal}
+                        vendorId={vendorId}
+                        modalTitle="Order Details"
+                        buttonText="Order Details"
+                    />
                 </div>
-                {/* </main> */}
             </div>
         </div >
     )
