@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { AiOutlineOrderedList } from 'react-icons/ai';
 import { BiSolidCoupon, BiSolidUser } from 'react-icons/bi';
+import { FaMoneyBillTransfer } from "react-icons/fa6";
 import { CiLogout } from 'react-icons/ci';
 import { FaArrowRight, FaArrowLeft, FaAddressBook } from 'react-icons/fa'; // Import arrow icons from react-icons
 import { MdAnalytics, MdInventory, MdOutlineSettings } from 'react-icons/md';
@@ -84,6 +85,19 @@ const Sidebar = () => {
                         {isExpanded ? <p className='' >Orders</p> : ""}
                     </div>
 
+                    <div
+                        onClick={() => navigate("/vendor/transactions")}
+                        className={`flex gap-1 ${location?.pathname === "/vendor/transactions" ? "bg-gray-400 text-indigo-500" : "bg-primary-blue text-white"} items-center justify-start w-full hover:bg-white hover:text-primary-blue ${isExpanded ? 'text-white' : 'text-white'} `}>
+                        <div className='p-2'>
+
+                            <FaMoneyBillTransfer className="w-auto h-6 " />
+                        </div>
+                        {isExpanded ? <p className='' >Transactions</p> : ""}
+                    </div>
+
+
+
+
 
                     {/* <div
                         // onClick={() => navigate("/admin/userManagement")}
@@ -161,6 +175,7 @@ const Sidebar = () => {
                         </div>
                         {isExpanded ? <p className='' >Profile</p> : ""}
                     </div>
+
 
                     <div
                         onClick={handleLogout}
