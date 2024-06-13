@@ -103,9 +103,11 @@ const TransactionsPage = () => {
     const [totalPaid, setTotalPaid] = useState(0);
     const pendingAmount = totalAmount - totalPaid;
     const [vendorWithdrawInfo, setVendorWithdrawInfo] = useState({});
+    const [view, setView] = useState("transactions");
 
     const instance = useAxios(token);
     const [allVendors, setAllVendors] = useState([]);
+    const [deliveredOrders, setDeliveredOrders] = useState([]);
     const [pagination, setPagination] = useState(
         null
     );
@@ -169,7 +171,7 @@ const TransactionsPage = () => {
         const deliveredOrders = allOrders.filter(
             (order) => order.status === "Delivered"
         );
-
+        setDeliveredOrders(deliveredOrders || [])
         console.log(deliveredOrders, "hjhjjhjhj")
 
         const totalAmount = deliveredOrders.reduce((sum, order) => {
@@ -305,13 +307,105 @@ const TransactionsPage = () => {
 
     ];
 
-    // const deliveredOrders =
-    //     allOrders?.filter((order) => order.status === "Delivered") || [];
-    // const deliveredPercentage =
-    //     allOrders && allOrders.length > 0
-    //         ? ((deliveredOrders.length / allOrders.length) * 100).toFixed(2)
-    //         : 0;
+    const all_customer_columns_for_orders = [
+        {
+            flex: 0.25,
+            minWidth: 150,
+            field: "name",
+            headerName: "Customer Id",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+            renderCell: ({ row }) => (
+                <Typography variant="body1" fontWeight={500} style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '150px' }}>
+                    {row?.user?.name}  {/* Accessing the 'name' field */}
+                </Typography>
+            ),
+        },
+        {
+            flex: 0.25,
+            minWidth: 250,
+            field: "productName",
+            headerName: "Product Name",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+            valueGetter: (params) => params.row.product?.name,
+            renderCell: ({ row }) => (
+                <Typography
+                    variant="body1"
+                    fontWeight={500}
+                    style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '250px' }}
+                >
+                    {row?.product?.name}
+                </Typography>
+            ),
+        },
+        {
+            minWidth: 150,
 
+            flex: 0.25,
+            field: "createdAt",
+            headerName: "Order Date",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true, renderCell: ({ row }) => (
+                <Typography variant="body1" fontWeight={500}>
+                    {new Date(row?.createdAt).toLocaleDateString('en-GB')}
+                </Typography>
+            ),
+        },
+
+        {
+            minWidth: 120,
+
+            flex: 0.25,
+            field: "quantity",
+            headerName: "Quantity",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+        },
+        {
+            minWidth: 150,
+
+            field: "shippingCharges",
+            headerName: "Shipping Charges",
+            flex: 0.25,
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+        },
+        {
+            minWidth: 150,
+
+            flex: 0.25,
+            field: "total",
+            headerName: "Order Total",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+        },
+
+        {
+            minWidth: 150,
+
+            field: "status",
+            headerName: "Order Status",
+            flex: 0.25,
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+        },
+
+    ];
+
+
+    const handleViewChange = (event, newView) => {
+        if (newView !== null) {
+            setView(newView);
+        }
+    };
     return (
         <div>
             <div className='flex h-screen overflow-hidden'>
@@ -448,32 +542,79 @@ const TransactionsPage = () => {
                             </div>
                         </div> */}
 
+                        <ToggleButtonGroup
+                            value={view}
+                            exclusive
+                            onChange={handleViewChange}
+                            aria-label="view toggle"
+                            sx={{ marginBottom: 3, marginLeft: 4, marginRight: 2 }}
+                        >
+                            <ToggleButton value="orders" aria-label="orders view">
+                                Orders
+                            </ToggleButton>
+                            <ToggleButton
+                                value="transactions"
+                                aria-label="transactions view"
+                            >
+                                Transactions
+                            </ToggleButton>
+                        </ToggleButtonGroup>
 
-                        <Grid container spacing={6} sx={{ pb: 38, px: 4, overflowX: 'scroll' }}>
-                            <Grid item xs={12}>
-                                <Card sx={{ borderRadius: 2 }}>
-                                    <DataGrid
-                                        rows={vendorWithdrawInfo?.withdrawalInfo ? vendorWithdrawInfo?.withdrawalInfo : []}
-                                        columns={all_customer_columns}
-                                        getRowId={(row) => row.transactionId}
-                                        autoHeight
-                                        // components={{
-                                        //     LoadingOverlay: LinearProgress,
-                                        // }}
-                                        loading={loading}
-                                        getRowHeight={() => "auto"}
+                        {view === "transactions" && (
+                            <Grid container spacing={6} sx={{ pb: 38, px: 4, overflowX: 'scroll' }}>
+                                <Grid item xs={12}>
+                                    <Card sx={{ borderRadius: 2 }}>
+                                        <DataGrid
+                                            rows={vendorWithdrawInfo?.withdrawalInfo ? vendorWithdrawInfo?.withdrawalInfo : []}
+                                            columns={all_customer_columns}
+                                            getRowId={(row) => row.transactionId}
+                                            autoHeight
+                                            // components={{
+                                            //     LoadingOverlay: LinearProgress,
+                                            // }}
+                                            loading={loading}
+                                            getRowHeight={() => "auto"}
 
-                                        pagination
-                                        paginationModel={paginationModel}
-                                        pageSizeOptions={[25, 50, 75, 100]}
-                                        rowCount={pagination?.totalUsers}
-                                        paginationMode="server"
-                                        onPaginationModelChange={setPaginationModel}
-                                        sx={tableStyles}
-                                    />
-                                </Card>
-                            </Grid>
-                        </Grid>
+                                            pagination
+                                            paginationModel={paginationModel}
+                                            pageSizeOptions={[25, 50, 75, 100]}
+                                            rowCount={pagination?.totalUsers}
+                                            paginationMode="server"
+                                            onPaginationModelChange={setPaginationModel}
+                                            sx={tableStyles}
+                                        />
+                                    </Card>
+                                </Grid>
+                            </Grid>)
+                        }
+                        {view === "orders" && (
+                            <Grid container spacing={6} sx={{ pb: 38, px: 4, overflowX: 'scroll' }}>
+                                <Grid item xs={12}>
+                                    <Card sx={{ borderRadius: 2 }}>
+                                        <DataGrid
+                                            rows={deliveredOrders ? deliveredOrders : []}
+                                            columns={all_customer_columns_for_orders}
+                                            getRowId={(row) => row._id}
+                                            autoHeight
+                                            // components={{
+                                            //     LoadingOverlay: LinearProgress,
+                                            // }}
+                                            loading={loading}
+                                            getRowHeight={() => "auto"}
+
+                                            pagination
+                                            paginationModel={paginationModel}
+                                            pageSizeOptions={[25, 50, 75, 100]}
+                                            rowCount={pagination?.totalUsers}
+                                            paginationMode="server"
+                                            onPaginationModelChange={setPaginationModel}
+                                            sx={tableStyles}
+                                        />
+                                    </Card>
+                                </Grid>
+                            </Grid>)
+                        }
+
 
                         {/* <ConfirmBox
                             title="Order"
@@ -494,13 +635,13 @@ const TransactionsPage = () => {
                             onClose={handleCloseModal}
                         /> */}
 
-                        <OrderDetailsModal
+                        {/* <OrderDetailsModal
                             open={isModalOpen}
                             onClose={handleCloseModal}
                             orderId={orderId}
                             modalTitle="Order Details"
                             buttonText="Order Details"
-                        />
+                        /> */}
 
                     </div>}
                 </div>
