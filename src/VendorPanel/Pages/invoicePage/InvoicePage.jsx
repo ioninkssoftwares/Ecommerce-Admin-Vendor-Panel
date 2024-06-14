@@ -99,7 +99,7 @@ const InvoicePageContent = React.forwardRef(({ orderDetails }, ref) => {
                                 <td className="border border-gray-300 p-2 text-center">{orderDetails?.product?.name}</td>
                                 {/* <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.product?.price)}</td> */}
                                 <td className="border border-gray-300 p-2 text-center">{orderDetails?.quantity}</td>
-                                <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.quantity * orderDetails?.product?.price)}</td>
+                                <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.total)}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -126,7 +126,7 @@ const InvoicePageContent = React.forwardRef(({ orderDetails }, ref) => {
                         </thead>
                         <tbody>
                             <tr key={orderDetails?.product?._id}>
-                                <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.product?.price)}</td>
+                                <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.basePrice)}</td>
                             
                                 {state === "Andhra Pradesh" || state === "andhra pradesh" ? (
             <>
@@ -142,7 +142,7 @@ const InvoicePageContent = React.forwardRef(({ orderDetails }, ref) => {
               {formatCurrency(igst)}
             </td>
           )}
-                                <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.quantity * orderDetails?.product?.price)}</td>
+                                <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.total)}</td>
                             </tr>
                         </tbody>
                     </table>
