@@ -376,16 +376,26 @@ const VendorOrdersPage = () => {
             ),
         },
 
-        // {
-        //     minWidth: 150,
+        {
+            flex: 0.25,
+            minWidth: 150,
+            field: "productPrice",
+            headerName: "Price",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+            valueGetter: (params) => params.row.product?.price,
+            renderCell: ({ row }) => (
+                <Typography
+                    variant="body1"
+                    fontWeight={500}
+                    style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '250px' }}
+                >
+                    {row?.product?.price}
+                </Typography>
+            ),
+        },
 
-        //     flex: 0.25,
-        //     field: "subtotal",
-        //     headerName: "Price",
-        //     align: "left",
-        //     headerAlign: "left",
-        //     disableColumnMenu: true,
-        // },
 
         {
             minWidth: 120,
@@ -419,25 +429,36 @@ const VendorOrdersPage = () => {
         //     headerAlign: "left",
         //     disableColumnMenu: true,
         // },
-        {
-            minWidth: 150,
+        // {
+        //     minWidth: 150,
 
-            field: "shippingCharges",
-            headerName: "Shipping Charges",
+        //     field: "shippingCharges",
+        //     headerName: "Shipping Charges",
+        //     flex: 0.25,
+        //     align: "left",
+        //     headerAlign: "left",
+        //     disableColumnMenu: true,
+        // },
+        // {
+        //     minWidth: 150,
+
+        //     flex: 0.25,
+        //     field: "total",
+        //     headerName: "Order Total",
+        //     align: "left",
+        //     headerAlign: "left",
+        //     disableColumnMenu: true,
+        // },
+        {
+            field: 'orderTotal',
+            headerName: 'Order Total',
+            minWidth: 150,
             flex: 0.25,
             align: "left",
             headerAlign: "left",
-            disableColumnMenu: true,
-        },
-        {
-            minWidth: 150,
-
-            flex: 0.25,
-            field: "total",
-            headerName: "Order Total",
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true,
+            valueGetter: (params) => {
+                return params.row.product?.price * params.row.quantity;
+            },
         },
 
         {
