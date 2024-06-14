@@ -150,8 +150,13 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
 
     const isTrackingDetailsEmpty =
         !orderDetails?.trackingDetails?.trackingId ||
-        !orderDetails?.trackingDetails?.trackingLink ||
+        // !orderDetails?.trackingDetails?.trackingLink ||
         !orderDetails?.trackingDetails?.shippingPartner;
+
+
+    const isTrackingDetailsEmptyFromState =
+        !trackingId ||
+        !shippingPartner;
 
 
     console.log(isTrackingDetailsEmpty, "trackiiiii")
@@ -277,14 +282,23 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
             )
         },
         {
-            minWidth: 120,
-
             flex: 0.25,
-            field: "_id",
-            headerName: "Order Id",
+            minWidth: 250,
+            field: "productName",
+            headerName: "Product Name",
             align: "left",
             headerAlign: "left",
             disableColumnMenu: true,
+            valueGetter: (params) => params.row.product?.name,
+            renderCell: ({ row }) => (
+                <Typography
+                    variant="body1"
+                    fontWeight={500}
+                    style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '250px' }}
+                >
+                    {row?.product?.name}
+                </Typography>
+            ),
         },
         {
             minWidth: 120,
@@ -323,26 +337,26 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
         },
 
 
-        {
-            minWidth: 120,
+        // {
+        //     minWidth: 120,
 
-            flex: 0.25,
-            field: "discount",
-            headerName: "Discount",
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true,
-        },
-        {
-            minWidth: 120,
+        //     flex: 0.25,
+        //     field: "discount",
+        //     headerName: "Discount",
+        //     align: "left",
+        //     headerAlign: "left",
+        //     disableColumnMenu: true,
+        // },
+        // {
+        //     minWidth: 120,
 
-            field: "shippingCharges",
-            headerName: "Shipping Charges",
-            flex: 0.25,
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true,
-        },
+        //     field: "shippingCharges",
+        //     headerName: "Shipping Charges",
+        //     flex: 0.25,
+        //     align: "left",
+        //     headerAlign: "left",
+        //     disableColumnMenu: true,
+        // },
 
         {
             minWidth: 120,
@@ -377,7 +391,13 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
 
 
     const updateTrackingDetials = async () => {
+        if (isTrackingDetailsEmptyFromState) {
+            toast.error("Please Enter Tracking Id and Shipping Partner")
+            return;
+        }
+
         setLoading(true)
+
         try {
             const shippingData = {
                 trackingLink,
@@ -408,6 +428,21 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
 
     const navigateToOrder = (orderDetails) => {
         navigate(`/vendor/order/invoice`, { state: { orderDetails } });
+    };
+
+    // Pattern for urls for tracing
+    const simpleUrlPattern = /^(https?:\/\/)?([a-zA-Z0-9_-]+\.)+[a-zA-Z]{2,6}(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?$/;
+
+    const [isValidUrl, setIsValidUrl] = useState(true);
+
+    const validateUrl = (url) => {
+        return simpleUrlPattern.test(url);
+    };
+
+    const handleInputChange = (e) => {
+        const url = e.target.value;
+        setTrackingLink(url);
+        setIsValidUrl(validateUrl(url));
     };
 
 
@@ -445,8 +480,8 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
 
 
                     <div className="flex m-7 ">
-                        {/* <p className="mr-9">SAMSUNG 8 kg Fully Automatic Washing Machine</p> */}
-                        {orderDetails && orderDetails.product && (<p className="mr-9">{orderDetails.product.name}</p>)}
+                        <p className="mr-2">Order Id</p>
+                        <p className="mr-9">{orderDetails._id}</p>
 
                         <p className="mr-2">Date Added</p>
                         {orderDetails && orderDetails.createdAt ? (
@@ -485,14 +520,14 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
                                     </p>
                                     {/* <p className=" font-bold ">
                                         878787787                              </p> */}
-                                    {orderDetails && orderDetails.user && (<p className=" font-bold ">{orderDetails.user.mobileNo}</p>)}
+                                    {orderDetails && orderDetails.user && (<p className=" font-bold ">{orderDetails.user?.mobileNo}</p>)}
                                 </div>
                                 <div className="flex flex-col items-start justify-center">
                                     <p className=" text-gray-400">
                                         Email
                                     </p>
                                     <p className=" font-bold">
-                                        swapnil.hi@gmail.com
+                                        {orderDetails.user?.email}
                                     </p>
                                 </div>
                             </div>
@@ -503,7 +538,7 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
                             <div className="flex justify-between items-center">
                                 <div className="flex gap-5">
                                     <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
-                                        <FiUsers />
+                                        <LuMapPin className='w-full h-full ' />
                                     </div>
                                     {/* <div>
                                         <p className="text-gray-400">Sravan Kumar</p>
@@ -532,10 +567,10 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
 
                         <div className="basis-[50%]  p-3 bg-white rounded-lg">
                             <div className="flex justify-between items-center">
-                                <div className="flex gap-5">
-                                    <div className="bg-[#04A7FF29] p-3 w-12 h-12 text-primary-blue rounded-xl text-xl">
+                                <div className="">
+                                    {/* <div className="bg-[#04A7FF29] p-3 w-12 h-12 text-primary-blue rounded-xl text-xl">
                                         <LuMapPin className='w-full h-full ' />
-                                    </div>
+                                    </div> */}
                                     <div>
                                         <p className="text-gray-400 mb-2">Tracking Details</p>
                                         <div>
@@ -572,10 +607,16 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
                                     <input type="text" onChange={(e) => setTrackingId(e.target.value)} className="rounded-md" value={trackingId} />
                                 </div>
                                 <div className="flex flex-col items-start justify-center">
-                                    <p className=" text-gray-400">
-                                        Tracking Link
-                                    </p>
-                                    <input type="text" onChange={(e) => setTrackingLink(e.target.value)} className="rounded-md" value={trackingLink} />
+                                    <p className="text-gray-400">Tracking Link</p>
+                                    <input
+                                        type="text"
+                                        onChange={handleInputChange}
+                                        className={`rounded-md ${isValidUrl ? '' : 'border-red-500'}`}
+                                        value={trackingLink}
+                                    />
+                                    {!isValidUrl && (
+                                        <p className="text-red-500">Please enter a valid URL.</p>
+                                    )}
                                 </div>
                             </div>
                         </div>
