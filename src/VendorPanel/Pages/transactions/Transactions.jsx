@@ -117,8 +117,8 @@ const TransactionsPage = () => {
     });
 
 
-    if (allOrders) {
-        console.log(allOrders, "jsdahfaksdjhf")
+    if (vendorWithdrawInfo) {
+        console.log(vendorWithdrawInfo, "jsdahfaksdjhf")
     }
 
     function filterVendor() {
@@ -265,6 +265,21 @@ const TransactionsPage = () => {
         },
 
         {
+            minWidth: 120,
+
+            flex: 0.25,
+            field: "date",
+            headerName: "Date",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true, renderCell: ({ row }) => (
+                <Typography variant="body1" fontWeight={500}>
+                    {new Date(row?.date).toLocaleDateString('en-GB')}
+                </Typography>
+            ),
+        },
+
+        {
             minWidth: 150,
 
             flex: 0.25,
@@ -290,35 +305,32 @@ const TransactionsPage = () => {
             ),
         },
 
-        {
-            minWidth: 120,
 
-            flex: 0.25,
-            field: "date",
-            headerName: "Date",
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true, renderCell: ({ row }) => (
-                <Typography variant="body1" fontWeight={500}>
-                    {new Date(row?.date).toLocaleDateString('en-GB')}
-                </Typography>
-            ),
-        },
 
     ];
 
     const all_customer_columns_for_orders = [
         {
+            minWidth: 120,
+
+            flex: 0.25,
+            field: "_id",
+            headerName: "Order Id",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+        },
+        {
             flex: 0.25,
             minWidth: 150,
             field: "name",
-            headerName: "Customer Id",
+            headerName: "User Name",
             align: "left",
             headerAlign: "left",
             disableColumnMenu: true,
             renderCell: ({ row }) => (
                 <Typography variant="body1" fontWeight={500} style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '150px' }}>
-                    {row?.user?.name}  {/* Accessing the 'name' field */}
+                    {row?.user?.name}
                 </Typography>
             ),
         },
@@ -357,6 +369,17 @@ const TransactionsPage = () => {
         },
 
         {
+            minWidth: 150,
+
+            flex: 0.25,
+            field: "subtotal",
+            headerName: "Price",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+        },
+
+        {
             minWidth: 120,
 
             flex: 0.25,
@@ -366,16 +389,16 @@ const TransactionsPage = () => {
             headerAlign: "left",
             disableColumnMenu: true,
         },
-        {
-            minWidth: 150,
+        // {
+        //     minWidth: 150,
 
-            field: "shippingCharges",
-            headerName: "Shipping Charges",
-            flex: 0.25,
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true,
-        },
+        //     field: "shippingCharges",
+        //     headerName: "Shipping Charges",
+        //     flex: 0.25,
+        //     align: "left",
+        //     headerAlign: "left",
+        //     disableColumnMenu: true,
+        // },
         {
             minWidth: 150,
 
@@ -406,6 +429,21 @@ const TransactionsPage = () => {
             setView(newView);
         }
     };
+
+
+    const sortedDeliveredOrders = useMemo(() => {
+        return [...deliveredOrders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }, [deliveredOrders]);
+
+
+    const sortedTransactions = useMemo(() => {
+        if (!vendorWithdrawInfo?.withdrawalInfo) return [];
+
+        return [...vendorWithdrawInfo.withdrawalInfo].sort((a, b) => new Date(b.date) - new Date(a.date));
+    }, [vendorWithdrawInfo]);
+
+    if (sortedTransactions) console.log(sortedTransactions, "hjhj");
+
     return (
         <div>
             <div className='flex h-screen overflow-hidden'>
@@ -483,14 +521,6 @@ const TransactionsPage = () => {
 
 
 
-
-
-
-
-
-
-
-
                         </div>
 
                         {/* <div className="flex justify-between items-center mb-8 mt-4  px-10">
@@ -565,7 +595,7 @@ const TransactionsPage = () => {
                                 <Grid item xs={12}>
                                     <Card sx={{ borderRadius: 2 }}>
                                         <DataGrid
-                                            rows={vendorWithdrawInfo?.withdrawalInfo ? vendorWithdrawInfo?.withdrawalInfo : []}
+                                            rows={sortedTransactions ? sortedTransactions : []}
                                             columns={all_customer_columns}
                                             getRowId={(row) => row.transactionId}
                                             autoHeight
@@ -592,7 +622,7 @@ const TransactionsPage = () => {
                                 <Grid item xs={12}>
                                     <Card sx={{ borderRadius: 2 }}>
                                         <DataGrid
-                                            rows={deliveredOrders ? deliveredOrders : []}
+                                            rows={sortedDeliveredOrders ? sortedDeliveredOrders : []}
                                             columns={all_customer_columns_for_orders}
                                             getRowId={(row) => row._id}
                                             autoHeight
