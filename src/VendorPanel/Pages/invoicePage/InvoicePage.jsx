@@ -99,7 +99,7 @@ const InvoicePageContent = React.forwardRef(({ orderDetails }, ref) => {
                                 <td className="border border-gray-300 p-2 text-center">{orderDetails?.product?.name}</td>
                                 {/* <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.product?.price)}</td> */}
                                 <td className="border border-gray-300 p-2 text-center">{orderDetails?.quantity}</td>
-                                <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.total)}</td>
+                                <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.subtotal)}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -142,7 +142,7 @@ const InvoicePageContent = React.forwardRef(({ orderDetails }, ref) => {
               {formatCurrency(igst)}
             </td>
           )}
-                                <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.total)}</td>
+                                <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.subtotal)}</td>
                             </tr>
                         </tbody>
                     </table>
