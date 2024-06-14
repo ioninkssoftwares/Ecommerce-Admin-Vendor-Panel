@@ -140,9 +140,9 @@ const VendorOrdersPage = () => {
     const filterBySearchQuery = (rows, query) => {
         if (!query) return rows;
         return rows.filter((row) => {
-            const { product } = row;
+            const { product, _id } = row;
             const { name, brand, category, subCategory } = product;
-            const searchFields = [name, category, subCategory, brand];
+            const searchFields = [name, category, subCategory, brand, _id];
             return searchFields.some((field) =>
                 field.toLowerCase().includes(query.toLowerCase())
             );
@@ -319,16 +319,26 @@ const VendorOrdersPage = () => {
 
     const all_customer_columns = [
         {
+            minWidth: 120,
+
+            flex: 0.25,
+            field: "_id",
+            headerName: "Order Id",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+        },
+        {
             flex: 0.25,
             minWidth: 150,
             field: "name",
-            headerName: "Customer Id",
+            headerName: "User Name",
             align: "left",
             headerAlign: "left",
             disableColumnMenu: true,
             renderCell: ({ row }) => (
                 <Typography variant="body1" fontWeight={500} style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '150px' }}>
-                    {row?.user?.name}  {/* Accessing the 'name' field */}
+                    {row?.user?.name}
                 </Typography>
             ),
         },
@@ -365,6 +375,17 @@ const VendorOrdersPage = () => {
                 </Typography>
             ),
         },
+
+        // {
+        //     minWidth: 150,
+
+        //     flex: 0.25,
+        //     field: "subtotal",
+        //     headerName: "Price",
+        //     align: "left",
+        //     headerAlign: "left",
+        //     disableColumnMenu: true,
+        // },
 
         {
             minWidth: 120,
