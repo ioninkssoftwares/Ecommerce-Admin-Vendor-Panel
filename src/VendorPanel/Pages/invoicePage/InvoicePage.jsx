@@ -62,16 +62,15 @@ const InvoicePageContent = React.forwardRef(({ orderDetails }, ref) => {
                 <div className="">
                     <h2 className="text-xl font-semibold mb-2">S2 For U</h2>
                    <p>**********@gmail.com</p>
-                   <p>Issued On: 28 May 2024</p>
+                   {/* <p>Issued On: 28 May 2024</p> */}
                    <p>Address: Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae velit, esse reprehenderit</p>
                 </div>
-
                 <div className="">
                     <h2 className="text-xl font-semibold mb-2">Shipping Information</h2>
                     <p>{orderDetails?.user?.mobileNo}</p>
-                    <p>
+                    {/* <p>
   Issued On: {orderDetails && orderDetails.createdAt && new Date(orderDetails.createdAt).toLocaleDateString() }
-</p>
+</p> */}
                      <p> <span>Address:</span>{orderDetails.shippingInfo.address}, {orderDetails.shippingInfo.city}, {orderDetails.shippingInfo.state}, {orderDetails.shippingInfo.country}, {orderDetails.shippingInfo.pinCode}</p>
                 </div>
                 </div>
@@ -85,19 +84,33 @@ const InvoicePageContent = React.forwardRef(({ orderDetails }, ref) => {
                         <thead>
                             <tr>
                                 <th className="border border-gray-300 p-2">Product</th>
-                                {/* <th className="border border-gray-300 p-2">Price</th> */}
+                                <th className="border border-gray-300 p-2">Price</th>
                                 <th className="border border-gray-300 p-2">Quantity</th>
                                 <th className="border border-gray-300 p-2">Total</th>
 
                             </tr>
                         </thead>
                         <tbody>
-                            {/* {orderDetails.orderItems.map((item) => (  
-                               
-                            ))} */}
+                  
                             <tr key={orderDetails?.product?._id}>
                                 <td className="border border-gray-300 p-2 text-center">{orderDetails?.product?.name}</td>
-                                {/* <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.product?.price)}</td> */}
+                                <td className="border border-gray-300 p-2 text-center">
+                    {(() => {
+                        const { product, user } = orderDetails;
+                        if (!product || !user) return '';
+
+                        switch (user.userType) {
+                            case 'freeUser':
+                                return formatCurrency(product.freeUser);
+                            case 'goldUser':
+                                return formatCurrency(product.goldUser);
+                            case 'silverUser':
+                                return formatCurrency(product.silverUser);
+                            default:
+                                return '';
+                        }
+                    })()}
+                </td>
                                 <td className="border border-gray-300 p-2 text-center">{orderDetails?.quantity}</td>
                                 <td className="border border-gray-300 p-2 text-center">{formatCurrency(orderDetails?.subtotal)}</td>
                             </tr>
