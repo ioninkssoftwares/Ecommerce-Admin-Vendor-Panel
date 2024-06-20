@@ -17,7 +17,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { CircularProgress, FormControlLabel, FormGroup, Switch } from '@mui/material';
+import { Chip, CircularProgress, FormControlLabel, FormGroup, Switch } from '@mui/material';
 
 import Textarea from '@mui/joy/Textarea';
 import { useCookies } from "react-cookie";
@@ -140,7 +140,8 @@ const AddProductByAdmin = () => {
         // mrp: 0,
         warrantyPeriod: "",
         hsnCode: "",
-        gstPerc: 0
+        gstPerc: 0,
+        // gender,
         // costPrice: 0,
         // returnPolicy: true
     })
@@ -159,14 +160,37 @@ const AddProductByAdmin = () => {
     const [selectedSubCategory, setSelectedSubCategory] = useState('');
     const [selectedCategoryName, setSelectedCategoryName] = useState("");
     const [vendorId, setVendorId] = useState('');
+    const [colors, setColors] = useState([]);
+    const [selectedColors, setSelectedColors] = useState([]);
+    const [selectedGender, setSelectedGender] = useState('');
+    const [selectedSize, setSelectedSize] = useState('');
 
-    if (product) console.log(product, 'produddct');
+
+    if (selectedColors) console.log(selectedColors, 'produddct');
+
+    const genderOptions = ['men', 'women', 'boys', 'girls'];
+    const sizeOptions = ['S', 'M', 'L', 'XL', 'XXL'];
 
 
 
     const [specifications, setSpecifications] = useState(['']);
 
+    const handleGenderChange = (event) => {
+        setSelectedGender(event.target.value);
+        // setProduct({ ...product, gender: event.target.value });
+    };
 
+    const handleSizeChange = (event) => {
+        setSelectedSize(event.target.value);
+    };
+
+
+    const handleColorChange = (event) => {
+        const selectedHexCodes = event.target.value;
+        const selectedColorObjects = selectedHexCodes.map(hexCode => colors.find(color => color.hexCode === hexCode));
+        setSelectedColors(selectedColorObjects);
+        setProduct({ ...product, color: selectedColorObjects });
+    };
 
     const handleSpecificationChange = (index, event) => {
         const values = [...specifications];
@@ -566,6 +590,24 @@ const AddProductByAdmin = () => {
 
 
 
+    const sampleColors = [
+        { name: 'Red', hexCode: '#FF0000' },
+        { name: 'Green', hexCode: '#00FF00' },
+        { name: 'Blue', hexCode: '#0000FF' },
+        { name: 'Yellow', hexCode: '#FFFF00' },
+        { name: 'Orange', hexCode: '#FFA500' },
+        { name: 'Purple', hexCode: '#800080' },
+        { name: 'Pink', hexCode: '#FFC0CB' },
+        { name: 'Brown', hexCode: '#A52A2A' },
+        { name: 'Gray', hexCode: '#808080' },
+        { name: 'Black', hexCode: '#000000' },
+    ];
+
+
+
+    useEffect(() => {
+        setColors(sampleColors)
+    }, [])
 
 
 
@@ -804,90 +846,83 @@ const AddProductByAdmin = () => {
 
 
                                     </Box>
-                                    {/* 
-                                    <InputField
-                                        label="Brand"
-                                        type="text"
-                                        value={product?.brand}
-                                        onChange={(e) => setProduct({ ...product, brand: e })}
-                                        validate={validateBrandName}
-                                    /> */}
 
 
-                                    {/* <Box sx={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 2 }}>
-                                        <Typography sx={{ my: 1, color: "gray" }} id="modal-modal-title" variant="p" component="p">
-                                            Discount
-                                        </Typography>
-                                        <FormGroup>
-                                            <FormControlLabel
-                                                label="Add Discount"
-                                                control={<Switch checked={discountSwitch}
-                                                    onChange={handleDiscountSwitch} />}
-
-                                            />
-                                        </FormGroup>
-                                    </Box> */}
-
-
-
-
-                                    {/* <Box sx={{ display: "flex", marginTop: 2, gap: 2 }}>
+                                    <div className="my-4">
                                         <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                                            <InputLabel id="color-select-label">Color</InputLabel>
                                             <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={clients}
-                                                label="Select Customer"
-                                            onChange={handleClient}
+                                                labelId="color-select-label"
+                                                multiple
+                                                value={selectedColors.map(color => color.hexCode)}
+                                                onChange={handleColorChange}
+                                                renderValue={(selected) => (
+                                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                                        {selected.map((value) => {
+                                                            const color = colors.find(color => color.hexCode === value);
+                                                            return (
+                                                                <Chip
+                                                                    key={value}
+                                                                    label={color.name}
+                                                                    style={{ backgroundColor: value, color: '#fff' }}
+                                                                />
+                                                            );
+                                                        })}
+                                                    </Box>
+                                                )}
                                             >
-                                                { clients && clients.map((name) => (
-                                            <MenuItem
-                                                key={name?.clientName}
-                                                value={name?.clientName}
-                                            style={getStyles(name, personName, theme)}
-                                            >
-                                                {name?.clientName}
-                                            </MenuItem>
-                                        ))}
+                                                {colors.map((color) => (
+                                                    <MenuItem key={color.name} value={color.hexCode}>
+                                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                            <div style={{
+                                                                backgroundColor: color.hexCode,
+                                                                width: 20,
+                                                                height: 20,
+                                                                marginRight: 10,
+                                                                border: '1px solid #000',
+                                                            }} />
+                                                            {color.name}
+                                                        </div>
+                                                    </MenuItem>
+                                                ))}
                                             </Select>
                                         </FormControl>
-                                        <TextField
-                                            label="Value"
-                                            fullWidth
-                                            margin="normal"
-                                        value={projectData.project_name}
-                                        onChange={(e) =>
-                                            setProjectData({ ...projectData, project_name: e.target.value })
-                                        }
-                                        />
 
-                                    </Box> */}
+                                    </div>
 
-                                    {/* <Box sx={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 2 }}>
-                                        <Typography sx={{ my: 1, color: "gray" }} id="modal-modal-title" variant="p" component="p">
-                                            Expiry Date
-                                        </Typography>
-                                        <FormGroup>
-                                            <FormControlLabel
-                                                label="Add Expiry Date"
-                                                control={<Switch defaultChecked />}
+                                    <div className="my-4">
+                                        <FormControl fullWidth>
+                                            <InputLabel id="size-select-label">Size</InputLabel>
+                                            <Select
+                                                labelId="size-select-label"
+                                                value={selectedSize}
+                                                onChange={handleSizeChange}
+                                                label="Size"
+                                            >
+                                                {sizeOptions.map((size) => (
+                                                    <MenuItem key={size} value={size}>
+                                                        {size}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </div>
 
-                                            />
-                                        </FormGroup>
-                                    </Box> */}
-                                    {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DemoContainer components={['DatePicker', 'DatePicker']}>
-                                            <DatePicker
-                                                sx={{ width: "100%" }}
-                                                label="Pick a Date"
-                                                value={value}
-                                                onChange={(newValue) => setValue(newValue)}
-                                            />
-                                        </DemoContainer>
-                                    </LocalizationProvider> */}
-
-
+                                    <FormControl fullWidth>
+                                        <InputLabel id="gender-select-label">Gender</InputLabel>
+                                        <Select
+                                            labelId="gender-select-label"
+                                            value={selectedGender}
+                                            onChange={handleGenderChange}
+                                            label="Gender"
+                                        >
+                                            {genderOptions.map((gender) => (
+                                                <MenuItem key={gender} value={gender}>
+                                                    {gender}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
 
                                 </div>
                                 <div className="basis-[45%] py-4 mt-10">
