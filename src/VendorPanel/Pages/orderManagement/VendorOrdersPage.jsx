@@ -376,31 +376,11 @@ const VendorOrdersPage = () => {
             ),
         },
 
-        // {
-        //     flex: 0.25,
-        //     minWidth: 150,
-        //     field: "productPrice",
-        //     headerName: "Price",
-        //     align: "left",
-        //     headerAlign: "left",
-        //     disableColumnMenu: true,
-        //     valueGetter: (params) => params.row.product?.price,
-        //     renderCell: ({ row }) => (
-        //         <Typography
-        //             variant="body1"
-        //             fontWeight={500}
-        //             style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '250px' }}
-        //         >
-        //             {row?.product?.price}
-        //         </Typography>
-        //     ),
-        // },
-
         {
             minWidth: 150,
             flex: 0.25,
             field: "actualPrice",
-            headerName: "Actual Price",
+            headerName: "Price",
             align: "left",
             headerAlign: "left",
             disableColumnMenu: true,
