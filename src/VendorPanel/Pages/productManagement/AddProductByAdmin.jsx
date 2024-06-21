@@ -773,7 +773,7 @@ const AddProductByAdmin = () => {
                                         </Select>
                                     </FormControl> */}
 
-                                    <Box sx={{ display: "flex", marginTop: 2, gap: 2 }}>
+                                    <Box sx={{ display: "flex", gap: 2 }}>
 
                                         <InputField
                                             label=" Price"
@@ -802,28 +802,8 @@ const AddProductByAdmin = () => {
 
                                     </Box>
 
-                                    <Box sx={{ display: "flex", marginTop: 2, gap: 2 }}>
+                                    <Box sx={{ display: "flex", gap: 2 }}>
 
-                                        {/* <InputField
-                                            label=" Mrp"
-                                            type="number"
-                                            value={product.mrp}
-                                            // onChange={(e) => setProduct({ ...product, price: e })} 
-                                            onChange={(value) => {
-                                                setProduct({ ...product, mrp: +value })
-                                                setFormErrors({ ...formErrors, mrp: validateSellingPrice(value) });
-                                            }}
-                                            validate={validateSellingPrice} /> */}
-
-
-                                        {/* <InputField label="Warranty Period"
-    type="text"
-    value={product.warrantyPeriod}
-    // onChange={(e) => setProduct({ ...product, stock: e })} 
-    onChange={(value) => {
-        setProduct({ ...product, warrantyPeriod: value })
-    }}
-/> */}
                                         <FormControl fullWidth>
                                             <InputLabel id="warranty-period-label">Warranty Period</InputLabel>
                                             <Select
