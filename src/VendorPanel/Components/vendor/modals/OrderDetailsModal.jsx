@@ -691,10 +691,10 @@ const OrderDetailsModal = ({ open, onClose, modalTitle, orderId, buttonText }) =
                         {orderDetails?.status === "Processing" ? (
                             <button
                                 onClick={() => !isTrackingDetailsEmpty && processOrder(orderId)}
-                                disabled={loading || isTrackingDetailsEmpty}
-                                className={`px-7 text-white font-medium bg-primary-blue rounded-lg py-3 items-center transition transform active:scale-95 duration-200 ${loading || isTrackingDetailsEmpty ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                disabled={loading || isTrackingDetailsEmpty || deleteLoading}
+                                className={`px-7 text-white font-medium bg-primary-blue rounded-lg py-3 items-center transition transform active:scale-95 duration-200 ${loading || isTrackingDetailsEmpty || deleteLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
-                                {loading ? <CircularProgress size={24} color="inherit" /> : "Mark as Shipped"}
+                                {(loading || deleteLoading) ? <CircularProgress size={24} color="inherit" /> : "Mark as Shipped"}
                             </button>
                         ) : orderDetails?.status === "Shipped" ? (
                             <button

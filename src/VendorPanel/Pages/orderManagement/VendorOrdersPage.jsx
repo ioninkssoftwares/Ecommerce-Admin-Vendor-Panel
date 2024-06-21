@@ -739,24 +739,7 @@ const VendorOrdersPage = () => {
                             </Grid>
                         </Grid>
 
-                        {/* <ConfirmBox
-                            title="Order"
-                            name="order"
-                            open={deleteOpen}
-                            closeDialog={() => setDeleteOpen(false)}
-                            toDoFunction={deleteOrder}
-                            loading={deleteLoading}
-                            sx={{ pb: 4, border: "2px solid red" }}
-                        /> */}
 
-
-                        {/* <OrderDetailsModal
-                            orderId={orderId}
-                            open={deleteOpen}
-                            modalTitle="Order Details"
-                            buttonText="Order Details"
-                            onClose={handleCloseModal}
-                        /> */}
 
                         <OrderDetailsModal
                             open={isModalOpen}
