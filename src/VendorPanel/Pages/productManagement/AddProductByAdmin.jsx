@@ -125,6 +125,7 @@ const AddProductByAdmin = () => {
     const [name, setName] = useState("");
     const [selected, setSelected] = useState("All");
     const [filesToupload, setFilesToUpload] = useState([]);
+    const [colorFilesToUpload, setColorFilesToUpload] = useState([]);
     const [formErrors, setFormErrors] = useState({});
     const [product, setProduct] = useState({
         stock: 0,
@@ -161,12 +162,14 @@ const AddProductByAdmin = () => {
     const [selectedCategoryName, setSelectedCategoryName] = useState("");
     const [vendorId, setVendorId] = useState('');
     const [colors, setColors] = useState([]);
+    const [sizes, setSizes] = useState([]);
     const [selectedColors, setSelectedColors] = useState([]);
+    const [selectedSizes, setSelectedSizes] = useState([]);
     const [selectedGender, setSelectedGender] = useState('');
     const [selectedSize, setSelectedSize] = useState('');
 
 
-    if (selectedColors) console.log(selectedColors, 'produddct');
+    if (selectedCategoryName) console.log(selectedCategoryName, 'produddct');
 
     const genderOptions = ['men', 'women', 'boys', 'girls'];
     const sizeOptions = ['S', 'M', 'L', 'XL', 'XXL'];
@@ -180,10 +183,10 @@ const AddProductByAdmin = () => {
         // setProduct({ ...product, gender: event.target.value });
     };
 
-    const handleSizeChange = (event) => {
-        setSelectedSize(event.target.value);
-    };
 
+    const handleSizeChange = (event) => {
+        setSizes(event.target.value);
+    };
 
     const handleColorChange = (event) => {
         const selectedHexCodes = event.target.value;
@@ -191,6 +194,9 @@ const AddProductByAdmin = () => {
         setSelectedColors(selectedColorObjects);
         setProduct({ ...product, color: selectedColorObjects });
     };
+
+
+
 
     const handleSpecificationChange = (index, event) => {
         const values = [...specifications];
@@ -388,9 +394,34 @@ const AddProductByAdmin = () => {
         }
         e.target.files = null;
     };
+
+
+    const handleColorImageChange = (e) => {
+        if (e.target.files) {
+            setColorFilesToUpload((prev) => {
+                let prevs = [...colorFilesToUpload];
+                console.log(e.target.files);
+                prevs.push(e.target.files[0]);
+                console.log(prevs);
+                return prevs;
+            });
+        }
+        e.target.files = null;
+    };
     const dleteImage = (file) => {
         setFilesToUpload((prev) => {
             let imgs = [...filesToupload];
+            const index = imgs.indexOf(file);
+            if (index > -1) {
+                imgs.splice(index, 1);
+            }
+            return imgs;
+        });
+    };
+
+    const dleteColorImage = (file) => {
+        setColorFilesToUpload((prev) => {
+            let imgs = [...colorFilesToUpload];
             const index = imgs.indexOf(file);
             if (index > -1) {
                 imgs.splice(index, 1);
@@ -410,6 +441,33 @@ const AddProductByAdmin = () => {
                     <button
                         onClick={() => {
                             dleteImage(photo);
+                        }}
+                        className="text-white bg-red-500 h-7 w-7 pt-1 flex rounded-full items-center justify-center absolute top-1 right-0"
+                    >
+                        x
+                    </button>
+                    <img
+                        className=" h-full object-cover"
+                        src={URL.createObjectURL(photo)}
+                        alt=""
+                        key={photo}
+                    />
+                </div>
+            );
+        });
+    };
+
+    const renderColorPhotos = (source) => {
+
+        return source.map((photo, index) => {
+            return (
+                <div
+                    className="w-max h-40 flex justify-center items-center  relative max-w-[200px]"
+                    key={index}
+                >
+                    <button
+                        onClick={() => {
+                            dleteColorImage(photo);
                         }}
                         className="text-white bg-red-500 h-7 w-7 pt-1 flex rounded-full items-center justify-center absolute top-1 right-0"
                     >
@@ -603,10 +661,13 @@ const AddProductByAdmin = () => {
         { name: 'Black', hexCode: '#000000' },
     ];
 
+    const sampleSizes = ["X", "S", "M", "L", "XL", "XXL", "3XL"];
+
 
 
     useEffect(() => {
         setColors(sampleColors)
+        // setSizes(sampleSizes)
     }, [])
 
 
@@ -828,7 +889,34 @@ const AddProductByAdmin = () => {
                                     </Box>
 
 
-                                    <div className="my-4">
+                                    {selectedCategoryName === "clothes" && <div className="my-4">
+                                        <FormControl fullWidth>
+                                            <InputLabel id="multiple-sizes-label">Sizes</InputLabel>
+                                            <Select
+                                                labelId="multiple-sizes-label"
+                                                multiple
+                                                value={sizes}
+                                                onChange={handleSizeChange}
+                                                renderValue={(selected) => (
+                                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                                        {selected.map((value) => (
+                                                            <Chip key={value} label={value} />
+                                                        ))}
+                                                    </Box>
+                                                )}
+                                            >
+                                                {sampleSizes.map((size) => (
+                                                    <MenuItem key={size} value={size}>
+                                                        {size}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+
+                                    </div>}
+
+
+                                    {selectedCategoryName === "clothes" && <div className="my-4">
                                         <FormControl fullWidth>
                                             <InputLabel id="color-select-label">Color</InputLabel>
                                             <Select
@@ -868,41 +956,27 @@ const AddProductByAdmin = () => {
                                             </Select>
                                         </FormControl>
 
-                                    </div>
+                                    </div>}
 
-                                    <div className="my-4">
+
+                                    {selectedCategoryName === "clothes" && <div>
                                         <FormControl fullWidth>
-                                            <InputLabel id="size-select-label">Size</InputLabel>
+                                            <InputLabel id="gender-select-label">Gender</InputLabel>
                                             <Select
-                                                labelId="size-select-label"
-                                                value={selectedSize}
-                                                onChange={handleSizeChange}
-                                                label="Size"
+                                                labelId="gender-select-label"
+                                                value={selectedGender}
+                                                onChange={handleGenderChange}
+                                                label="Gender"
                                             >
-                                                {sizeOptions.map((size) => (
-                                                    <MenuItem key={size} value={size}>
-                                                        {size}
+                                                {genderOptions.map((gender) => (
+                                                    <MenuItem key={gender} value={gender}>
+                                                        {gender}
                                                     </MenuItem>
                                                 ))}
                                             </Select>
                                         </FormControl>
-                                    </div>
+                                    </div>}
 
-                                    <FormControl fullWidth>
-                                        <InputLabel id="gender-select-label">Gender</InputLabel>
-                                        <Select
-                                            labelId="gender-select-label"
-                                            value={selectedGender}
-                                            onChange={handleGenderChange}
-                                            label="Gender"
-                                        >
-                                            {genderOptions.map((gender) => (
-                                                <MenuItem key={gender} value={gender}>
-                                                    {gender}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
 
                                 </div>
                                 <div className="basis-[45%] py-4 mt-10">
@@ -1003,64 +1077,50 @@ const AddProductByAdmin = () => {
                                         <button className="bg-primary-blue" type="button" onClick={handleAddSpecification}>Add Specification</button>
                                     </div>
 
-                                    {/* <Typography sx={{ color: "gray" }} id="modal-modal-title" variant="p" component="p">
-                                        Add a long description for your product
-                                    </Typography> */}
 
-                                    {/* <Box sx={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 2, marginTop: 2 }}>
-                                        <Typography sx={{ my: 1, color: "gray" }} id="modal-modal-title" variant="p" component="p">
-                                            Return Policy
-                                        </Typography>
-                                        <FormGroup>
-                                            <FormControlLabel
-                                                label="Add Deduction"
-                                                control={
-                                                    <Switch
-                                                        checked={returnSwitch}
-                                                        onChange={handleReturnSwitch}
-                                                    />
-                                                }
-                                            />
-                                        </FormGroup>
-                                    </Box> */}
 
-                                    {/* <Typography sx={{ marginTop: 2 }}>
-                                        Date Added
-                                    </Typography> */}
 
-                                    {/* <Box sx={{ display: "flex", marginTop: 2, gap: 2 }}>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                            <DemoContainer components={['DatePicker', 'DatePicker']}>
-                                                <DatePicker
-                                                    label="Pick a Date"
-                                                    value={value}
-                                                    onChange={(newValue) => setValue(newValue)}
+                                    {selectedCategoryName === "clothes" && <div className="mt-4">
+                                        <div className="flex items-center flex-col gap-4  w-full ">
+                                            <p className="font-semibold">Color Images</p>
+                                            <label className=" pb-4 flex flex-col w-full border-4 border-dashed hover:bg-gray-100 hover:border-gray-300">
+                                                <div className="flex flex-col items-center justify-center py-7 ">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        className="w-12 h-12 text-gray-400 group-hover:text-gray-600"
+                                                        viewBox="0 0 20 20"
+                                                        fill="currentColor"
+                                                    >
+                                                        <path
+                                                            fillRule="evenodd"
+                                                            d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                                                            clipRule="evenodd"
+                                                        />
+                                                    </svg>
+                                                    <p className="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
+                                                        Upload Color Image
+                                                    </p>
+                                                    <p className="pt-3 text-sm tracking-wider text-gray-400 group-hover:text-gray-600 text-center">Upload a cover image for your product.</p>
+                                                    <p className="  text-sm tracking-wider text-gray-400 group-hover:text-gray-600 text-center">File Format jpeg, png Recommened Size 600x600 (1:1)</p>
+                                                </div>
+                                                <input
+                                                    onChange={handleColorImageChange}
+                                                    type="file"
+                                                    className="opacity-0"
                                                 />
-                                            </DemoContainer>
-                                        </LocalizationProvider>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                            <DemoContainer components={['TimePicker', 'TimePicker']}>
-                                                <TimePicker
-                                                    label="Pick a Time"
-                                                    value={value}
-                                                    onChange={(newValue) => setValue(newValue)}
-                                                />
-                                            </DemoContainer>
-                                        </LocalizationProvider>
-                                    </Box> */}
+                                            </label>
 
+                                            <div className="w-full flex items-center justify-center gap-4 max-w-md flex-wrap">
+                                                {renderColorPhotos(colorFilesToUpload)}
+                                            </div>
+                                        </div>
+                                    </div>}
                                 </div>
                             </div>
                             <div className="basis-[25%] max-w-[380px]  px-7 ">
                                 <div>
-                                    {/* <p className='text-center text-xl my-8 '>Add Images</p> */}
-
                                     <div className="mt-12">
-                                        {/* <label className="inline-block mb-2 text-gray-500">
-                            Select Product Images (for Multiple images please upload one after one)
-                        </label> */}
                                         <div className="flex items-center flex-col gap-4  w-full ">
-
                                             <label className=" pb-4 flex flex-col w-full border-4 border-dashed hover:bg-gray-100 hover:border-gray-300">
                                                 <div className="flex flex-col items-center justify-center py-7 ">
                                                     <svg
