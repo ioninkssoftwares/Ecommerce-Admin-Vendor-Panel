@@ -152,6 +152,7 @@ const AddProductByAdmin = () => {
     const [bestSellerSwitch, setBestSellerSwitch] = useState(true);
     const [allBrands, setAllBrands] = useState([]);
     const [allCategories, setAllCategories] = useState([]);
+    const [allColors, setAllColors] = useState([]);
     const [allSubCategories, setAllSubCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
 
@@ -164,12 +165,12 @@ const AddProductByAdmin = () => {
     const [colors, setColors] = useState([]);
     const [sizes, setSizes] = useState([]);
     const [selectedColors, setSelectedColors] = useState([]);
-    const [selectedSizes, setSelectedSizes] = useState([]);
     const [selectedGender, setSelectedGender] = useState('');
-    const [selectedSize, setSelectedSize] = useState('');
 
 
-    if (selectedCategoryName) console.log(selectedCategoryName, 'produddct');
+
+    if (selectedColors) console.log(selectedColors, 'dfdfdfsa');
+    if (sizes) console.log(sizes, 'dfdfdfsa');
 
     const genderOptions = ['men', 'women', 'boys', 'girls'];
     const sizeOptions = ['S', 'M', 'L', 'XL', 'XXL'];
@@ -185,7 +186,8 @@ const AddProductByAdmin = () => {
 
 
     const handleSizeChange = (event) => {
-        setSizes(event.target.value);
+        const selectedSizes = event.target.value.map((size) => ({ size }));
+        setSizes(selectedSizes);
     };
 
     const handleColorChange = (event) => {
@@ -331,6 +333,10 @@ const AddProductByAdmin = () => {
         for (let i of filesToupload) {
             ProductFormData.append('productImages', i);
         }
+
+        for (let i of colorFilesToUpload) {
+            ProductFormData.append('moreColorImages', i);
+        }
         ProductFormData.append('name', product.name);
         ProductFormData.append('category', selectedCategoryName);
         ProductFormData.append('stock', product.stock);
@@ -346,6 +352,9 @@ const AddProductByAdmin = () => {
         ProductFormData.append('vendorId', vendorId);
         ProductFormData.append('gstPerc', product.gstPerc);
         ProductFormData.append('hsnCode', product.hsnCode);
+        ProductFormData.append('sizes', sizes);
+        ProductFormData.append('gender', selectedGender);
+        ProductFormData.append('colors', selectedColors);
 
         try {
             const res = await instance.post("/admin/product/new", ProductFormData, {
@@ -600,6 +609,25 @@ const AddProductByAdmin = () => {
         }
     }
 
+    async function getAllColors() {
+        try {
+            console.log(token, "jsakdfjkladsj")
+
+            setLoading(true);
+            const res = await instance.get(
+                `/admin/getAllColors`
+            );
+            if (res.data) {
+                setAllColors(res.data.data)
+                setLoading(false);
+            }
+        } catch (e) {
+            setLoading(false);
+            console.log(e)
+            // ErrorDispaly(e);
+        }
+    }
+
 
     // async function getAllSubCategories() {
     //     try {
@@ -642,7 +670,7 @@ const AddProductByAdmin = () => {
     useEffect(() => {
         getAllBrands();
         getAllCategories();
-        // getAllSubCategories();
+        getAllColors();
         getVendorDetails();
     }, [token]);
 
@@ -666,9 +694,9 @@ const AddProductByAdmin = () => {
 
 
     useEffect(() => {
-        setColors(sampleColors)
+        setColors(allColors)
         // setSizes(sampleSizes)
-    }, [])
+    }, [allColors])
 
 
 
@@ -895,7 +923,7 @@ const AddProductByAdmin = () => {
                                             <Select
                                                 labelId="multiple-sizes-label"
                                                 multiple
-                                                value={sizes}
+                                                value={sizes.map((sizeObj) => sizeObj.size)}
                                                 onChange={handleSizeChange}
                                                 renderValue={(selected) => (
                                                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -912,7 +940,6 @@ const AddProductByAdmin = () => {
                                                 ))}
                                             </Select>
                                         </FormControl>
-
                                     </div>}
 
 
@@ -931,7 +958,7 @@ const AddProductByAdmin = () => {
                                                             return (
                                                                 <Chip
                                                                     key={value}
-                                                                    label={color.name}
+                                                                    label={color.colorName}
                                                                     style={{ backgroundColor: value, color: '#fff' }}
                                                                 />
                                                             );
@@ -940,7 +967,7 @@ const AddProductByAdmin = () => {
                                                 )}
                                             >
                                                 {colors.map((color) => (
-                                                    <MenuItem key={color.name} value={color.hexCode}>
+                                                    <MenuItem key={color.colorName} value={color.hexCode}>
                                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                                             <div style={{
                                                                 backgroundColor: color.hexCode,
@@ -949,7 +976,7 @@ const AddProductByAdmin = () => {
                                                                 marginRight: 10,
                                                                 border: '1px solid #000',
                                                             }} />
-                                                            {color.name}
+                                                            {color.colorName}
                                                         </div>
                                                     </MenuItem>
                                                 ))}
