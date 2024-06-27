@@ -24,6 +24,7 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import InputField from "../../Components/InputField";
 import ConfirmBox from "../../Components/vendor/shared/ConfirmDialog";
+import axios from "axios";
 
 
 export const Button = ({
@@ -165,12 +166,18 @@ const AddProductByAdmin = () => {
     const [colors, setColors] = useState([]);
     const [sizes, setSizes] = useState([]);
     const [selectedColors, setSelectedColors] = useState([]);
+    const [selectedColorsIds, setSelectedColorsIds] = useState([]);
     const [selectedGender, setSelectedGender] = useState('');
 
 
+    if (Array.isArray(selectedColorsIds)) {
+        console.log(selectedColorsIds, 'Selected Color IDs');
+    } else {
+        console.log('selectedColorIds is not an array');
+    }
 
-    if (selectedColors) console.log(selectedColors, 'dfdfdfsa');
-    if (sizes) console.log(sizes, 'dfdfdfsa');
+    // if (selectedColorsIds) console.log(selectedColorsIds, 'sdfdsfd');
+    if (sizes) console.log(sizes, 'sadasd');
 
     const genderOptions = ['men', 'women', 'boys', 'girls'];
     const sizeOptions = ['S', 'M', 'L', 'XL', 'XXL'];
@@ -186,14 +193,22 @@ const AddProductByAdmin = () => {
 
 
     const handleSizeChange = (event) => {
-        const selectedSizes = event.target.value.map((size) => ({ size }));
-        setSizes(selectedSizes);
+        setSizes(event.target.value);
     };
 
     const handleColorChange = (event) => {
         const selectedHexCodes = event.target.value;
         const selectedColorObjects = selectedHexCodes.map(hexCode => colors.find(color => color.hexCode === hexCode));
+        console.log(selectedColorObjects, 'dfdfdfdfdfsfsa');
         setSelectedColors(selectedColorObjects);
+
+        //selecting Ids
+        const colorIds = selectedColorObjects.map(color => color._id);
+
+        setSelectedColorsIds(colorIds);
+
+
+
         setProduct({ ...product, color: selectedColorObjects });
     };
 
@@ -337,6 +352,13 @@ const AddProductByAdmin = () => {
         for (let i of colorFilesToUpload) {
             ProductFormData.append('moreColorImages', i);
         }
+        for (let i of sizes) {
+            ProductFormData.append('sizes', i);
+        }
+        for (let i of selectedColorsIds) {
+            ProductFormData.append('colors', i);
+        }
+
         ProductFormData.append('name', product.name);
         ProductFormData.append('category', selectedCategoryName);
         ProductFormData.append('stock', product.stock);
@@ -352,9 +374,9 @@ const AddProductByAdmin = () => {
         ProductFormData.append('vendorId', vendorId);
         ProductFormData.append('gstPerc', product.gstPerc);
         ProductFormData.append('hsnCode', product.hsnCode);
-        ProductFormData.append('sizes', sizes);
+        // ProductFormData.append('sizes', sizes);
         ProductFormData.append('gender', selectedGender);
-        ProductFormData.append('colors', selectedColors);
+        // ProductFormData.append('colors', selectedColorsIds);
 
         try {
             const res = await instance.post("/admin/product/new", ProductFormData, {
@@ -891,7 +913,7 @@ const AddProductByAdmin = () => {
 
                                     </Box>
 
-                                    <Box sx={{ display: "flex", gap: 2 }}>
+                                    {selectedCategoryName !== "clothes" && <Box sx={{ display: "flex", gap: 2 }}>
 
                                         <FormControl fullWidth>
                                             <InputLabel id="warranty-period-label">Warranty Period</InputLabel>
@@ -914,7 +936,7 @@ const AddProductByAdmin = () => {
                                         </FormControl>
 
 
-                                    </Box>
+                                    </Box>}
 
 
                                     {selectedCategoryName === "clothes" && <div className="my-4">
@@ -923,7 +945,7 @@ const AddProductByAdmin = () => {
                                             <Select
                                                 labelId="multiple-sizes-label"
                                                 multiple
-                                                value={sizes.map((sizeObj) => sizeObj.size)}
+                                                value={sizes.map((sizeObj) => sizeObj)}
                                                 onChange={handleSizeChange}
                                                 renderValue={(selected) => (
                                                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
