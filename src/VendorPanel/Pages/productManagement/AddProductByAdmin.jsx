@@ -169,6 +169,7 @@ const AddProductByAdmin = () => {
     const [selectedColorsIds, setSelectedColorsIds] = useState([]);
     const [selectedGender, setSelectedGender] = useState('');
 
+    const brandOptions = ["boys", "kids", "girls", "mens", "womens", "toddlers"];
 
     if (Array.isArray(selectedColorsIds)) {
         console.log(selectedColorsIds, 'Selected Color IDs');
@@ -380,6 +381,7 @@ const AddProductByAdmin = () => {
 
         try {
             const res = await instance.post("/admin/product/new", ProductFormData, {
+                // const res = await instance.post("http://localhost:8000/api/v1//admin/product/new", ProductFormData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -913,7 +915,7 @@ const AddProductByAdmin = () => {
 
                                     </Box>
 
-                                    {selectedCategoryName !== "clothes" && <Box sx={{ display: "flex", gap: 2 }}>
+                                    {!brandOptions.includes(selectedBrand) && <Box sx={{ display: "flex", gap: 2 }}>
 
                                         <FormControl fullWidth>
                                             <InputLabel id="warranty-period-label">Warranty Period</InputLabel>
@@ -939,7 +941,7 @@ const AddProductByAdmin = () => {
                                     </Box>}
 
 
-                                    {selectedCategoryName === "clothes" && <div className="my-4">
+                                    {brandOptions.includes(selectedBrand) && <div className="my-4">
                                         <FormControl fullWidth>
                                             <InputLabel id="multiple-sizes-label">Sizes</InputLabel>
                                             <Select
@@ -965,7 +967,7 @@ const AddProductByAdmin = () => {
                                     </div>}
 
 
-                                    {selectedCategoryName === "clothes" && <div className="my-4">
+                                    {brandOptions.includes(selectedBrand) && <div className="my-4">
                                         <FormControl fullWidth>
                                             <InputLabel id="color-select-label">Color</InputLabel>
                                             <Select
@@ -1008,7 +1010,7 @@ const AddProductByAdmin = () => {
                                     </div>}
 
 
-                                    {selectedCategoryName === "clothes" && <div>
+                                    {brandOptions.includes(selectedBrand) && <div>
                                         <FormControl fullWidth>
                                             <InputLabel id="gender-select-label">Gender</InputLabel>
                                             <Select
@@ -1129,7 +1131,7 @@ const AddProductByAdmin = () => {
 
 
 
-                                    {selectedCategoryName === "clothes" && <div className="mt-4">
+                                    {brandOptions.includes(selectedBrand) && <div className="mt-4">
                                         <div className="flex items-center flex-col gap-4  w-full ">
                                             <p className="font-semibold">Color Images</p>
                                             <label className=" pb-4 flex flex-col w-full border-4 border-dashed hover:bg-gray-100 hover:border-gray-300">
