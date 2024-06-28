@@ -62,6 +62,9 @@ const ViewProduct = () => {
         gstPerc: 0,
         images: [],
         isVerified: false,
+        colorImages: [],
+        sizes: [],
+        gender: ""
     })
     const [featuredSwitch, setFeaturedSwitch] = useState(true);
     const [bestSellerSwitch, setBestSellerSwitch] = useState(true);
@@ -95,6 +98,9 @@ const ViewProduct = () => {
                     images: data.productImages,
                     gstPerc: data.gstPerc,
                     hsnCode: data.hsnCode,
+                    gender: data.gender,
+                    sizes: data.sizes,
+                    colorImages: data.moreColorImage,
                     isVerified: data.isVerified === "true",
                 });
             } catch (error) {
@@ -115,7 +121,7 @@ const ViewProduct = () => {
         }
     }, [cookies]);
 
-
+    if (product) console.log(product, "hjfsdkh")
     return (
         <div>
             <div className='flex h-screen overflow-hidden'>
@@ -195,7 +201,7 @@ const ViewProduct = () => {
                                     </FormControl>
 
 
-                                    <Box sx={{ display: "flex", marginTop: 2, gap: 2 }}>
+                                    <Box sx={{ display: "flex", gap: 2 }}>
 
                                         <InputField
                                             label=" Price"
@@ -211,7 +217,7 @@ const ViewProduct = () => {
 
                                     </Box>
 
-                                    <Box sx={{ display: "flex", marginTop: 2, gap: 2 }}>
+                                    <Box sx={{ display: "flex", gap: 2 }}>
 
                                         <FormControl fullWidth>
                                             <InputLabel id="warranty-period-label">Warranty Period</InputLabel>
@@ -242,6 +248,43 @@ const ViewProduct = () => {
                                         />
 
                                     </Box>
+
+                                    <div className="mt-6">
+                                        <InputField
+                                            label="Gender"
+                                            type="text"
+                                            value={product?.gender}
+
+                                        />
+                                    </div>
+
+                                    <div className="">
+                                        <span className="">Sizes:</span>
+                                        <ul className="list-disc">
+                                            {product.sizes.map((spec, index) => (
+                                                <li key={index}>{spec}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+
+                                    <div>
+                                        <p className='text-center text-xl my-8 '>Uploaded Color Images</p>
+                                        <div className="mt-12">
+                                            {/* <div className="flex items-center flex-col gap-4  w-full "> */}
+                                            <div className="flex flex-col space-y-4">
+                                                {product?.colorImages.map((image, index) => (
+                                                    <img
+                                                        key={index}
+                                                        src={image}
+                                                        alt={`Color Image ${index + 1}`}
+                                                        className="w-full h-auto object-cover rounded"
+                                                    />
+                                                ))}
+                                            </div>
+
+                                            {/* </div> */}
+                                        </div>
+                                    </div>
 
                                 </div>
                                 <div className="basis-[45%] py-4 mt-10">
