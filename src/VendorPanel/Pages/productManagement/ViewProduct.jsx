@@ -64,6 +64,7 @@ const ViewProduct = () => {
         isVerified: false,
         colorImages: [],
         sizes: [],
+        colors: [],
         gender: ""
     })
     const [featuredSwitch, setFeaturedSwitch] = useState(true);
@@ -101,6 +102,7 @@ const ViewProduct = () => {
                     gender: data.gender,
                     sizes: data.sizes,
                     colorImages: data.moreColorImage,
+                    colors: data.colors,
                     isVerified: data.isVerified === "true",
                 });
             } catch (error) {
@@ -258,13 +260,43 @@ const ViewProduct = () => {
                                         />
                                     </div>
 
-                                    <div className="">
-                                        <span className="">Sizes:</span>
+                                    {/* <div className="flex gap-4">
+                                    <div>
+                                    <span className="">Sizes:</span>
                                         <ul className="list-disc">
                                             {product.sizes.map((spec, index) => (
                                                 <li key={index}>{spec}</li>
                                             ))}
                                         </ul>
+                                    </div>
+                                  <div>
+                                  <span className="">Colors:</span>
+                                      
+                                  </div>
+                                    </div> */}
+                                    <div className="flex items-center justify-around">
+                                        <div className=" ">
+                                            <span className="mb-2">Sizes:</span>
+                                            <ul className="list-disc">
+                                                {product?.sizes.map((spec, index) => (
+                                                    <li key={index}>{spec}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <span className="mb-2">Colors:</span>
+                                            <ul className="list-none">
+                                                {product?.colors.map((color) => (
+                                                    <li key={color._id} className="flex items-center gap-2 mb-1">
+                                                        <div
+                                                            className="w-6 h-6 rounded-full"
+                                                            style={{ backgroundColor: color.hexCode }}
+                                                        ></div>
+                                                        <span>{color.colorName}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
                                     </div>
 
                                     <div>
@@ -289,7 +321,7 @@ const ViewProduct = () => {
                                 </div>
                                 <div className="basis-[45%] py-4 mt-10">
 
-                                    <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+                                    {/* <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
                                         <FormGroup>
                                             <FormControlLabel
                                                 label="Featured"
@@ -309,7 +341,7 @@ const ViewProduct = () => {
 
                                             />
                                         </FormGroup>
-                                    </Box>
+                                    </Box> */}
 
 
 
