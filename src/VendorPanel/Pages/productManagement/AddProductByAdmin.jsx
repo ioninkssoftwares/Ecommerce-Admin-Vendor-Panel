@@ -136,8 +136,8 @@ const AddProductByAdmin = () => {
         category: "",
         brand: "",
         specification: "",
-        featured: true,
-        bestSeller: true,
+        featured: false,
+        bestSeller: false,
         subCategory: "",
         // mrp: 0,
         warrantyPeriod: "",
@@ -1032,7 +1032,7 @@ const AddProductByAdmin = () => {
                                 </div>
                                 <div className="basis-[45%] py-4 mt-10">
 
-                                    <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+                                    {/* <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
                                         <FormGroup>
                                             <FormControlLabel
                                                 label="Featured"
@@ -1049,7 +1049,7 @@ const AddProductByAdmin = () => {
 
                                             />
                                         </FormGroup>
-                                    </Box>
+                                    </Box> */}
 
 
 
