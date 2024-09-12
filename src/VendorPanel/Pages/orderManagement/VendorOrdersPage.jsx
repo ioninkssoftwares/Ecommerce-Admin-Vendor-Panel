@@ -484,16 +484,33 @@ const VendorOrdersPage = () => {
         //     },
         // },
 
+        // {
+        //     minWidth: 150,
+
+        //     field: "status",
+        //     headerName: "Order Status",
+        //     flex: 0.25,
+        //     align: "left",
+        //     headerAlign: "left",
+        //     disableColumnMenu: true,
+        // },
+        
         {
             minWidth: 150,
-
             field: "status",
             headerName: "Order Status",
             flex: 0.25,
             align: "left",
             headerAlign: "left",
             disableColumnMenu: true,
-        },
+            renderCell: ({ row }) => (
+              row.isCancelled ? (
+                <span style={{ color: 'red' }}>Cancelled</span>
+              ) : (
+                row.status
+              )
+            ),
+          },
         {
             minWidth: 150,
 
