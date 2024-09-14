@@ -481,7 +481,7 @@ const OrderDetailsModal = ({
               <p>
                 Cancelled Reason:{" "}
                 <span style={{ color: "red" }}>
-                  {orderDetails.cancelledReason}
+                  {orderDetails.customCancelReason}
                 </span>
               </p>
             </div>
