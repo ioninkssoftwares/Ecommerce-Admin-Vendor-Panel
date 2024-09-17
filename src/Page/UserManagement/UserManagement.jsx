@@ -27,7 +27,7 @@ export default function UserManagement() {
     const token = cookies.token;
 
     if (!token) {
-      navigate("/loginadmin");
+      navigate("/vendor/login");
     } else {
       setTokenAvailable(true);
       fetchUserData();

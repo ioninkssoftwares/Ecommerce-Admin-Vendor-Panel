@@ -44,7 +44,7 @@ export default function OrderManagement() {
     const token = cookies.token;
 
     if (!token) {
-      navigate("/loginadmin");
+      navigate("/vendor/login");
     } else {
       setTokenAvailable(true);
     }
@@ -66,7 +66,7 @@ export default function OrderManagement() {
     const token = cookies.token;
 
     if (!token) {
-      navigate("/loginadmin");
+      navigate("/vendor/login");
     } else {
       setTokenAvailable(true);
     }
@@ -75,7 +75,7 @@ export default function OrderManagement() {
   const fetchData = async () => {
     const token = cookies.token;
     if (!token) {
-      navigate("/loginadmin");
+      navigate("/vendor/login");
       return;
     }
 
