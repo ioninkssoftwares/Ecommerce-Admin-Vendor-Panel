@@ -47,7 +47,7 @@ const ProtectedRoute = ({ element }) => {
   const token = getTokenFromCookies();
 
   // If token exists, render the provided element, else redirect to login
-  return token ? element : <Navigate to="/loginadmin" />;
+  return token ? element : <Navigate to="/vendor/login" />;
 };
 
 
@@ -118,7 +118,7 @@ export default function App() {
             path="/addbanner"
             element={<ProtectedRoute element={<BannerComponent />} />}
           />
-          <Route path="/loginadmin" element={<Login />} />
+          <Route path="/vendor/login" element={<LoginVenDor />} />
           <Route
             path="/inventorymanagement"
             element={<ProtectedRoute element={<InventoryManagement />} />}

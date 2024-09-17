@@ -103,26 +103,30 @@ const BarChartTwo = ({ allOrdersCount, processingOrders, shippedOrders, delivere
         width: isMobile ? "100%" : "32%",
         marginBottom: isMobile ? "30px" : "0",
         marginRight: isMobile ? "0" : "30px",
-        marginLeft: isMobile ? "0" : "30px"
+        marginLeft: isMobile ? "0" : "30px",
       }}
-      className="BarChartOne01">
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      className="BarChartOne01"
+    >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Typography variant="h6">
           Total Orders
           <br />
           <Typography paragraph style={{ fontWeight: "800" }}>
-
             {allOrdersCount}
-            <span style={{ color: "green", fontSize: "12px", fontWeight: "200" }}>
+            {/* <span style={{ color: "green", fontSize: "12px", fontWeight: "200" }}>
               <ArrowUpwardIcon sx={{ fontSize: "12px" }} />
               {deliveredPercentage}
-            </span>
+            </span> */}
           </Typography>
         </Typography>
-
       </Box>
       {loading ? <CircularProgress /> : <canvas ref={chartRef} />}
-
     </div>
   );
 };
