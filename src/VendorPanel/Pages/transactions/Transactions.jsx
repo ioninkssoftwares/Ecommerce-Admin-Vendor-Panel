@@ -253,270 +253,341 @@ const TransactionsPage = () => {
     };
 
     const all_customer_columns = [
-        {
-            minWidth: 120,
+      {
+        minWidth: 120,
 
-            flex: 0.25,
-            field: "transactionId",
-            headerName: "Transaction Id",
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true,
-        },
+        flex: 0.25,
+        field: "transactionId",
+        headerName: "Transaction Id",
+        align: "left",
+        headerAlign: "left",
+        disableColumnMenu: true,
+      },
 
-        {
-            minWidth: 120,
+      {
+        minWidth: 120,
 
-            flex: 0.25,
-            field: "date",
-            headerName: "Date",
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true, renderCell: ({ row }) => (
-                <Typography variant="body1" fontWeight={500}>
-                    {new Date(row?.date).toLocaleDateString('en-GB')}
-                </Typography>
-            ),
-        },
+        flex: 0.25,
+        field: "date",
+        headerName: "Date",
+        align: "left",
+        headerAlign: "left",
+        disableColumnMenu: true,
+        renderCell: ({ row }) => (
+          <Typography variant="body1" fontWeight={500}>
+            {new Date(row?.date).toLocaleDateString("en-GB")}
+          </Typography>
+        ),
+      },
 
-        {
-            minWidth: 150,
+      {
+        minWidth: 150,
 
-            flex: 0.25,
-            field: "transactionType",
-            headerName: "Transaction Type",
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true,
-        },
+        flex: 0.25,
+        field: "transactionType",
+        headerName: "Transaction Type",
+        align: "left",
+        headerAlign: "left",
+        disableColumnMenu: true,
+      },
 
-        {
-            minWidth: 150,
+      // {
+      //     minWidth: 150,
 
-            flex: 0.25,
-            field: "amount",
-            headerName: "Amount",
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true, renderCell: ({ row }) => (
-                <Typography variant="body1" fontWeight={500}>
-                    ₹{row?.amount}
-                </Typography>
-            ),
-        },
+      //     flex: 0.25,
+      //     field: "amount",
+      //     headerName: "Amount",
+      //     align: "left",
+      //     headerAlign: "left",
+      //     disableColumnMenu: true, renderCell: ({ row }) => (
+      //         <Typography variant="body1" fontWeight={500}>
+      //             ₹{row?.amount}
+      //         </Typography>
+      //     ),
+      // },
 
+      {
+        minWidth: 150,
+        flex: 0.25,
+        field: "amount",
+        headerName: "Amount",
+        align: "left",
+        headerAlign: "left",
+        disableColumnMenu: true,
+        renderCell: ({ row }) => (
+          <Typography variant="body1" fontWeight={500}>
+            ₹
+            {row?.amount
+              ? Number.isInteger(row.amount)
+                ? row.amount
+                : row.amount.toFixed(2)
+              : "0"}
+          </Typography>
+        ),
+      },
     ];
 
     const all_customer_columns_for_orders = [
-        {
-            minWidth: 120,
+      {
+        minWidth: 120,
 
-            flex: 0.25,
-            field: "_id",
-            headerName: "Order Id",
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true,
+        flex: 0.25,
+        field: "_id",
+        headerName: "Order Id",
+        align: "left",
+        headerAlign: "left",
+        disableColumnMenu: true,
+      },
+      {
+        flex: 0.25,
+        minWidth: 150,
+        field: "name",
+        headerName: "User Name",
+        align: "left",
+        headerAlign: "left",
+        disableColumnMenu: true,
+        renderCell: ({ row }) => (
+          <Typography
+            variant="body1"
+            fontWeight={500}
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "150px",
+            }}
+          >
+            {row?.user?.name}
+          </Typography>
+        ),
+      },
+      {
+        flex: 0.25,
+        minWidth: 250,
+        field: "productName",
+        headerName: "Product Name",
+        align: "left",
+        headerAlign: "left",
+        disableColumnMenu: true,
+        valueGetter: (params) => params.row.product?.name,
+        renderCell: ({ row }) => (
+          <Typography
+            variant="body1"
+            fontWeight={500}
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "250px",
+            }}
+          >
+            {row?.product?.name}
+          </Typography>
+        ),
+      },
+      {
+        minWidth: 150,
+
+        flex: 0.25,
+        field: "createdAt",
+        headerName: "Order Date",
+        align: "left",
+        headerAlign: "left",
+        disableColumnMenu: true,
+        renderCell: ({ row }) => (
+          <Typography variant="body1" fontWeight={500}>
+            {new Date(row?.createdAt).toLocaleDateString("en-GB")}
+          </Typography>
+        ),
+      },
+
+      {
+        flex: 0.25,
+        minWidth: 150,
+        field: "productPrice",
+        headerName: "Price",
+        align: "left",
+        headerAlign: "left",
+        disableColumnMenu: true,
+        valueGetter: (params) => params.row.product?.price,
+        renderCell: ({ row }) => (
+          <Typography
+            variant="body1"
+            fontWeight={500}
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "250px",
+            }}
+          >
+            {/* {row?.product?.price} */}
+            {row?.product?.price
+              ? Number.isInteger(row.product?.price)
+                ? row.product?.price
+                : row.product?.price.toFixed(2)
+              : "0"}
+          </Typography>
+        ),
+      },
+
+      {
+        minWidth: 120,
+
+        flex: 0.25,
+        field: "quantity",
+        headerName: "Quantity",
+        align: "left",
+        headerAlign: "left",
+        disableColumnMenu: true,
+      },
+      // {
+      //     minWidth: 150,
+
+      //     field: "shippingCharges",
+      //     headerName: "Shipping Charges",
+      //     flex: 0.25,
+      //     align: "left",
+      //     headerAlign: "left",
+      //     disableColumnMenu: true,
+      // },
+      {
+        field: "orderTotal",
+        headerName: "Order Total",
+        minWidth: 150,
+        flex: 0.25,
+        align: "left",
+        headerAlign: "left",
+        valueGetter: (params) => {
+          const orderTotal = params.row.product?.price * params.row.quantity;
+          return orderTotal
+            ? Number.isInteger(orderTotal)
+              ? orderTotal
+              : orderTotal.toFixed(2)
+            : "0";
         },
-        {
-            flex: 0.25,
-            minWidth: 150,
-            field: "name",
-            headerName: "User Name",
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true,
-            renderCell: ({ row }) => (
-                <Typography variant="body1" fontWeight={500} style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '150px' }}>
-                    {row?.user?.name}
-                </Typography>
-            ),
-        },
-        {
-            flex: 0.25,
-            minWidth: 250,
-            field: "productName",
-            headerName: "Product Name",
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true,
-            valueGetter: (params) => params.row.product?.name,
-            renderCell: ({ row }) => (
-                <Typography
-                    variant="body1"
-                    fontWeight={500}
-                    style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '250px' }}
-                >
-                    {row?.product?.name}
-                </Typography>
-            ),
-        },
-        {
-            minWidth: 150,
+      },
 
-            flex: 0.25,
-            field: "createdAt",
-            headerName: "Order Date",
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true, renderCell: ({ row }) => (
-                <Typography variant="body1" fontWeight={500}>
-                    {new Date(row?.createdAt).toLocaleDateString('en-GB')}
-                </Typography>
-            ),
-        },
+      {
+        minWidth: 150,
 
-        {
-            flex: 0.25,
-            minWidth: 150,
-            field: "productPrice",
-            headerName: "Price",
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true,
-            valueGetter: (params) => params.row.product?.price,
-            renderCell: ({ row }) => (
-                <Typography
-                    variant="body1"
-                    fontWeight={500}
-                    style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '250px' }}
-                >
-                    {row?.product?.price}
-                </Typography>
-            ),
-        },
-
-        {
-            minWidth: 120,
-
-            flex: 0.25,
-            field: "quantity",
-            headerName: "Quantity",
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true,
-        },
-        // {
-        //     minWidth: 150,
-
-        //     field: "shippingCharges",
-        //     headerName: "Shipping Charges",
-        //     flex: 0.25,
-        //     align: "left",
-        //     headerAlign: "left",
-        //     disableColumnMenu: true,
-        // },
-        {
-            field: 'orderTotal',
-            headerName: 'Order Total',
-            minWidth: 150,
-            flex: 0.25,
-            align: "left",
-            headerAlign: "left",
-            valueGetter: (params) => {
-                return params.row.product?.price * params.row.quantity;
-            },
-        },
-
-        {
-            minWidth: 150,
-
-            field: "status",
-            headerName: "Order Status",
-            flex: 0.25,
-            align: "left",
-            headerAlign: "left",
-            disableColumnMenu: true,
-        },
-
+        field: "status",
+        headerName: "Order Status",
+        flex: 0.25,
+        align: "left",
+        headerAlign: "left",
+        disableColumnMenu: true,
+      },
     ];
 
-
     const handleViewChange = (event, newView) => {
-        if (newView !== null) {
-            setView(newView);
-        }
+      if (newView !== null) {
+        setView(newView);
+      }
     };
 
-
     const sortedDeliveredOrders = useMemo(() => {
-        return [...deliveredOrders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      return [...deliveredOrders].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
     }, [deliveredOrders]);
 
-
     const sortedTransactions = useMemo(() => {
-        if (!vendorWithdrawInfo?.withdrawalInfo) return [];
+      if (!vendorWithdrawInfo?.withdrawalInfo) return [];
 
-        return [...vendorWithdrawInfo.withdrawalInfo].sort((a, b) => new Date(b.date) - new Date(a.date));
+      return [...vendorWithdrawInfo.withdrawalInfo].sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
     }, [vendorWithdrawInfo]);
 
     if (sortedTransactions) console.log(sortedTransactions, "hjhj");
 
     return (
-        <div>
-            <div className='flex h-screen overflow-hidden'>
-                <Sidebar />
-                <div className='relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden'>
-                    {/* <main> */}
-                    {loading ? <div className="flex items-center justify-center text-3xl h-full">
-                        <CircularProgress className="text-3xl" />
-                    </div> : <div className='bg-gray-50'>
-                        <AdminNavbar />
-                        <div className="flex md:justify-between md:items-center md:flex-row flex-col justify-center items-center mt-8 mb-6 gap-3 px-3">
+      <div>
+        <div className="flex h-screen overflow-hidden">
+          <Sidebar />
+          <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+            {/* <main> */}
+            {loading ? (
+              <div className="flex items-center justify-center text-3xl h-full">
+                <CircularProgress className="text-3xl" />
+              </div>
+            ) : (
+              <div className="bg-gray-50">
+                <AdminNavbar />
+                <div className="flex md:justify-between md:items-center md:flex-row flex-col justify-center items-center mt-8 mb-6 gap-3 px-3">
+                  {/* <div> */}
+                  <div className="p-3 w-full bg-white rounded-lg mx-6">
+                    {/* <p style={{ borderBottom: "2px solid gray" }} className=" text-center w-full pb-2 font-bold text-xl">Transactions</p> */}
+                    <div className="flex gap-5 items-center justify-center mb-3">
+                      <div className="bg-[#04A7FF29] p-2 text-primary-blue rounded-xl text-lg">
+                        <FaMoneyBillTransfer />
+                      </div>
+                      <div>
+                        <p className="text-primary-blue font-bold text-xl">
+                          Transactions
+                        </p>
+                      </div>
+                    </div>
+                    <Divider />
+                    <Grid container spacing={2} sx={{ marginTop: 1 }}>
+                      <Grid item xs={4}>
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <PaymentIcon color="primary" />
 
-                            {/* <div> */}
-                            <div className="p-3 w-full bg-white rounded-lg mx-6">
-                                {/* <p style={{ borderBottom: "2px solid gray" }} className=" text-center w-full pb-2 font-bold text-xl">Transactions</p> */}
-                                <div className="flex gap-5 items-center justify-center mb-3">
-                                    <div className="bg-[#04A7FF29] p-2 text-primary-blue rounded-xl text-lg">
-                                        <FaMoneyBillTransfer />
-                                    </div>
-                                    <div>
-                                        <p className="text-primary-blue font-bold text-xl">Transactions</p>
-                                    </div>
-                                </div>
-                                <Divider />
-                                <Grid container spacing={2} sx={{ marginTop: 1 }}>
-
-                                    <Grid item xs={4}>
-                                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                                            <PaymentIcon color="primary" />
-
-                                            <Box sx={{ marginLeft: 1 }}>
-                                                <Typography variant="subtitle1">Total Amount</Typography>
-                                                <Typography variant="h6" color="textSecondary">
-                                                    ₹{totalAmount}
-                                                </Typography>
-                                            </Box>
-                                        </Box>
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                                            <DoneIcon color="secondary" />
-                                            <Box sx={{ marginLeft: 1 }}>
-                                                <Typography variant="subtitle1">Total Paid</Typography>
-                                                <Typography variant="h6" color="textSecondary">
-                                                    ₹{totalPaid || 0}
-                                                </Typography>
-                                            </Box>
-                                        </Box>
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                                            <HourglassEmptyIcon color="error" />
-                                            <Box sx={{ marginLeft: 1 }}>
-                                                <Typography variant="subtitle1">
-                                                    Pending Amount
-                                                </Typography>
-                                                <Typography variant="h6" color="textSecondary">
-                                                    ₹{pendingAmount}
-                                                </Typography>
-                                            </Box>
-                                        </Box>
-                                    </Grid>
-
-                                </Grid>
-                                {/* <div className="flex justify-center items-center ">
+                          <Box sx={{ marginLeft: 1 }}>
+                            <Typography variant="subtitle1">
+                              Total Amount
+                            </Typography>
+                            <Typography variant="h6" color="textSecondary">
+                              {/* ₹{totalAmount} */}₹
+                              {/* {totalAmount ? totalAmount.toFixed(2) : "0.00"} */}
+                              ₹
+                              {totalAmount
+                                ? Number.isInteger(totalAmount)
+                                  ? totalAmount
+                                  : totalAmount.toFixed(2)
+                                : "0"}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <DoneIcon color="secondary" />
+                          <Box sx={{ marginLeft: 1 }}>
+                            <Typography variant="subtitle1">
+                              Total Paid
+                            </Typography>
+                            <Typography variant="h6" color="textSecondary">
+                              {/* ₹{totalPaid ? totalPaid.toFixed(2) : "0.00"} */}
+                              ₹
+                              {totalPaid
+                                ? Number.isInteger(totalPaid)
+                                  ? totalPaid
+                                  : totalPaid.toFixed(2)
+                                : "0"}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <HourglassEmptyIcon color="error" />
+                          <Box sx={{ marginLeft: 1 }}>
+                            <Typography variant="subtitle1">
+                              Pending Amount
+                            </Typography>
+                            <Typography variant="h6" color="textSecondary">
+                              {/* ₹{pendingAmount} */}₹ ₹
+                              {pendingAmount
+                                ? Number.isInteger(pendingAmount)
+                                  ? pendingAmount
+                                  : pendingAmount.toFixed(2)
+                                : "0"}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Grid>
+                    </Grid>
+                    {/* <div className="flex justify-center items-center ">
                                     <div className="flex gap-5 items-center justify-center">
                                         <div className="w-full border-2 border-b-gray-400">
                                             <p className=" font-bold text-xl">Transactions</p>
@@ -524,14 +595,11 @@ const TransactionsPage = () => {
                                     </div>
                                 </div> */}
 
-                                {/* </div> */}
-                            </div>
+                    {/* </div> */}
+                  </div>
+                </div>
 
-
-
-                        </div>
-
-                        {/* <div className="flex justify-between items-center mb-8 mt-4  px-10">
+                {/* <div className="flex justify-between items-center mb-8 mt-4  px-10">
                             <div className="space-x-5">
                                 <p className="text-2xl ">Orders </p>
                             </div>
@@ -580,81 +648,88 @@ const TransactionsPage = () => {
                             </div>
                         </div> */}
 
-                        <ToggleButtonGroup
-                            value={view}
-                            exclusive
-                            onChange={handleViewChange}
-                            aria-label="view toggle"
-                            sx={{ marginBottom: 3, marginLeft: 4, marginRight: 2 }}
-                        >
-                            <ToggleButton value="orders" aria-label="orders view">
-                                Orders
-                            </ToggleButton>
-                            <ToggleButton
-                                value="transactions"
-                                aria-label="transactions view"
-                            >
-                                Transactions
-                            </ToggleButton>
-                        </ToggleButtonGroup>
+                <ToggleButtonGroup
+                  value={view}
+                  exclusive
+                  onChange={handleViewChange}
+                  aria-label="view toggle"
+                  sx={{ marginBottom: 3, marginLeft: 4, marginRight: 2 }}
+                >
+                  <ToggleButton value="orders" aria-label="orders view">
+                    Orders
+                  </ToggleButton>
+                  <ToggleButton
+                    value="transactions"
+                    aria-label="transactions view"
+                  >
+                    Transactions
+                  </ToggleButton>
+                </ToggleButtonGroup>
 
-                        {view === "transactions" && (
-                            <Grid container spacing={6} sx={{ pb: 38, px: 4, overflowX: 'scroll' }}>
-                                <Grid item xs={12}>
-                                    <Card sx={{ borderRadius: 2 }}>
-                                        <DataGrid
-                                            rows={sortedTransactions ? sortedTransactions : []}
-                                            columns={all_customer_columns}
-                                            getRowId={(row) => row.transactionId}
-                                            autoHeight
-                                            // components={{
-                                            //     LoadingOverlay: LinearProgress,
-                                            // }}
-                                            loading={loading}
-                                            getRowHeight={() => "auto"}
+                {view === "transactions" && (
+                  <Grid
+                    container
+                    spacing={6}
+                    sx={{ pb: 38, px: 4, overflowX: "scroll" }}
+                  >
+                    <Grid item xs={12}>
+                      <Card sx={{ borderRadius: 2 }}>
+                        <DataGrid
+                          rows={sortedTransactions ? sortedTransactions : []}
+                          columns={all_customer_columns}
+                          getRowId={(row) => row.transactionId}
+                          autoHeight
+                          // components={{
+                          //     LoadingOverlay: LinearProgress,
+                          // }}
+                          loading={loading}
+                          getRowHeight={() => "auto"}
+                          pagination
+                          paginationModel={paginationModel}
+                          pageSizeOptions={[25, 50, 75, 100]}
+                          rowCount={pagination?.totalUsers}
+                          paginationMode="server"
+                          onPaginationModelChange={setPaginationModel}
+                          sx={tableStyles}
+                        />
+                      </Card>
+                    </Grid>
+                  </Grid>
+                )}
+                {view === "orders" && (
+                  <Grid
+                    container
+                    spacing={6}
+                    sx={{ pb: 38, px: 4, overflowX: "scroll" }}
+                  >
+                    <Grid item xs={12}>
+                      <Card sx={{ borderRadius: 2 }}>
+                        <DataGrid
+                          rows={
+                            sortedDeliveredOrders ? sortedDeliveredOrders : []
+                          }
+                          columns={all_customer_columns_for_orders}
+                          getRowId={(row) => row._id}
+                          autoHeight
+                          // components={{
+                          //     LoadingOverlay: LinearProgress,
+                          // }}
+                          loading={loading}
+                          getRowHeight={() => "auto"}
+                          pagination
+                          paginationModel={paginationModel}
+                          pageSizeOptions={[25, 50, 75, 100]}
+                          rowCount={pagination?.totalUsers}
+                          paginationMode="server"
+                          onPaginationModelChange={setPaginationModel}
+                          sx={tableStyles}
+                        />
+                      </Card>
+                    </Grid>
+                  </Grid>
+                )}
 
-                                            pagination
-                                            paginationModel={paginationModel}
-                                            pageSizeOptions={[25, 50, 75, 100]}
-                                            rowCount={pagination?.totalUsers}
-                                            paginationMode="server"
-                                            onPaginationModelChange={setPaginationModel}
-                                            sx={tableStyles}
-                                        />
-                                    </Card>
-                                </Grid>
-                            </Grid>)
-                        }
-                        {view === "orders" && (
-                            <Grid container spacing={6} sx={{ pb: 38, px: 4, overflowX: 'scroll' }}>
-                                <Grid item xs={12}>
-                                    <Card sx={{ borderRadius: 2 }}>
-                                        <DataGrid
-                                            rows={sortedDeliveredOrders ? sortedDeliveredOrders : []}
-                                            columns={all_customer_columns_for_orders}
-                                            getRowId={(row) => row._id}
-                                            autoHeight
-                                            // components={{
-                                            //     LoadingOverlay: LinearProgress,
-                                            // }}
-                                            loading={loading}
-                                            getRowHeight={() => "auto"}
-
-                                            pagination
-                                            paginationModel={paginationModel}
-                                            pageSizeOptions={[25, 50, 75, 100]}
-                                            rowCount={pagination?.totalUsers}
-                                            paginationMode="server"
-                                            onPaginationModelChange={setPaginationModel}
-                                            sx={tableStyles}
-                                        />
-                                    </Card>
-                                </Grid>
-                            </Grid>)
-                        }
-
-
-                        {/* <ConfirmBox
+                {/* <ConfirmBox
                             title="Order"
                             name="order"
                             open={deleteOpen}
@@ -664,8 +739,7 @@ const TransactionsPage = () => {
                             sx={{ pb: 4, border: "2px solid red" }}
                         /> */}
 
-
-                        {/* <OrderDetailsModal
+                {/* <OrderDetailsModal
                             orderId={orderId}
                             open={deleteOpen}
                             modalTitle="Order Details"
@@ -673,21 +747,21 @@ const TransactionsPage = () => {
                             onClose={handleCloseModal}
                         /> */}
 
-                        {/* <OrderDetailsModal
+                {/* <OrderDetailsModal
                             open={isModalOpen}
                             onClose={handleCloseModal}
                             orderId={orderId}
                             modalTitle="Order Details"
                             buttonText="Order Details"
                         /> */}
+              </div>
+            )}
+          </div>
+          {/* </main> */}
+        </div>
+      </div>
 
-                    </div>}
-                </div>
-                {/* </main> */}
-            </div>
-        </div >
-
-        // </div>
+      // </div>
     );
 };
 

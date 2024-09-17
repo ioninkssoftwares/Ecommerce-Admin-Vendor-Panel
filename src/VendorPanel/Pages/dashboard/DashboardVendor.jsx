@@ -140,21 +140,23 @@ const DashboardVendor = () => {
             : 0;
 
     return (
-        <div>
-            <div className='flex h-screen overflow-hidden'>
-                <Sidebar />
-                <div className='relative flex flex-1 flex-col bg-gray-50 overflow-y-auto overflow-x-hidden'>
-                    <VendorNavbar />
-                    <main className="mx-10 mb-10 ">
-                        <Box
-                            sx={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                            }}
-                        >
-                            <Typography sx={{ marginTop: "5px" }} variant="h5">Welcome back, Vendor</Typography>
-                            {/* <FormControl sx={{
+      <div>
+        <div className="flex h-screen overflow-hidden">
+          <Sidebar />
+          <div className="relative flex flex-1 flex-col bg-gray-50 overflow-y-auto overflow-x-hidden">
+            <VendorNavbar />
+            <main className="mx-10 mb-10 ">
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Typography sx={{ marginTop: "5px" }} variant="h5">
+                  Welcome back, Vendor
+                </Typography>
+                {/* <FormControl sx={{
                                 m: 1,
                                 minWidth: 250,
                             }} size="small">
@@ -174,163 +176,171 @@ const DashboardVendor = () => {
                                         <MenuItem value={365}>Yearly</MenuItem>
                                     </Select> </>}
                             </FormControl> */}
-                        </Box>
+              </Box>
 
-                        <Box
-                            sx={{
-                                // justifyContent: "space-between",
-                                marginTop: "15px",
-                                marginBottom: "25px",
-                                display: 'flex',
-                                // display: isMobile ? 'none' : 'flex'
-                                flexDirection: isMobile ? 'column' : 'row'
+              <Box
+                sx={{
+                  // justifyContent: "space-between",
+                  marginTop: "15px",
+                  marginBottom: "25px",
+                  display: "flex",
+                  // display: isMobile ? 'none' : 'flex'
+                  flexDirection: isMobile ? "column" : "row",
+                }}
+              >
+                <BarChartOne
+                  allProductsCount={vendorProducts && vendorProducts.length}
+                  activeProductsCount={
+                    vendorProducts &&
+                    vendorProducts.filter(
+                      (product) => product.isVerified === "true"
+                    ).length
+                  }
+                  inactiveProductsCount={
+                    vendorProducts &&
+                    vendorProducts.filter(
+                      (product) => product.isVerified === "false"
+                    ).length
+                  }
+                  loading={loading}
+                />
 
+                <BarChartTwo
+                  allOrdersCount={allOrders && allOrders.length}
+                  processingOrders={
+                    allOrders &&
+                    allOrders.filter(
+                      (product) => product.status === "Processing"
+                    ).length
+                  }
+                  shippedOrders={
+                    allOrders &&
+                    allOrders.filter((product) => product.status === "Shipped")
+                      .length
+                  }
+                  deliveredOrders={
+                    allOrders &&
+                    allOrders.filter(
+                      (product) => product.status === "Delivered"
+                    ).length
+                  }
+                  returnedOrders={
+                    allOrders &&
+                    allOrders.filter((product) => product.status === "Returned")
+                      .length
+                  }
+                  cancelledOrders={
+                    allOrders &&
+                    allOrders.filter(
+                      (product) => product.status === "Cancelled"
+                    ).length
+                  }
+                  deliveredPercentage={deliveredPercentage}
+                  loading={loading}
+                />
+                {/* <PieChartThree /> */}
+              </Box>
 
-                            }}
+              <Box
+                sx={{
+                  // justifyContent: "space-between",
+                  marginTop: "30px",
+                  marginBottom: "25px",
+                  display: "flex",
+                  // display: isMobile ? 'none' : 'flex'
+                  flexDirection: isMobile ? "column" : "row",
+                }}
+              >
+                <div
+                  style={{
+                    width: isMobile ? "100%" : "32%",
+                    marginBottom: isMobile ? "30px" : "0",
+                    marginRight: isMobile ? "0" : "30px",
+                    marginLeft: isMobile ? "0" : "30px",
+                  }}
+                  className="p-3 bg-white rounded-lg ml-6"
+                >
+                  <div className="flex justify-between items-center">
+                    <div className="flex gap-5 items-center justify-center">
+                      <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
+                        <MdInventory />
+                      </div>
+                      <div>
+                        <p className="text-primary-blue font-bold text-xl">
+                          Products Summary
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-8 flex items-center justify-start gap-20 w-full">
+                    <div className="flex flex-col items-start justify-center">
+                      <p className="text-gray-400">All Products</p>
+                      <Typography
+                        paragraph
+                        style={{ fontWeight: "500", color: "black" }}
+                      >
+                        {vendorProducts && vendorProducts.length}
+                      </Typography>
+                    </div>
+                    <div className="flex flex-col ml-11 items-start justify-center">
+                      <p className=" text-gray-400">Active Products</p>
+                      <Typography
+                        paragraph
+                        style={{ fontWeight: "500", color: "black" }}
+                      >
+                        {vendorProducts &&
+                          vendorProducts.filter(
+                            (product) => product.isVerified === "true"
+                          ).length}
+                      </Typography>
+                    </div>
+                    <div className="flex flex-col items-start justify-center">
+                      <p className=" text-gray-400">Inactive Products</p>
+                      <Typography
+                        paragraph
+                        style={{ fontWeight: "500", color: "black" }}
+                      >
+                        {vendorProducts &&
+                          vendorProducts.filter(
+                            (product) => product.isVerified === "false"
+                          ).length}
+                      </Typography>
+                    </div>
+                  </div>
+                </div>
 
-
+                <div
+                  style={{
+                    width: isMobile ? "100%" : "32%",
+                    marginBottom: isMobile ? "30px" : "0",
+                    marginRight: isMobile ? "0" : "30px",
+                    marginLeft: isMobile ? "0" : "30px",
+                  }}
+                  className="p-3 bg-white rounded-lg ml-6"
+                >
+                  <div className="flex justify-between items-center">
+                    <div className="flex gap-5 items-center justify-center">
+                      <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
+                        <PeopleOutlineIcon />
+                      </div>
+                      <div>
+                        <p className="text-primary-blue font-bold text-xl">
+                          {" "}
+                          Orders Summary
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="mt-8 flex items-center justify-start gap-20 w-full">
+                      <div className="flex flex-col items-start justify-center">
+                        <p className="text-gray-400">All Orders</p>
+                        <Typography
+                          paragraph
+                          style={{ fontWeight: "500", color: "black" }}
                         >
-
-
-
-                            <BarChartOne
-                                allProductsCount={vendorProducts && vendorProducts.length} activeProductsCount={vendorProducts &&
-                                    vendorProducts.filter((product) => product.isVerified === "true")
-                                        .length}
-                                inactiveProductsCount={vendorProducts &&
-                                    vendorProducts.filter((product) => product.isVerified === "false")
-                                        .length}
-                                loading={loading}
-                            />
-
-
-
-
-                            <BarChartTwo
-                                allOrdersCount={allOrders && allOrders.length}
-                                processingOrders={allOrders &&
-                                    allOrders.filter((product) => product.status === "Processing")
-                                        .length}
-                                shippedOrders={allOrders &&
-                                    allOrders.filter((product) => product.status === "Shipped")
-                                        .length}
-                                deliveredOrders={allOrders &&
-                                    allOrders.filter((product) => product.status === "Delivered")
-                                        .length}
-                                returnedOrders={allOrders &&
-                                    allOrders.filter((product) => product.status === "Returned")
-                                        .length}
-                                cancelledOrders={allOrders &&
-                                    allOrders.filter((product) => product.status === "Cancelled")
-                                        .length}
-                                deliveredPercentage={deliveredPercentage}
-                                loading={loading}
-                            />
-                            {/* <PieChartThree /> */}
-
-
-                        </Box>
-
-                        <Box
-                            sx={{
-                                // justifyContent: "space-between",
-                                marginTop: "30px",
-                                marginBottom: "25px",
-                                display: 'flex',
-                                // display: isMobile ? 'none' : 'flex'
-                                flexDirection: isMobile ? 'column' : 'row'
-
-
-                            }}>
-
-                            <div style={{
-                                width: isMobile ? "100%" : "32%",
-                                marginBottom: isMobile ? "30px" : "0",
-                                marginRight: isMobile ? "0" : "30px",
-                                marginLeft: isMobile ? "0" : "30px"
-                            }} className="p-3 bg-white rounded-lg ml-6">
-                                <div className="flex justify-between items-center">
-                                    <div className="flex gap-5 items-center justify-center">
-                                        <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
-                                            <MdInventory />
-                                        </div>
-                                        <div>
-                                            <p className="text-primary-blue font-bold text-xl">Products Summary</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="mt-8 flex items-center justify-start gap-20 w-full">
-                                    <div className="flex flex-col items-start justify-center">
-                                        <p className="text-gray-400">
-                                            All Products
-                                        </p>
-                                        <Typography
-                                            paragraph
-                                            style={{ fontWeight: "500", color: "black" }}
-                                        >
-                                            {vendorProducts && vendorProducts.length}
-
-                                        </Typography>
-
-                                    </div>
-                                    <div className="flex flex-col ml-11 items-start justify-center">
-                                        <p className=" text-gray-400">
-                                            Active Products
-                                        </p>
-                                        <Typography
-                                            paragraph
-                                            style={{ fontWeight: "500", color: "black" }}
-                                        >
-                                            {vendorProducts &&
-                                                vendorProducts.filter((product) => product.isVerified === "true")
-                                                    .length}
-                                        </Typography>
-                                    </div>
-                                    <div className="flex flex-col items-start justify-center">
-                                        <p className=" text-gray-400">
-                                            Inactive Products
-                                        </p>
-                                        <Typography
-                                            paragraph
-                                            style={{ fontWeight: "500", color: "black" }}
-                                        >
-                                            {vendorProducts &&
-                                                vendorProducts.filter((product) => product.isVerified === "false")
-                                                    .length}
-                                        </Typography>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div style={{
-                                width: isMobile ? "100%" : "32%",
-                                marginBottom: isMobile ? "30px" : "0",
-                                marginRight: isMobile ? "0" : "30px",
-                                marginLeft: isMobile ? "0" : "30px"
-                            }} className="p-3 bg-white rounded-lg ml-6">
-                                <div className="flex justify-between items-center">
-                                    <div className="flex gap-5 items-center justify-center">
-                                        <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
-                                            <PeopleOutlineIcon />
-                                        </div>
-                                        <div>
-                                            <p className="text-primary-blue font-bold text-xl"> Orders Summary</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="flex flex-col">
-                                    <div className="mt-8 flex items-center justify-start gap-20 w-full">
-                                        <div className="flex flex-col items-start justify-center">
-                                            <p className="text-gray-400">
-                                                All Orders
-                                            </p>
-                                            <Typography
-                                                paragraph
-                                                style={{ fontWeight: "500", color: "black" }}
-                                            >
-                                                {allOrders && allOrders.length}
-                                                <span
+                          {allOrders && allOrders.length}
+                          {/* <span
                                                     style={{
                                                         fontSize: "12px",
                                                         color: "green",
@@ -339,86 +349,76 @@ const DashboardVendor = () => {
                                                 >
 
                                                     {allOrders && allOrders.length > 0 && `+${deliveredPercentage}%`}
-                                                </span>
-                                            </Typography>
-
-                                        </div>
-                                        <div className="flex flex-col ml-11 items-start justify-center">
-                                            <p className=" text-gray-400">
-                                                Delivered Orders
-                                            </p>
-                                            <Typography
-                                                paragraph
-                                                style={{ fontWeight: "500", color: "black" }}
-                                            >
-                                                {allOrders &&
-                                                    allOrders.filter((product) => product.status === "Delivered")
-                                                        .length}
-                                            </Typography>
-                                        </div>
-                                        <div className="flex flex-col items-start justify-center">
-                                            <p className=" text-gray-400">
-                                                Shipped Orders
-                                            </p>
-                                            <Typography
-                                                paragraph
-                                                style={{ fontWeight: "500", color: "black" }}
-                                            >
-                                                {allOrders &&
-                                                    allOrders.filter((product) => product.status === "Shipped")
-                                                        .length}
-                                            </Typography>
-                                        </div>
-                                    </div>
-                                    <div className="mt-2 flex items-center justify-start gap-20 w-full">
-                                        <div className="flex flex-col items-start justify-center">
-                                            <p className="text-gray-400">
-                                                Processing Orders
-                                            </p>
-                                            <Typography
-                                                paragraph
-                                                style={{ fontWeight: "500", color: "black" }}
-                                            >
-                                                {allOrders &&
-                                                    allOrders.filter((product) => product.status === "Processing")
-                                                        .length}
-                                            </Typography>
-
-                                        </div>
-                                        <div className="flex flex-col items-start justify-center">
-                                            <p className=" text-gray-400">
-                                                Returned Orders
-                                            </p>
-                                            <Typography
-                                                paragraph
-                                                style={{ fontWeight: "500", color: "black" }}
-                                            >
-                                                {allOrders &&
-                                                    allOrders.filter((product) => product.status === "Returned")
-                                                        .length}
-                                            </Typography>
-                                        </div>
-                                        <div className="flex flex-col items-start justify-center">
-                                            <p className=" text-gray-400">
-                                                Cancelled Orders
-                                            </p>
-                                            <Typography
-                                                paragraph
-                                                style={{ fontWeight: "500", color: "black" }}
-                                            >
-                                                {allOrders &&
-                                                    allOrders.filter((product) => product.status === "Cancelled")
-                                                        .length}
-                                            </Typography>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-
-                        </Box>
-                        {/* <Box
+                                                </span> */}
+                        </Typography>
+                      </div>
+                      <div className="flex flex-col ml-11 items-start justify-center">
+                        <p className=" text-gray-400">Delivered Orders</p>
+                        <Typography
+                          paragraph
+                          style={{ fontWeight: "500", color: "black" }}
+                        >
+                          {allOrders &&
+                            allOrders.filter(
+                              (product) => product.status === "Delivered"
+                            ).length}
+                        </Typography>
+                      </div>
+                      <div className="flex flex-col items-start justify-center">
+                        <p className=" text-gray-400">Shipped Orders</p>
+                        <Typography
+                          paragraph
+                          style={{ fontWeight: "500", color: "black" }}
+                        >
+                          {allOrders &&
+                            allOrders.filter(
+                              (product) => product.status === "Shipped"
+                            ).length}
+                        </Typography>
+                      </div>
+                    </div>
+                    <div className="mt-2 flex items-center justify-start gap-20 w-full">
+                      <div className="flex flex-col items-start justify-center">
+                        <p className="text-gray-400">Processing Orders</p>
+                        <Typography
+                          paragraph
+                          style={{ fontWeight: "500", color: "black" }}
+                        >
+                          {allOrders &&
+                            allOrders.filter(
+                              (product) => product.status === "Processing"
+                            ).length}
+                        </Typography>
+                      </div>
+                      <div className="flex flex-col items-start justify-center">
+                        <p className=" text-gray-400">Returned Orders</p>
+                        <Typography
+                          paragraph
+                          style={{ fontWeight: "500", color: "black" }}
+                        >
+                          {allOrders &&
+                            allOrders.filter(
+                              (product) => product.status === "Returned"
+                            ).length}
+                        </Typography>
+                      </div>
+                      <div className="flex flex-col items-start justify-center">
+                        <p className=" text-gray-400">Cancelled Orders</p>
+                        <Typography
+                          paragraph
+                          style={{ fontWeight: "500", color: "black" }}
+                        >
+                          {allOrders &&
+                            allOrders.filter(
+                              (product) => product.status === "Cancelled"
+                            ).length}
+                        </Typography>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Box>
+              {/* <Box
                             sx={{
                                 justifyContent: "space-between",
                                 marginTop: "15px",
@@ -431,17 +431,17 @@ const DashboardVendor = () => {
                             <CardChartSix />
                         </Box> */}
 
-                        {/* <Box sx={{
+              {/* <Box sx={{
                             display: isMobile ? 'none' : 'block'
                         }}>
                             <SellingProducts />
                             <CustomersOrders />
                             <SaleVsDate />
                         </Box> */}
-                    </main>
-                </div>
-            </div>
+            </main>
+          </div>
         </div>
-    )
+      </div>
+    );
 }
 export default DashboardVendor
