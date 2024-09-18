@@ -239,6 +239,9 @@ const OrderDetailsModal = ({
   //     });
   // };
 
+  const hasColor = orderGridDetails.some((row) => row.color);
+  const hasSize = orderGridDetails.some((row) => row.size);
+
   const all_customer_columns = [
     {
       flex: 0.25,
@@ -277,6 +280,47 @@ const OrderDetailsModal = ({
         </Typography>
       ),
     },
+    ...(hasColor
+      ? [
+          {
+            flex: 0.15,
+            minWidth: 100,
+            field: "color",
+            headerName: "Color",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+            renderCell: ({ row }) =>
+              row.color ? (
+                <Typography variant="body1" fontWeight={500}>
+                  {row.color}
+                </Typography>
+              ) : null,
+          },
+        ]
+      : []), // Don't add color column if none of the rows have a color
+
+    // Conditionally add the size column
+    ...(hasSize
+      ? [
+          {
+            flex: 0.15,
+            minWidth: 100,
+            field: "size",
+            headerName: "Size",
+            align: "left",
+            headerAlign: "left",
+            disableColumnMenu: true,
+            renderCell: ({ row }) =>
+              row.size ? (
+                <Typography variant="body1" fontWeight={500}>
+                  {row.size}
+                </Typography>
+              ) : null,
+          },
+        ]
+      : []),
+
     {
       minWidth: 120,
 
