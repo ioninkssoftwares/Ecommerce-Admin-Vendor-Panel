@@ -748,7 +748,9 @@ const VendorOrdersPage = () => {
                       >
                         {allOrders &&
                           allOrders.filter(
-                            (product) => product.status === "Processing"
+                            (product) =>
+                              product.status === "Processing" &&
+                              product.isCancelled === false
                           ).length}
                       </Typography>
                     </div>
