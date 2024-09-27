@@ -794,12 +794,12 @@ const OrderDetailsModal = ({
                 )}
               </button>
             )}
-            <button
+            {/* <button
               // onClick={() => router.push("/admin/customers/add")}
               className=" px-7 text-white font-medium bg-red-600 rounded-lg py-3  items-center transition transform active:scale-95 duration-200  "
             >
               Cancel Order
-            </button>
+            </button> */}
           </div>
 
           <ConfirmBox
