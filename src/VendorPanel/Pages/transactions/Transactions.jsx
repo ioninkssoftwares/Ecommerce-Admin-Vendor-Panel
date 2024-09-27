@@ -537,7 +537,7 @@ const TransactionsPage = () => {
                               Total Amount
                             </Typography>
                             <Typography variant="h6" color="textSecondary">
-                              {/* ₹{totalAmount} */}₹
+                              {/* ₹{totalAmount} */}
                               {/* {totalAmount ? totalAmount.toFixed(2) : "0.00"} */}
                               ₹
                               {totalAmount
@@ -576,7 +576,7 @@ const TransactionsPage = () => {
                               Pending Amount
                             </Typography>
                             <Typography variant="h6" color="textSecondary">
-                              {/* ₹{pendingAmount} */}₹ ₹
+                              {/* ₹{pendingAmount} */}₹
                               {pendingAmount
                                 ? Number.isInteger(pendingAmount)
                                   ? pendingAmount
