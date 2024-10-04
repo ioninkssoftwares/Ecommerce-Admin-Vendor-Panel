@@ -47,7 +47,12 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useMemo } from "react";
 import Button from "@mui/material/Button";
+import { CiExport } from "react-icons/ci";
 // import 'dayjs/locale/en'; // Optionally, set locale
+import { saveAs } from "file-saver";
+import * as XLSX from "xlsx";
+import { create } from "@mui/material/styles/createTransitions";
+import { formatDate } from "../../Utils/formatPrice";
 
 // export const Button = ({ name, Icon, Color }) => {
 //   return (
@@ -655,6 +660,46 @@ const VendorOrdersPage = () => {
     },
   ];
 
+  const handleExportExcel = async () => {
+    try {
+      // const response = await axios.get(
+      //   `${process.env.REACT_APP_BASE_URL}/staff/getAllStaf`
+      // );
+
+      if (allOrders.length > 0) {
+        const vendorsData = allOrders.map(
+          ({ _id, user, product, createdAt, subtotal, quantity }) => ({
+            "Order Id": _id,
+            "User Name": user?.name,
+            "Product Name": product?.name,
+            Price: product?.price,
+            Quantity: quantity,
+            "Order Total": subtotal,
+            "Order Date": formatDate(createdAt),
+          })
+        );
+
+        const workbook = XLSX.utils.book_new();
+        const worksheet = XLSX.utils.json_to_sheet(vendorsData);
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Orders Data");
+
+        const excelBuffer = XLSX.write(workbook, {
+          bookType: "xlsx",
+          type: "array",
+        });
+        const blob = new Blob([excelBuffer], {
+          type: "application/octet-stream",
+        });
+        saveAs(blob, "orderss_data.xlsx");
+      } else {
+        toast.error("Failed to export orders data");
+      }
+    } catch (error) {
+      console.error("Error exporting orders data:", error);
+      toast.error("Failed to export orders data");
+    }
+  };
+
   const deliveredOrders =
     allOrders?.filter((order) => order.status === "Delivered") || [];
   const deliveredPercentage =
@@ -677,7 +722,7 @@ const VendorOrdersPage = () => {
               <AdminNavbar />
               <div className="flex md:justify-between md:items-center md:flex-row flex-col justify-center items-center mt-8 mb-6 gap-3 px-3">
                 {/* <div> */}
-                <div className="p-3 w-full bg-white rounded-lg mx-6">
+                <div className="p-3 w-full bg-white rounded-lg mx-6 ">
                   <div className="flex justify-between items-center">
                     <div className="flex gap-5 items-center justify-center">
                       <div className="bg-[#04A7FF29] p-4 text-primary-blue rounded-xl text-xl">
@@ -690,20 +735,21 @@ const VendorOrdersPage = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-[8.8rem] mt-4">
-                    {/* <div className="mt-8 flex items-center justify-start gap-20 w-full"> */}
-                    <div className="flex flex-col items-start justify-center">
-                      <p className="text-gray-400">All Orders</p>
-                      <Typography
-                        paragraph
-                        style={{
-                          fontWeight: "500",
-                          color: "black",
-                          textAlign: "center",
-                        }}
-                      >
-                        {allOrders && allOrders.length}
-                        {/* <span
+                  <div className="flex justify-between">
+                    <div className="flex gap-[8.8rem] mt-4">
+                      {/* <div className="mt-8 flex items-center justify-start gap-20 w-full"> */}
+                      <div className="flex flex-col items-start justify-center">
+                        <p className="text-gray-400">All Orders</p>
+                        <Typography
+                          paragraph
+                          style={{
+                            fontWeight: "500",
+                            color: "black",
+                            textAlign: "center",
+                          }}
+                        >
+                          {allOrders && allOrders.length}
+                          {/* <span
                             style={{
                               fontSize: "12px",
                               color: "green",
@@ -713,48 +759,48 @@ const VendorOrdersPage = () => {
                               allOrders.length > 0 &&
                               `+${deliveredPercentage}%`}
                           </span> */}
-                      </Typography>
-                    </div>
-                    <div className="flex flex-col items-start justify-center">
-                      <p className=" text-gray-400">Delivered Orders</p>
-                      <Typography
-                        paragraph
-                        style={{ fontWeight: "500", color: "black" }}
-                      >
-                        {allOrders &&
-                          allOrders.filter(
-                            (product) => product.status === "Delivered"
-                          ).length}
-                      </Typography>
-                    </div>
-                    <div className="flex flex-col items-start justify-center">
-                      <p className=" text-gray-400">Shipped Orders</p>
-                      <Typography
-                        paragraph
-                        style={{ fontWeight: "500", color: "black" }}
-                      >
-                        {allOrders &&
-                          allOrders.filter(
-                            (product) => product.status === "Shipped"
-                          ).length}
-                      </Typography>
-                    </div>
+                        </Typography>
+                      </div>
+                      <div className="flex flex-col items-start justify-center">
+                        <p className=" text-gray-400">Delivered Orders</p>
+                        <Typography
+                          paragraph
+                          style={{ fontWeight: "500", color: "black" }}
+                        >
+                          {allOrders &&
+                            allOrders.filter(
+                              (product) => product.status === "Delivered"
+                            ).length}
+                        </Typography>
+                      </div>
+                      <div className="flex flex-col items-start justify-center">
+                        <p className=" text-gray-400">Shipped Orders</p>
+                        <Typography
+                          paragraph
+                          style={{ fontWeight: "500", color: "black" }}
+                        >
+                          {allOrders &&
+                            allOrders.filter(
+                              (product) => product.status === "Shipped"
+                            ).length}
+                        </Typography>
+                      </div>
 
-                    <div className="flex flex-col items-start justify-center">
-                      <p className="text-gray-400">Processing Orders</p>
-                      <Typography
-                        paragraph
-                        style={{ fontWeight: "500", color: "black" }}
-                      >
-                        {allOrders &&
-                          allOrders.filter(
-                            (product) =>
-                              product.status === "Processing" &&
-                              product.isCancelled === false
-                          ).length}
-                      </Typography>
-                    </div>
-                    {/* <div className="flex flex-col items-start justify-center">
+                      <div className="flex flex-col items-start justify-center">
+                        <p className="text-gray-400">Processing Orders</p>
+                        <Typography
+                          paragraph
+                          style={{ fontWeight: "500", color: "black" }}
+                        >
+                          {allOrders &&
+                            allOrders.filter(
+                              (product) =>
+                                product.status === "Processing" &&
+                                product.isCancelled === false
+                            ).length}
+                        </Typography>
+                      </div>
+                      {/* <div className="flex flex-col items-start justify-center">
                         <p className=" text-gray-400">Returned Orders</p>
                         <Typography
                           paragraph
@@ -766,24 +812,35 @@ const VendorOrdersPage = () => {
                             ).length}
                         </Typography>
                       </div> */}
-                    <div className="flex flex-col items-start justify-center">
-                      <p className=" text-gray-400">Cancelled Orders</p>
-                      <Typography
-                        paragraph
-                        style={{ fontWeight: "500", color: "black" }}
-                      >
-                        {/* {allOrders &&
+                      <div className="flex flex-col items-start justify-center">
+                        <p className=" text-gray-400">Cancelled Orders</p>
+                        <Typography
+                          paragraph
+                          style={{ fontWeight: "500", color: "black" }}
+                        >
+                          {/* {allOrders &&
                             allOrders.filter(
                               (product) => product.status === "Cancelled"
                             ).length} */}
 
-                        {allOrders
-                          ? allOrders.filter((order) => order.isCancelled)
-                              .length
-                          : 0}
-                      </Typography>
+                          {allOrders
+                            ? allOrders.filter((order) => order.isCancelled)
+                                .length
+                            : 0}
+                        </Typography>
+                      </div>
                     </div>
+                    <button
+                      onClick={handleExportExcel}
+                      className=" px-3 text-white font-medium justify-center bg-primary-blue rounded-lg py-1 flex space-x-2 items-center transition transform active:scale-95 duration-200  "
+                    >
+                      <span>
+                        <CiExport className="w-6 h-6 font-bold" />
+                      </span>
+                      <span>Export Orders</span>
+                    </button>
                   </div>
+
                   {/* </div> */}
                 </div>
               </div>
